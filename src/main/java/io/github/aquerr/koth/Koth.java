@@ -1,13 +1,11 @@
 package io.github.aquerr.koth;
 
 import com.google.inject.Inject;
-import io.github.aquerr.koth.command.KothCommand;
 import io.github.aquerr.koth.command.WandCommand;
 import io.github.aquerr.koth.listeners.WandUsageListener;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandCallable;
 import org.spongepowered.api.command.CommandManager;
-import org.spongepowered.api.command.source.ConsoleSource;
 import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.config.ConfigDir;
 import org.spongepowered.api.event.EventManager;
