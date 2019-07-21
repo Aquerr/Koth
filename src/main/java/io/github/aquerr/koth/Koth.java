@@ -6,6 +6,7 @@ import io.github.aquerr.koth.listeners.WandUsageListener;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandCallable;
 import org.spongepowered.api.command.CommandManager;
+import org.spongepowered.api.command.CommandMapping;
 import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.config.ConfigDir;
 import org.spongepowered.api.event.EventManager;
@@ -18,7 +19,7 @@ import org.spongepowered.api.text.format.TextColors;
 import java.nio.file.Path;
 import java.util.*;
 
-@Plugin(id = PluginInfo.ID)
+@Plugin(id = PluginInfo.ID, name = PluginInfo.NAME, version = PluginInfo.VERSION, description = PluginInfo.DESCRIPTION, authors = {"Aquerr/Nerdi"})
 public class Koth {
 
     private final Map<List<String>, CommandCallable> subcommands = new HashMap<>();
@@ -27,7 +28,7 @@ public class Koth {
     private final Path configDir;
 
     @Inject
-    private Koth(final CommandManager commandManager, final EventManager eventManager, @ConfigDir(sharedRoot = false) Path configDir)
+    private Koth(final CommandManager commandManager, final EventManager eventManager, @ConfigDir(sharedRoot = false) final Path configDir)
     {
         this.commandManager = commandManager;
         this.eventManager = eventManager;
@@ -75,6 +76,11 @@ public class Koth {
      */
     private void disablePlugin()
     {
+        final Set<CommandMapping> commandMappings = this.commandManager.getOwnedBy(this);
+        for (final CommandMapping commandMapping : commandMappings) {
+            this.commandManager.removeMapping(commandMapping);
+        }
 
+        this.subcommands.clear();
     }
 }
