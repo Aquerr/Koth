@@ -1,4 +1,4 @@
-package io.github.aquerr.koth.listeners;
+package io.github.aquerr.koth.listener;
 
 import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.living.player.Player;

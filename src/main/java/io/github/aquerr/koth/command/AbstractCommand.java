@@ -17,7 +17,6 @@ import java.util.Optional;
 
 public abstract class AbstractCommand implements CommandExecutor
 {
-
     private final Koth plugin;
 
     public AbstractCommand(final Koth plugin)
@@ -27,4 +26,9 @@ public abstract class AbstractCommand implements CommandExecutor
 
     @Override
     public abstract CommandResult execute(CommandSource source, CommandContext args) throws CommandException;
+
+    public Koth getPlugin()
+    {
+        return this.plugin;
+    }
 }

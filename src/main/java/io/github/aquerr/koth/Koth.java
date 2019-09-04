@@ -1,8 +1,12 @@
 package io.github.aquerr.koth;
 
 import com.google.inject.Inject;
+import io.github.aquerr.koth.command.CreateArenaCommand;
 import io.github.aquerr.koth.command.WandCommand;
-import io.github.aquerr.koth.listeners.WandUsageListener;
+import io.github.aquerr.koth.entity.SelectionPoints;
+import io.github.aquerr.koth.listener.WandUsageListener;
+import io.github.aquerr.koth.manager.ArenaManager;
+import io.github.aquerr.koth.manager.ArenaManagerImpl;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandCallable;
 import org.spongepowered.api.command.CommandManager;
@@ -27,6 +31,12 @@ public class Koth {
     private final EventManager eventManager;
     private final Path configDir;
 
+    private final Map<UUID, SelectionPoints> playerSelectionPoints = new HashMap<>();
+    private final List<UUID> playersCreatingArena = new ArrayList<>();
+
+    @Inject
+    private ArenaManagerImpl arenaManager;
+
     @Inject
     private Koth(final CommandManager commandManager, final EventManager eventManager, @ConfigDir(sharedRoot = false) final Path configDir)
     {
@@ -47,6 +57,21 @@ public class Koth {
         //If something went wrong, disable plugin.
     }
 
+    public ArenaManager getArenaManager()
+    {
+        return this.arenaManager;
+    }
+
+    public Map<UUID, SelectionPoints> getPlayerSelectionPoints()
+    {
+        return this.playerSelectionPoints;
+    }
+
+    public List<UUID> getPlayersCreatingArena()
+    {
+        return this.playersCreatingArena;
+    }
+
     private void registerListeners()
     {
         this.eventManager.registerListeners(this, new WandUsageListener());
@@ -56,16 +81,23 @@ public class Koth {
     {
         //Wand Command
         this.subcommands.put(Collections.singletonList("wand"), CommandSpec.builder()
-                .description(Text.of("Gives player a KOTH builder wand."))
-                .permission(PluginPermissions.WAND_COMMAND)
-                .executor(new WandCommand(this))
-                .build());
+            .description(Text.of("Gives player a KOTH builder wand."))
+            .permission(PluginPermissions.WAND_COMMAND)
+            .executor(new WandCommand(this))
+            .build());
+
+        //Create Arena Command
+        this.subcommands.put(Collections.singletonList("createarena"), CommandSpec.builder()
+            .description(Text.of("Creates an arena"))
+            .permission(PluginPermissions.CREATE_ARENA_COMMAND)
+            .executor(new CreateArenaCommand(this))
+            .build());
 
         //KOTH Commands
         final CommandSpec kothCommand = CommandSpec.builder()
-                .description(Text.of("Shows all commands in KOTH plugin"))
-                .children(this.subcommands)
-                .build();
+            .description(Text.of("Shows all commands in KOTH plugin"))
+            .children(this.subcommands)
+            .build();
 
         this.commandManager.register(this, kothCommand, "koth");
     }
