@@ -6,6 +6,7 @@ import io.github.aquerr.koth.command.CreateHillCommand;
 import io.github.aquerr.koth.command.WandCommand;
 import io.github.aquerr.koth.entity.Arena;
 import io.github.aquerr.koth.entity.SelectionPoints;
+import io.github.aquerr.koth.listener.PlayerLeaveListener;
 import io.github.aquerr.koth.listener.WandUsageListener;
 import io.github.aquerr.koth.manager.ArenaManager;
 import io.github.aquerr.koth.manager.ArenaManagerImpl;
@@ -83,7 +84,8 @@ public class Koth {
 
     private void registerListeners()
     {
-        this.eventManager.registerListeners(this, new WandUsageListener());
+        this.eventManager.registerListeners(this, new WandUsageListener(this));
+        this.eventManager.registerListeners(this, new PlayerLeaveListener(this));
     }
 
     private void registerCommands()
