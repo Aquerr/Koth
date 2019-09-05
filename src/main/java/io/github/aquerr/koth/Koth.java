@@ -2,7 +2,9 @@ package io.github.aquerr.koth;
 
 import com.google.inject.Inject;
 import io.github.aquerr.koth.command.CreateArenaCommand;
+import io.github.aquerr.koth.command.CreateHillCommand;
 import io.github.aquerr.koth.command.WandCommand;
+import io.github.aquerr.koth.entity.Arena;
 import io.github.aquerr.koth.entity.SelectionPoints;
 import io.github.aquerr.koth.listener.WandUsageListener;
 import io.github.aquerr.koth.manager.ArenaManager;
@@ -32,7 +34,9 @@ public class Koth {
     private final Path configDir;
 
     private final Map<UUID, SelectionPoints> playerSelectionPoints = new HashMap<>();
-    private final List<UUID> playersCreatingArena = new ArrayList<>();
+
+    private final Map<UUID, Arena> playersCreatingArena = new HashMap<>();
+    private final Map<UUID, Arena> playersEditingArena = new HashMap<>();
 
     @Inject
     private ArenaManagerImpl arenaManager;
@@ -67,9 +71,14 @@ public class Koth {
         return this.playerSelectionPoints;
     }
 
-    public List<UUID> getPlayersCreatingArena()
+    public Map<UUID, Arena> getPlayersCreatingArena()
     {
         return this.playersCreatingArena;
+    }
+
+    public Map<UUID, Arena> getPlayersEditingArena()
+    {
+        return this.playersEditingArena;
     }
 
     private void registerListeners()
@@ -93,6 +102,15 @@ public class Koth {
             .executor(new CreateArenaCommand(this))
             .build());
 
+        //List Arenas Command
+
+        //Create Hill Command
+        this.subcommands.put(Collections.singletonList("createhill"), CommandSpec.builder()
+            .description(Text.of("Creates a hill in arena"))
+            .permission(PluginPermissions.CREATE_HILL_COMMAND)
+            .executor(new CreateHillCommand(this))
+            .build());
+
         //KOTH Commands
         final CommandSpec kothCommand = CommandSpec.builder()
             .description(Text.of("Shows all commands in KOTH plugin"))
@@ -109,7 +127,8 @@ public class Koth {
     private void disablePlugin()
     {
         final Set<CommandMapping> commandMappings = this.commandManager.getOwnedBy(this);
-        for (final CommandMapping commandMapping : commandMappings) {
+        for (final CommandMapping commandMapping : commandMappings)
+        {
             this.commandManager.removeMapping(commandMapping);
         }
 
