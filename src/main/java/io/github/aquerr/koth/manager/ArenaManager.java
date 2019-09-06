@@ -3,6 +3,7 @@ package io.github.aquerr.koth.manager;
 import io.github.aquerr.koth.entity.Arena;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public interface ArenaManager
@@ -11,7 +12,7 @@ public interface ArenaManager
      * Gets all arenas from cache.
      * @return A list of arenas.
      */
-    List<Arena> getArenas();
+    Map<String, Arena> getArenas();
 
     /**
      * Gets arena for the given name

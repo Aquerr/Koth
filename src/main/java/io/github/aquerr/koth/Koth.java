@@ -7,6 +7,7 @@ import io.github.aquerr.koth.command.WandCommand;
 import io.github.aquerr.koth.entity.Arena;
 import io.github.aquerr.koth.entity.SelectionPoints;
 import io.github.aquerr.koth.listener.PlayerLeaveListener;
+import io.github.aquerr.koth.listener.PlayerMoveListener;
 import io.github.aquerr.koth.listener.WandUsageListener;
 import io.github.aquerr.koth.manager.ArenaManager;
 import io.github.aquerr.koth.manager.ArenaManagerImpl;
@@ -56,6 +57,9 @@ public class Koth {
     {
         Sponge.getServer().getConsole().sendMessage(Text.of(PluginInfo.PLUGIN_PREFIX, TextColors.YELLOW, "Loading Koth listeners and commands..."));
 
+        //Setup storage and managers first so that listeners and commands can use them later.
+
+
         //Register commands and listeners
         registerListeners();
         registerCommands();
@@ -89,6 +93,7 @@ public class Koth {
     {
         this.eventManager.registerListeners(this, new WandUsageListener(this));
         this.eventManager.registerListeners(this, new PlayerLeaveListener(this));
+        this.eventManager.registerListeners(this, new PlayerMoveListener(this));
     }
 
     private void registerCommands()

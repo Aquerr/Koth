@@ -30,9 +30,18 @@ public class ArenaManagerImpl implements ArenaManager
     }
 
     @Override
-    public List<Arena> getArenas()
+    public Map<String, Arena> getArenas()
     {
-        return new ArrayList<>(this.arenasCache.values());
+        return this.arenasCache;
+    }
+
+    @Override
+    public Optional<Arena> getArena(final String name)
+    {
+        final Arena arena = this.arenasCache.get(name);
+        if (arena == null)
+            return Optional.empty();
+        return Optional.of(arena);
     }
 
     @Override
