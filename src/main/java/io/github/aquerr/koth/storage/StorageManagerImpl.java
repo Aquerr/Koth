@@ -4,7 +4,7 @@ import com.google.inject.Singleton;
 import io.github.aquerr.koth.entity.Arena;
 
 @Singleton
-public class StorageManagerImpl
+public class StorageManagerImpl implements StorageManager
 {
     public Arena getArena(final String arenaName)
     {
@@ -21,7 +21,7 @@ public class StorageManagerImpl
         return false;
     }
 
-    public boolean deleteArena(final Arena arena)
+    public boolean deleteArena(final String name)
     {
         return false;
     }

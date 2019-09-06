@@ -14,6 +14,7 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandCallable;
 import org.spongepowered.api.command.CommandManager;
 import org.spongepowered.api.command.CommandMapping;
+import org.spongepowered.api.command.args.GenericArguments;
 import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.config.ConfigDir;
 import org.spongepowered.api.event.EventManager;
@@ -53,13 +54,15 @@ public class Koth {
     @Listener
     public void onInitialization(final GameInitializationEvent event)
     {
-        Sponge.getServer().getConsole().sendMessage(Text.of(TextColors.YELLOW, "Loading Koth listeners and commands..."));
+        Sponge.getServer().getConsole().sendMessage(Text.of(PluginInfo.PLUGIN_PREFIX, TextColors.YELLOW, "Loading Koth listeners and commands..."));
 
         //Register commands and listeners
         registerListeners();
         registerCommands();
 
         //If something went wrong, disable plugin.
+
+        Sponge.getServer().getConsole().sendMessage(Text.of(PluginInfo.PLUGIN_PREFIX, TextColors.GREEN, "Koth loaded successfully! Time for a fight on the arena!"));
     }
 
     public ArenaManager getArenaManager()
@@ -101,6 +104,7 @@ public class Koth {
         this.subcommands.put(Collections.singletonList("createarena"), CommandSpec.builder()
             .description(Text.of("Creates an arena"))
             .permission(PluginPermissions.CREATE_ARENA_COMMAND)
+            .arguments(GenericArguments.onlyOne(GenericArguments.string(Text.of("name"))))
             .executor(new CreateArenaCommand(this))
             .build());
 
