@@ -1,10 +1,7 @@
 package io.github.aquerr.koth;
 
 import com.google.inject.Inject;
-import io.github.aquerr.koth.command.CreateArenaCommand;
-import io.github.aquerr.koth.command.CreateHillCommand;
-import io.github.aquerr.koth.command.DeselectCommand;
-import io.github.aquerr.koth.command.WandCommand;
+import io.github.aquerr.koth.command.*;
 import io.github.aquerr.koth.entity.Arena;
 import io.github.aquerr.koth.entity.SelectionPoints;
 import io.github.aquerr.koth.listener.PlayerLeaveListener;
@@ -122,6 +119,11 @@ public class Koth {
             .build());
 
         //List Arenas Command
+        this.subcommands.put(Collections.singletonList("list"), CommandSpec.builder()
+            .description(Text.of("List all arenas on the server"))
+            .permission(PluginPermissions.LIST_COMMAND)
+            .executor(new ListCommand(this))
+            .build());
 
         //Create Hill Command
         this.subcommands.put(Collections.singletonList("createhill"), CommandSpec.builder()
