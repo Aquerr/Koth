@@ -5,4 +5,5 @@ public class PluginPermissions {
     public static final String WAND_COMMAND = "koth.admin.command.wand";
     public static final String CREATE_ARENA_COMMAND = "koth.admin.command.createarena";
     public static final String CREATE_HILL_COMMAND = "koth.admin.command.createhill";
+    public static final String DESELECT_COMMAND = "koth.admin.command.deselect";
 }

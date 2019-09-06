@@ -3,6 +3,7 @@ package io.github.aquerr.koth;
 import com.google.inject.Inject;
 import io.github.aquerr.koth.command.CreateArenaCommand;
 import io.github.aquerr.koth.command.CreateHillCommand;
+import io.github.aquerr.koth.command.DeselectCommand;
 import io.github.aquerr.koth.command.WandCommand;
 import io.github.aquerr.koth.entity.Arena;
 import io.github.aquerr.koth.entity.SelectionPoints;
@@ -103,6 +104,13 @@ public class Koth {
             .description(Text.of("Gives player a KOTH builder wand."))
             .permission(PluginPermissions.WAND_COMMAND)
             .executor(new WandCommand(this))
+            .build());
+
+        //Deselect Command
+        this.subcommands.put(Arrays.asList("deselect", "desel"), CommandSpec.builder()
+            .description(Text.of("Clears wand selection points"))
+            .permission(PluginPermissions.DESELECT_COMMAND)
+            .executor(new DeselectCommand(this))
             .build());
 
         //Create Arena Command

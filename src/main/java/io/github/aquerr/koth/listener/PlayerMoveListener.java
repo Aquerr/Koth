@@ -37,9 +37,8 @@ public class PlayerMoveListener extends AbstractListener
             return;
 
         //TODO: This is a debug code and should be removed in the future.
-        //TODO: Normally we should check if player goes outside the arena and if he/she is outside then move them back.
+        //TODO: Normally we should check if player goes outside the arena during game and if he/she goes outside then we should move them back or kick from the arena.
         //Check if player entered arena
-
         for (final Arena arena : this.arenasCache.values())
         {
             //Enters
