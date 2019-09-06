@@ -39,31 +39,31 @@ public class Hill
         boolean intersectZ = false;
 
         //Check X
-        if (this.firstPoint.getX() < this.secondPoint.getX() && (position.getX() < this.secondPoint.getX() && position.getX() > this.firstPoint.getX()))
+        if (this.firstPoint.getX() <= this.secondPoint.getX() && (position.getX() <= this.secondPoint.getX() && position.getX() >= this.firstPoint.getX()))
         {
             intersectX = true;
         }
-        else if (this.firstPoint.getX() > this.secondPoint.getX() && (position.getX() < this.firstPoint.getX() && position.getX() > this.secondPoint.getX()))
+        else if (this.firstPoint.getX() >= this.secondPoint.getX() && (position.getX() <= this.firstPoint.getX() && position.getX() >= this.secondPoint.getX()))
         {
             intersectX = true;
         }
 
         //Check Y
-        if (this.firstPoint.getY() < this.secondPoint.getY() && (position.getY() < this.secondPoint.getY() && position.getY() > this.firstPoint.getY()))
+        if (this.firstPoint.getY() <= this.secondPoint.getY() && (position.getY() <= this.secondPoint.getY() && position.getY() >= this.firstPoint.getY()))
         {
             intersectY = true;
         }
-        else if (this.firstPoint.getY() > this.secondPoint.getY() && (position.getY() < this.firstPoint.getY() && position.getY() > this.secondPoint.getY()))
+        else if (this.firstPoint.getY() >= this.secondPoint.getY() && (position.getY() <= this.firstPoint.getY() && position.getY() >= this.secondPoint.getY()))
         {
             intersectY = true;
         }
 
         //Check Z
-        if (this.firstPoint.getZ() < this.secondPoint.getZ() && (position.getZ() < this.secondPoint.getZ() && position.getZ() > this.firstPoint.getZ()))
+        if (this.firstPoint.getZ() <= this.secondPoint.getZ() && (position.getZ() <= this.secondPoint.getZ() && position.getZ() >= this.firstPoint.getZ()))
         {
             intersectZ = true;
         }
-        else if (this.firstPoint.getZ() > this.secondPoint.getZ() && (position.getZ() < this.firstPoint.getZ() && position.getZ() > this.secondPoint.getZ()))
+        else if (this.firstPoint.getZ() >= this.secondPoint.getZ() && (position.getZ() <= this.firstPoint.getZ() && position.getZ() >= this.secondPoint.getZ()))
         {
             intersectZ = true;
         }

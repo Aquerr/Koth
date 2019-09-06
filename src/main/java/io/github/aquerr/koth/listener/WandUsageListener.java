@@ -63,7 +63,7 @@ public class WandUsageListener extends AbstractListener
         SelectionPoints selectionPoints = super.getPlugin().getPlayerSelectionPoints().get(player.getUniqueId());
         if (selectionPoints == null)
         {
-            selectionPoints = new SelectionPoints(null, event.getTargetBlock().getPosition());
+            selectionPoints = new SelectionPoints(event.getTargetBlock().getPosition(), null);
         }
         else
         {

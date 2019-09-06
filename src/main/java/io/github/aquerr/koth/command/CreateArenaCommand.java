@@ -28,15 +28,18 @@ public class CreateArenaCommand extends AbstractCommand
         if (!(source instanceof Player))
             throw new CommandException(Text.of(PluginInfo.PLUGIN_ERROR, TextColors.RED, "Only in-game players can use this command!"));
 
-        if(super.getPlugin().getArenaManager().getArenas().stream().anyMatch(x -> x.getName().equals(arenaName)))
+        if(super.getPlugin().getArenaManager().getArenas().containsKey(arenaName))
             throw new CommandException(Text.of(PluginInfo.PLUGIN_ERROR, TextColors.RED, "Arena with such name already exists."));
 
         final Player player = (Player)source;
         if (!super.getPlugin().getPlayerSelectionPoints().containsKey(player.getUniqueId()))
-            throw new CommandException(Text.of(PluginInfo.PLUGIN_ERROR, TextColors.RED, "You must select two points in the world first before creating an arena."));
+            throw new CommandException(Text.of(PluginInfo.PLUGIN_ERROR, TextColors.RED, "You must select two points in the world first before creating an arena!"));
 
         final World world = player.getWorld();
         final SelectionPoints selectionPoints = super.getPlugin().getPlayerSelectionPoints().get(player.getUniqueId());
+
+        if (selectionPoints.getFirstPoint() == null || selectionPoints.getSecondPoint() == null)
+            throw new CommandException(Text.of(PluginInfo.PLUGIN_ERROR, TextColors.RED, "You must select two points in the world first before creating an arena!"));
 
         final Arena arena = new Arena(arenaName, world.getUniqueId(), selectionPoints.getFirstPoint(), selectionPoints.getSecondPoint());
         final boolean didSucceed = super.getPlugin().getArenaManager().addArena(arena);
