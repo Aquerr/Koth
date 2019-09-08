@@ -1,14 +1,20 @@
 package io.github.aquerr.koth;
 
+import com.google.common.reflect.TypeToken;
 import com.google.inject.Inject;
 import io.github.aquerr.koth.command.*;
 import io.github.aquerr.koth.entity.Arena;
+import io.github.aquerr.koth.entity.ArenaTeam;
+import io.github.aquerr.koth.entity.Hill;
 import io.github.aquerr.koth.entity.SelectionPoints;
 import io.github.aquerr.koth.listener.PlayerLeaveListener;
 import io.github.aquerr.koth.listener.PlayerMoveListener;
 import io.github.aquerr.koth.listener.WandUsageListener;
 import io.github.aquerr.koth.manager.ArenaManager;
 import io.github.aquerr.koth.manager.ArenaManagerImpl;
+import io.github.aquerr.koth.storage.serializer.ArenaTeamTypeSerializer;
+import io.github.aquerr.koth.storage.serializer.HillTypeSerializer;
+import ninja.leaping.configurate.objectmapping.serialize.TypeSerializers;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandCallable;
 import org.spongepowered.api.command.CommandManager;
@@ -39,8 +45,10 @@ public class Koth {
     private final Map<UUID, Arena> playersCreatingArena = new HashMap<>();
     private final Map<UUID, Arena> playersEditingArena = new HashMap<>();
 
+    private final Map<UUID, Arena> playersPlayingOnArena = new HashMap<>();
+
     @Inject
-    private ArenaManagerImpl arenaManager;
+    private ArenaManager arenaManager;
 
     @Inject
     private Koth(final CommandManager commandManager, final EventManager eventManager, @ConfigDir(sharedRoot = false) final Path configDir)
@@ -53,18 +61,31 @@ public class Koth {
     @Listener
     public void onInitialization(final GameInitializationEvent event)
     {
-        Sponge.getServer().getConsole().sendMessage(Text.of(PluginInfo.PLUGIN_PREFIX, TextColors.YELLOW, "Loading Koth listeners and commands..."));
+        try
+        {
+            Sponge.getServer().getConsole().sendMessage(Text.of(PluginInfo.PLUGIN_PREFIX, TextColors.YELLOW, "Loading Koth listeners and commands..."));
 
-        //Setup storage and managers first so that listeners and commands can use them later.
+            //Setup storage and managers first so that listeners and commands can use them later.
+            registerTypeSerializers();
 
+            //Register commands and listeners
+            registerListeners();
+            registerCommands();
 
-        //Register commands and listeners
-        registerListeners();
-        registerCommands();
+            //If something went wrong, disable plugin.
 
-        //If something went wrong, disable plugin.
+            Sponge.getServer().getConsole().sendMessage(Text.of(PluginInfo.PLUGIN_PREFIX, TextColors.GREEN, "Koth loaded successfully! Time for a fight on the arena!"));
+        }
+        catch (final Exception exception)
+        {
+            disablePlugin();
+        }
+    }
 
-        Sponge.getServer().getConsole().sendMessage(Text.of(PluginInfo.PLUGIN_PREFIX, TextColors.GREEN, "Koth loaded successfully! Time for a fight on the arena!"));
+    private void registerTypeSerializers()
+    {
+        TypeSerializers.getDefaultSerializers().registerType(TypeToken.of(Hill.class), new HillTypeSerializer());
+        TypeSerializers.getDefaultSerializers().registerType(TypeToken.of(ArenaTeam.class), new ArenaTeamTypeSerializer());
     }
 
     public ArenaManager getArenaManager()
@@ -87,6 +108,11 @@ public class Koth {
         return this.playersEditingArena;
     }
 
+    public Map<UUID, Arena> getPlayersPlayingOnArena()
+    {
+        return this.playersPlayingOnArena;
+    }
+
     private void registerListeners()
     {
         this.eventManager.registerListeners(this, new WandUsageListener(this));
@@ -96,6 +122,14 @@ public class Koth {
 
     private void registerCommands()
     {
+        //Help Command
+        this.subcommands.put(Collections.singletonList("help"), CommandSpec.builder()
+            .description(Text.of("Show all available commands"))
+            .permission(PluginPermissions.HELP_COMMAND)
+            .arguments(GenericArguments.optional(GenericArguments.integer(Text.of("page"))))
+            .executor(new HelpCommand(this))
+            .build());
+
         //Wand Command
         this.subcommands.put(Collections.singletonList("wand"), CommandSpec.builder()
             .description(Text.of("Gives player a KOTH builder wand."))
@@ -154,5 +188,15 @@ public class Koth {
         }
 
         this.subcommands.clear();
+    }
+
+    public Path getConfigDir()
+    {
+        return this.configDir;
+    }
+
+    public Map<List<String>, CommandCallable> getSubcommands()
+    {
+        return this.subcommands;
     }
 }

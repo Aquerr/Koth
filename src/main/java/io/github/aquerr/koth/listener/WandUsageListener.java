@@ -45,7 +45,7 @@ public class WandUsageListener extends AbstractListener
         }
 
         super.getPlugin().getPlayerSelectionPoints().put(player.getUniqueId(), selectionPoints);
-        player.sendMessage(Text.of(TextColors.GOLD, "Second point", TextColors.RESET, " has been selected at ", TextColors.GOLD, event.getTargetBlock().getPosition()));
+        player.sendMessage(Text.of(TextColors.GOLD, "Second point", TextColors.BLUE, " has been selected at ", TextColors.GOLD, event.getTargetBlock().getPosition()));
     }
 
     @Listener
@@ -71,6 +71,6 @@ public class WandUsageListener extends AbstractListener
         }
 
         super.getPlugin().getPlayerSelectionPoints().put(player.getUniqueId(), selectionPoints);
-        player.sendMessage(Text.of(TextColors.GOLD, "First point", TextColors.RESET, " has been selected at ", TextColors.GOLD, event.getTargetBlock().getPosition()));
+        player.sendMessage(Text.of(TextColors.GOLD, "First point", TextColors.BLUE, " has been selected at ", TextColors.GOLD, event.getTargetBlock().getPosition()));
     }
 }

@@ -5,16 +5,13 @@ import com.google.inject.Singleton;
 import io.github.aquerr.koth.PluginInfo;
 import io.github.aquerr.koth.entity.Arena;
 import io.github.aquerr.koth.storage.StorageManager;
-import io.github.aquerr.koth.storage.StorageManagerImpl;
+import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.concurrent.FutureTask;
 
 @Singleton
 public class ArenaManagerImpl implements ArenaManager
@@ -50,7 +47,15 @@ public class ArenaManagerImpl implements ArenaManager
         //Add arena to storage by using a separate thread.
         //We do not want to use main thread for storage.
         CompletableFuture.runAsync(() -> {
-            final boolean didSucceed = this.storageManager.addArena(arena);
+            boolean didSucceed = false;
+            try
+            {
+                didSucceed = this.storageManager.addArena(arena);
+            }
+            catch (ObjectMappingException e)
+            {
+                e.printStackTrace();
+            }
             if (!didSucceed)
                 Sponge.getServer().getConsole().sendMessage(Text.of(PluginInfo.PLUGIN_ERROR, TextColors.RED, "Arena named \"" + arena.getName() + "\" could not be saved into the storage..."));
         });
@@ -63,6 +68,8 @@ public class ArenaManagerImpl implements ArenaManager
     @Override
     public boolean updateArena(final Arena arena)
     {
+        //TODO: Should we preform additional update operations here or will commands classes do everthing on their own?
+
         //Delete arena from the storage in a separate thread.
         CompletableFuture.runAsync(() -> {
             final boolean didSucceed = this.storageManager.updateArena(arena);

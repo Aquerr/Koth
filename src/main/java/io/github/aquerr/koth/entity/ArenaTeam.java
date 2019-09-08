@@ -9,11 +9,17 @@ import java.util.UUID;
 public class ArenaTeam
 {
     private String name;
-    private List<UUID> players = new ArrayList<>();
+    private List<UUID> players;
 
     public ArenaTeam(final String name)
     {
+        this(name, new ArrayList<>());
+    }
+
+    public ArenaTeam(final String name, final List<UUID> players)
+    {
         this.name = name;
+        this.players = players;
     }
 
     public String getName()
