@@ -11,7 +11,6 @@ import io.github.aquerr.koth.listener.PlayerLeaveListener;
 import io.github.aquerr.koth.listener.PlayerMoveListener;
 import io.github.aquerr.koth.listener.WandUsageListener;
 import io.github.aquerr.koth.manager.ArenaManager;
-import io.github.aquerr.koth.manager.ArenaManagerImpl;
 import io.github.aquerr.koth.storage.serializer.ArenaTeamTypeSerializer;
 import io.github.aquerr.koth.storage.serializer.HillTypeSerializer;
 import ninja.leaping.configurate.objectmapping.serialize.TypeSerializers;
@@ -67,6 +66,7 @@ public class Koth {
 
             //Setup storage and managers first so that listeners and commands can use them later.
             registerTypeSerializers();
+            arenaManager.reloadCache();
 
             //Register commands and listeners
             registerListeners();
