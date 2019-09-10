@@ -14,15 +14,11 @@ import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
-import ninja.leaping.configurate.objectmapping.serialize.TypeSerializerCollection;
-import ninja.leaping.configurate.objectmapping.serialize.TypeSerializers;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Singleton
 public class ArenaStorage
@@ -84,6 +80,37 @@ public class ArenaStorage
     public boolean deleteArena(final String name)
     {
         return this.configNode.getNode("arenas").removeChild(name);
+    }
+
+    public Arena getArena(final String name) throws ObjectMappingException
+    {
+        final ConfigurationNode arenaNode = this.configNode.getNode("arenas", name);
+        final UUID worldUUID = arenaNode.getNode("worldUUID").getValue(TypeToken.of(UUID.class));
+        final Vector3i firstPoint = arenaNode.getValue(TypeToken.of(Vector3i.class));
+        final Vector3i secondPoint = arenaNode.getValue(TypeToken.of(Vector3i.class));
+
+        //TODO: Do we really need a Set here?
+        final Set<Hill> hills = new HashSet<>(arenaNode.getList(TypeToken.of(Hill.class)));
+        final Set<ArenaTeam> teams = new HashSet<>(arenaNode.getList(TypeToken.of(ArenaTeam.class)));
+
+        final Arena arena = new Arena(name, worldUUID, firstPoint, secondPoint, hills, teams);
+        return arena;
+    }
+
+    public List<Arena> getArenas() throws ObjectMappingException
+    {
+        final ConfigurationNode arenasNode = this.configNode.getNode("areans");
+        final Map<Object, ? extends ConfigurationNode> arenaNodes =  arenasNode.getChildrenMap();
+        final Set<Object> arenaNames = arenaNodes.keySet();
+        final List<Arena> arenas = new ArrayList<>();
+        for (final Object arenaName : arenaNames)
+        {
+            if(!(arenaName instanceof String))
+                continue;
+            final Arena arena = getArena(String.valueOf(arenaName));
+            arenas.add(arena);
+        }
+        return arenas;
     }
 
     private boolean saveChanges()

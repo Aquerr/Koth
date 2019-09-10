@@ -94,4 +94,23 @@ public class ArenaManagerImpl implements ArenaManager
         final Arena deletedArena = this.arenasCache.remove(name);
         return deletedArena != null;
     }
+
+    @Override
+    public boolean reloadCache()
+    {
+        try
+        {
+            final List<Arena> arenas = this.storageManager.getArenas();
+            for (final Arena arena : arenas)
+            {
+                this.arenasCache.put(arena.getName(), arena);
+            }
+            return true;
+        }
+        catch (final  Exception ex)
+        {
+            ex.printStackTrace();
+            return false;
+        }
+    }
 }

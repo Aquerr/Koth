@@ -6,6 +6,7 @@ import org.spongepowered.api.entity.living.player.Player;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Arena
 {
@@ -15,19 +16,26 @@ public class Arena
     private UUID worldUUID;
 
     private int maxPlayers = 10;
-    private Set<UUID> players = new HashSet<>();
-    private Set<Hill> hills = new HashSet<>();
-    private Set<ArenaTeam> teams = new HashSet<>();
+//    private final Set<UUID> players;
+    private final Set<Hill> hills;
+    private final Set<ArenaTeam> teams;
 
     private boolean isRoundBased = false;
     private Duration roundTime = Duration.of(3, ChronoUnit.MINUTES);
 
     public Arena(final String name, final UUID worldUUID, final Vector3i firstPoint, final Vector3i secondPoint)
     {
+        this(name, worldUUID, firstPoint, secondPoint, new HashSet<>(), new HashSet<>());
+    }
+
+    public Arena(final String name, final UUID worldUUID, final Vector3i firstPoint, final Vector3i secondPoint, final Set<Hill> hills, final Set<ArenaTeam> teams)
+    {
         this.name = name;
         this.worldUUID = worldUUID;
         this.firstPoint = firstPoint;
         this.secondPoint = secondPoint;
+        this.hills = hills;
+        this.teams = teams;
     }
 
     public String getName()
@@ -67,7 +75,7 @@ public class Arena
 
     public Set<UUID> getPlayers()
     {
-        return this.players;
+        return this.teams.stream().map(ArenaTeam::getPlayers).collect(HashSet::new, AbstractCollection::addAll, AbstractCollection::addAll);
     }
 
     public boolean isRoundBased()
@@ -85,15 +93,15 @@ public class Arena
         return this.roundTime;
     }
 
-    public boolean addPlayer(final Player player)
-    {
-        return this.players.add(player.getUniqueId());
-    }
+//    public boolean addPlayer(final Player player)
+//    {
+//        return this.players.add(player.getUniqueId());
+//    }
 
-    public boolean removePlayer(final Player player)
-    {
-        return this.players.remove(player.getUniqueId());
-    }
+//    public boolean removePlayer(final Player player)
+//    {
+//        return this.players.remove(player.getUniqueId());
+//    }
 
     public boolean addHill(final Hill hill)
     {

@@ -44,4 +44,10 @@ public interface ArenaManager
      * @return <tt>true</tt> if operation succeed of <tt>false</tt> if not
      */
     boolean deleteArena(String name);
+
+    /**
+     * Loads all arenas from the storage into the cache.
+     * @return
+     */
+    boolean reloadCache();
 }
