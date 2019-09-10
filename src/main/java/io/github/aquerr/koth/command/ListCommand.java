@@ -34,18 +34,29 @@ public class ListCommand extends AbstractCommand
         for (final Arena arena : arenas)
         {
             //TODO: Color arena properties and their values.
-            final Text arenaDescription = Text.of("Name: " + arena.getName() + "\n"
-                    + "World: " + Sponge.getServer().getWorld(arena.getWorldUniqueId()).get().getName() + "\n"
-                    + "First Corner: " + arena.getFirstPoint() + "\n"
-                    + "Second Corner: " + arena.getSecondPoint() + "\n"
-                    + "Max players: " + arena.getMaxPlayers() + "\n"
-                    + "Hills: " + arena.getHills().size() + "\n"
-                    + "Teams: " + arena.getTeams().size() + "\n"
-                    + "Round time: " + arena.getRoundTime().getSeconds() + "\n");
+            final Text.Builder arenaDescBuilder = Text.builder();
+
+            arenaDescBuilder.append(Text.of(TextColors.BLUE, "Name: ", TextColors.GOLD, arena.getName() + "\n"));
+            arenaDescBuilder.append(Text.of(TextColors.BLUE, "World: ", TextColors.GOLD, Sponge.getServer().getWorld(arena.getWorldUniqueId()).get().getName() + "\n"));
+            arenaDescBuilder.append(Text.of(TextColors.BLUE, "First Corner: ", TextColors.GOLD, arena.getFirstPoint() + "\n"));
+            arenaDescBuilder.append(Text.of(TextColors.BLUE, "Second Corner: ", TextColors.GOLD, arena.getSecondPoint() + "\n"));
+            arenaDescBuilder.append(Text.of(TextColors.BLUE, "Max players: ", TextColors.GOLD, arena.getMaxPlayers() + "\n"));
+            arenaDescBuilder.append(Text.of(TextColors.BLUE, "Hills: ", TextColors.GOLD, arena.getHills().size() + "\n"));
+            arenaDescBuilder.append(Text.of(TextColors.BLUE, "Teams: ", TextColors.GOLD, arena.getTeams().size() + "\n"));
+            arenaDescBuilder.append(Text.of(TextColors.BLUE, "Round time: ", TextColors.GOLD, arena.getRoundTime().getSeconds() + "\n"));
+
+//            final Text arenaDescription = Text.of("Name: " + arena.getName() + "\n"
+//                    + "World: " + Sponge.getServer().getWorld(arena.getWorldUniqueId()).get().getName() + "\n"
+//                    + "First Corner: " + arena.getFirstPoint() + "\n"
+//                    + "Second Corner: " + arena.getSecondPoint() + "\n"
+//                    + "Max players: " + arena.getMaxPlayers() + "\n"
+//                    + "Hills: " + arena.getHills().size() + "\n"
+//                    + "Teams: " + arena.getTeams().size() + "\n"
+//                    + "Round time: " + arena.getRoundTime().getSeconds() + "\n");
             final Text arenaText = Text.builder()
                     .append(Text.of(TextColors.BLUE, "- " + arena.getPlayers().size() + "/" + arena.getMaxPlayers()))
                     .append(Text.of(TextColors.GOLD, " " + arena.getName()))
-                    .onHover(TextActions.showText(arenaDescription))
+                    .onHover(TextActions.showText(arenaDescBuilder.build()))
                     .build();
             helpList.add(arenaText);
         }

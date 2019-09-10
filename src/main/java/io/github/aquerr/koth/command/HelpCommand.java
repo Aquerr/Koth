@@ -33,8 +33,7 @@ public class HelpCommand extends AbstractCommand
             final CommandCallable commandCallable = subcommands.get(aliases);
             if(source instanceof Player)
             {
-                Player player = (Player)source;
-
+                final Player player = (Player)source;
                 if(!commandCallable.testPermission(player))
                 {
                     continue;

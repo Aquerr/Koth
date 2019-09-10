@@ -8,18 +8,11 @@ public class Hill
 {
     private final Vector3i firstPoint;
     private final Vector3i secondPoint;
-    private final UUID worldUUID;
 
-    public Hill(final UUID worldUUID, final Vector3i firstPoint, final Vector3i secondPoint)
+    public Hill(final Vector3i firstPoint, final Vector3i secondPoint)
     {
-        this.worldUUID = worldUUID;
         this.firstPoint = firstPoint;
         this.secondPoint = secondPoint;
-    }
-
-    public UUID getWorldUUID()
-    {
-        return this.worldUUID;
     }
 
     public Vector3i getFirstPoint()

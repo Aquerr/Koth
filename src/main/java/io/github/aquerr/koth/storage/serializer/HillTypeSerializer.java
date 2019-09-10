@@ -9,8 +9,6 @@ import ninja.leaping.configurate.objectmapping.serialize.TypeSerializer;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-import java.util.UUID;
-
 public class HillTypeSerializer implements TypeSerializer<Hill>
 {
     @Nullable
@@ -19,8 +17,7 @@ public class HillTypeSerializer implements TypeSerializer<Hill>
     {
         final Vector3i firstPoint = value.getNode("firstPoint").getValue(TypeToken.of(Vector3i.class));
         final Vector3i secondPoint = value.getNode("secondPoint").getValue(TypeToken.of(Vector3i.class));
-        final UUID worldUUID = value.getNode("worldUUID").getValue(TypeToken.of(UUID.class));
-        return new Hill(worldUUID, firstPoint, secondPoint);
+        return new Hill(firstPoint, secondPoint);
     }
 
     @Override
@@ -28,6 +25,5 @@ public class HillTypeSerializer implements TypeSerializer<Hill>
     {
         value.getNode("firstPoint").setValue(TypeToken.of(Vector3i.class), obj.getFirstPoint());
         value.getNode("secondPoint").setValue(TypeToken.of(Vector3i.class), obj.getSecondPoint());
-        value.getNode("worldUUID").setValue(TypeToken.of(UUID.class), obj.getWorldUUID());
     }
 }

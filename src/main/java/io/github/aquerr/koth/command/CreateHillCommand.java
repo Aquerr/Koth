@@ -36,6 +36,9 @@ public class CreateHillCommand extends AbstractCommand
         if(arena == null)
             throw new CommandException(Text.of(PluginInfo.PLUGIN_ERROR, TextColors.RED, "You must be in arena editing mode to do this."));
 
+        if (!arena.getWorldUniqueId().equals(world.getUniqueId()))
+            throw new CommandException(Text.of(PluginInfo.PLUGIN_ERROR, TextColors.RED, "Hills must exists in the same world where arena exists!"));
+
         if (!super.getPlugin().getPlayerSelectionPoints().containsKey(player.getUniqueId()))
             throw new CommandException(Text.of(PluginInfo.PLUGIN_ERROR, TextColors.RED, "You must select two points in the world first before creating an arena."));
 
@@ -49,11 +52,12 @@ public class CreateHillCommand extends AbstractCommand
                 throw new CommandException(Text.of(PluginInfo.PLUGIN_ERROR, TextColors.RED, "Hill cannot be placed on top another hill!"));
         }
 
-        final Hill hill = new Hill(world.getUniqueId(), selectionPoints.getFirstPoint(), selectionPoints.getSecondPoint());
+        final Hill hill = new Hill(selectionPoints.getFirstPoint(), selectionPoints.getSecondPoint());
         arena.addHill(hill);
         final boolean didSucceed = super.getPlugin().getArenaManager().updateArena(arena);
         if (!didSucceed)
             throw new CommandException(Text.of(PluginInfo.PLUGIN_ERROR, TextColors.RED, "Something went wrong with saving the arena..."));
+        player.sendMessage(Text.of(PluginInfo.PLUGIN_PREFIX, TextColors.GOLD, "Added hill to the arena!"));
 
         return CommandResult.success();
     }
