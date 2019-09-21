@@ -166,11 +166,19 @@ public class Koth {
             .executor(new CreateHillCommand(this))
             .build());
 
+        //Version Command
+        this.subcommands.put(Collections.singletonList("version"), CommandSpec.builder()
+                .description(Text.of("View version of the plugin"))
+                .permission(PluginPermissions.VERSION_COMMAND)
+                .executor(new VersionCommand(this))
+                .build());
+
         //KOTH Commands
         final CommandSpec kothCommand = CommandSpec.builder()
             .description(Text.of("Shows all commands in KOTH plugin"))
             .children(this.subcommands)
             .build();
+
 
         this.commandManager.register(this, kothCommand, "koth");
     }

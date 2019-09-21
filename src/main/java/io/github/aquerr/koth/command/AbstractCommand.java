@@ -25,7 +25,7 @@ public abstract class AbstractCommand implements CommandExecutor
     }
 
     @Override
-    public abstract CommandResult execute(CommandSource source, CommandContext args) throws CommandException;
+    public abstract CommandResult execute(final CommandSource source, final CommandContext args) throws CommandException;
 
     public Koth getPlugin()
     {
