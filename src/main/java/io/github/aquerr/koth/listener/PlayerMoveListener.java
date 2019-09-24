@@ -44,11 +44,13 @@ public class PlayerMoveListener extends AbstractListener
             //Enters
             if(!arena.intersects(fromBlockPosition) && arena.intersects(toBlockPosition))
             {
-                player.sendMessage(Text.of(PluginInfo.PLUGIN_PREFIX, "You entered arena " + arena.getName() + "!"));
+                player.sendMessage(Text.of(PluginInfo.PLUGIN_PREFIX, "You can't enter the arena " + arena.getName() + "!"));
+                event.setCancelled(true);
             }
             else if(arena.intersects(fromBlockPosition) && !arena.intersects(toBlockPosition))
             {
-                player.sendMessage(Text.of(PluginInfo.PLUGIN_PREFIX, "You left arena " + arena.getName() + "!"));
+                player.sendMessage(Text.of(PluginInfo.PLUGIN_PREFIX, "You can't leave the arena " + arena.getName() + "!"));
+                event.setCancelled(true);
             }
         }
     }
