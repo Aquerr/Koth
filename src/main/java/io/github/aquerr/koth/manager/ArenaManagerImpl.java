@@ -68,7 +68,7 @@ public class ArenaManagerImpl implements ArenaManager
     @Override
     public boolean updateArena(final Arena arena)
     {
-        //TODO: Should we preform additional update operations here or will commands classes do everthing on their own?
+        //TODO: Should we preform additional update operations here or will commands classes do everything on their own?
 
         //Delete arena from the storage in a separate thread.
         CompletableFuture.runAsync(() -> {

@@ -86,12 +86,12 @@ public class ArenaStorage
     {
         final ConfigurationNode arenaNode = this.configNode.getNode("arenas", name);
         final UUID worldUUID = arenaNode.getNode("worldUUID").getValue(TypeToken.of(UUID.class));
-        final Vector3i firstPoint = arenaNode.getValue(TypeToken.of(Vector3i.class));
-        final Vector3i secondPoint = arenaNode.getValue(TypeToken.of(Vector3i.class));
+        final Vector3i firstPoint = arenaNode.getNode("firstPoint").getValue(TypeToken.of(Vector3i.class));
+        final Vector3i secondPoint = arenaNode.getNode("secondPoint").getValue(TypeToken.of(Vector3i.class));
 
         //TODO: Do we really need a Set here?
-        final Set<Hill> hills = new HashSet<>(arenaNode.getList(TypeToken.of(Hill.class)));
-        final Set<ArenaTeam> teams = new HashSet<>(arenaNode.getList(TypeToken.of(ArenaTeam.class)));
+        final Set<Hill> hills = new HashSet<>(arenaNode.getNode("hills").getList(TypeToken.of(Hill.class)));
+        final Set<ArenaTeam> teams = new HashSet<>(arenaNode.getNode("teams").getList(TypeToken.of(ArenaTeam.class)));
 
         final Arena arena = new Arena(name, worldUUID, firstPoint, secondPoint, hills, teams);
         return arena;
@@ -99,7 +99,7 @@ public class ArenaStorage
 
     public List<Arena> getArenas() throws ObjectMappingException
     {
-        final ConfigurationNode arenasNode = this.configNode.getNode("areans");
+        final ConfigurationNode arenasNode = this.configNode.getNode("arenas");
         final Map<Object, ? extends ConfigurationNode> arenaNodes =  arenasNode.getChildrenMap();
         final Set<Object> arenaNames = arenaNodes.keySet();
         final List<Arena> arenas = new ArrayList<>();

@@ -5,7 +5,6 @@ import com.google.inject.Singleton;
 import io.github.aquerr.koth.Koth;
 import io.github.aquerr.koth.entity.Arena;
 import io.github.aquerr.koth.entity.ArenaClass;
-import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 
 import java.io.IOException;
