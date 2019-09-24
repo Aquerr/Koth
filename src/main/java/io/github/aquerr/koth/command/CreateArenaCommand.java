@@ -52,7 +52,7 @@ public class CreateArenaCommand extends AbstractCommand
         super.getPlugin().getPlayersCreatingArena().put(player.getUniqueId(), arena);
         super.getPlugin().getPlayerSelectionPoints().remove(player.getUniqueId()); //TODO: Shouldn't we remove player from map even if adding of arena fails?
         player.sendMessage(Text.of(PluginInfo.PLUGIN_PREFIX, "The arena has been created!"));
-        player.sendMessage(Text.of(PluginInfo.PLUGIN_PREFIX, "Now it is time to set up hills in the arena. Select two points with your wand and type ", TextColors.GOLD, "/f createhill", TextColors.WHITE, " to create a hill.\n" +
+        player.sendMessage(Text.of(PluginInfo.PLUGIN_PREFIX, "Now it is time to set up hills in the arena. Select two points with your wand and type ", TextColors.GOLD, "/koth createhill", TextColors.WHITE, " to create a hill.\n" +
                 "You can create as many hills as you want."));
         return CommandResult.success();
     }
