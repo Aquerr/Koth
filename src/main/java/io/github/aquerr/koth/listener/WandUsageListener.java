@@ -31,7 +31,12 @@ public class WandUsageListener extends AbstractListener
         if(event.getTargetBlock() == BlockSnapshot.NONE)
             return;
 
-        if(!player.getItemInHand(HandTypes.MAIN_HAND).isPresent() || !player.getItemInHand(HandTypes.MAIN_HAND).get().get(Keys.DISPLAY_NAME).get().toPlain().equals("Koth Wand"))
+        if(!player.getItemInHand(HandTypes.MAIN_HAND).isPresent())
+            return;
+
+        final ItemStack itemInHand = player.getItemInHand(HandTypes.MAIN_HAND).get();
+
+        if(!itemInHand.get(Keys.DISPLAY_NAME).isPresent() || !player.getItemInHand(HandTypes.MAIN_HAND).get().get(Keys.DISPLAY_NAME).get().toPlain().equals("Koth Wand"))
             return;
 
         SelectionPoints selectionPoints = super.getPlugin().getPlayerSelectionPoints().get(player.getUniqueId());
@@ -57,7 +62,12 @@ public class WandUsageListener extends AbstractListener
         if(event.getTargetBlock() == BlockSnapshot.NONE)
             return;
 
-        if(!player.getItemInHand(HandTypes.MAIN_HAND).isPresent() || !player.getItemInHand(HandTypes.MAIN_HAND).get().get(Keys.DISPLAY_NAME).get().toPlain().equals("Koth Wand"))
+        if(!player.getItemInHand(HandTypes.MAIN_HAND).isPresent())
+            return;
+
+        final ItemStack itemInHand = player.getItemInHand(HandTypes.MAIN_HAND).get();
+
+        if(!itemInHand.get(Keys.DISPLAY_NAME).isPresent() || !player.getItemInHand(HandTypes.MAIN_HAND).get().get(Keys.DISPLAY_NAME).get().toPlain().equals("Koth Wand"))
             return;
 
         SelectionPoints selectionPoints = super.getPlugin().getPlayerSelectionPoints().get(player.getUniqueId());
