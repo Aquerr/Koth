@@ -1,10 +1,12 @@
 package io.github.aquerr.koth.manager;
 
+import com.google.inject.ImplementedBy;
 import io.github.aquerr.koth.entity.ArenaClass;
 
 import java.util.Map;
 import java.util.Optional;
 
+@ImplementedBy(ArenaClassManagerImpl.class)
 public interface ArenaClassManager
 {
 
@@ -12,11 +14,11 @@ public interface ArenaClassManager
 
 	Optional<ArenaClass> getArenaClass(final String name);
 
-	boolean addArena(final ArenaClass arenaClass);
+	boolean addArenaClass(final ArenaClass arenaClass);
 
-	boolean updateArena(final ArenaClass arenaClass);
+	boolean updateArenaClass(final ArenaClass arenaClass);
 
-	boolean deleteArena(final String name);
+	boolean deleteArenaClass(final String name);
 
 	boolean reloadCache();
 }

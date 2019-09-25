@@ -1,10 +1,8 @@
 package io.github.aquerr.koth.manager;
 
 import com.google.inject.ImplementedBy;
-import com.google.inject.Singleton;
 import io.github.aquerr.koth.entity.Arena;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 

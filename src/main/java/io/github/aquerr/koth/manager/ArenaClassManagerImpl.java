@@ -1,6 +1,7 @@
 package io.github.aquerr.koth.manager;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import io.github.aquerr.koth.PluginInfo;
 import io.github.aquerr.koth.entity.ArenaClass;
 import io.github.aquerr.koth.storage.StorageManager;
@@ -15,6 +16,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
+@Singleton
 public class ArenaClassManagerImpl implements ArenaClassManager
 {
 	private final Map<String, ArenaClass> arenasCache = new HashMap<>(1);
@@ -43,7 +45,7 @@ public class ArenaClassManagerImpl implements ArenaClassManager
 	}
 
 	@Override
-	public boolean addArena(final ArenaClass arena)
+	public boolean addArenaClass(final ArenaClass arena)
 	{
 		//Add arena to storage by using a separate thread.
 		//We do not want to use main thread for storage.
@@ -67,7 +69,7 @@ public class ArenaClassManagerImpl implements ArenaClassManager
 	}
 
 	@Override
-	public boolean updateArena(final ArenaClass arena)
+	public boolean updateArenaClass(final ArenaClass arena)
 	{
 		//TODO: Should we preform additional update operations here or will commands classes do everything on their own?
 
@@ -83,7 +85,7 @@ public class ArenaClassManagerImpl implements ArenaClassManager
 	}
 
 	@Override
-	public boolean deleteArena(final String name)
+	public boolean deleteArenaClass(final String name)
 	{
 		//Delete arena from the storage in a separate thread.
 		CompletableFuture.runAsync(() -> {

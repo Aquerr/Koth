@@ -10,6 +10,7 @@ import io.github.aquerr.koth.entity.SelectionPoints;
 import io.github.aquerr.koth.listener.PlayerLeaveListener;
 import io.github.aquerr.koth.listener.PlayerMoveListener;
 import io.github.aquerr.koth.listener.WandUsageListener;
+import io.github.aquerr.koth.manager.ArenaClassManager;
 import io.github.aquerr.koth.manager.ArenaManager;
 import io.github.aquerr.koth.storage.serializer.ArenaTeamTypeSerializer;
 import io.github.aquerr.koth.storage.serializer.HillTypeSerializer;
@@ -50,6 +51,9 @@ public class Koth {
     private ArenaManager arenaManager;
 
     @Inject
+    private ArenaClassManager arenaClassManager;
+
+    @Inject
     private Koth(final CommandManager commandManager, final EventManager eventManager, @ConfigDir(sharedRoot = false) final Path configDir)
     {
         this.commandManager = commandManager;
@@ -67,6 +71,7 @@ public class Koth {
             //Setup storage and managers first so that listeners and commands can use them later.
             registerTypeSerializers();
             arenaManager.reloadCache();
+            arenaClassManager.reloadCache();
 
             //Register commands and listeners
             registerListeners();
@@ -91,6 +96,11 @@ public class Koth {
     public ArenaManager getArenaManager()
     {
         return this.arenaManager;
+    }
+
+    public ArenaClassManager getArenaClassManager()
+    {
+        return this.arenaClassManager;
     }
 
     public Map<UUID, SelectionPoints> getPlayerSelectionPoints()
@@ -143,6 +153,14 @@ public class Koth {
             .permission(PluginPermissions.DESELECT_COMMAND)
             .executor(new DeselectCommand(this))
             .build());
+
+        //Create Arena Class Command
+        this.subcommands.put(Collections.singletonList("createclass"), CommandSpec.builder()
+                .description(Text.of("Creates an arena class"))
+                .permission(PluginPermissions.CREATE_ARENA_CLASS_COMMAND)
+                .arguments(GenericArguments.onlyOne(GenericArguments.string(Text.of("name"))))
+                .executor(new CreateArenaClassCommand(this))
+                .build());
 
         //Create Arena Command
         this.subcommands.put(Collections.singletonList("createarena"), CommandSpec.builder()
