@@ -7,6 +7,7 @@ import com.google.inject.Singleton;
 import io.github.aquerr.koth.Koth;
 import io.github.aquerr.koth.entity.Arena;
 import io.github.aquerr.koth.entity.ArenaTeam;
+import io.github.aquerr.koth.entity.ArenaType;
 import io.github.aquerr.koth.entity.Hill;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.ConfigurationOptions;
@@ -68,6 +69,7 @@ public class ArenaStorage
         arenaNode.getNode("maxPlayers").setValue(arena.getMaxPlayers());
         arenaNode.getNode("isRoundBased").setValue(arena.isRoundBased());
         arenaNode.getNode("roundTime").setValue(arena.getRoundTime().getSeconds());
+        arenaNode.getNode("type").setValue(TypeToken.of(ArenaType.class), arena.getType());
 
         return saveChanges();
     }
@@ -79,7 +81,8 @@ public class ArenaStorage
 
     public boolean deleteArena(final String name)
     {
-        return this.configNode.getNode("arenas").removeChild(name);
+        this.configNode.getNode("arenas").removeChild(name);
+        return saveChanges();
     }
 
     public Arena getArena(final String name) throws ObjectMappingException
@@ -93,7 +96,8 @@ public class ArenaStorage
         final Set<Hill> hills = new HashSet<>(arenaNode.getNode("hills").getList(TypeToken.of(Hill.class)));
         final Set<ArenaTeam> teams = new HashSet<>(arenaNode.getNode("teams").getList(TypeToken.of(ArenaTeam.class)));
 
-        final Arena arena = new Arena(name, worldUUID, firstPoint, secondPoint, hills, teams);
+        final ArenaType type = arenaNode.getNode("type").getValue(TypeToken.of(ArenaType.class));
+        final Arena arena = new Arena(name, type , worldUUID, firstPoint, secondPoint, hills, teams);
         return arena;
     }
 

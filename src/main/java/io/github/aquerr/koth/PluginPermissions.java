@@ -8,6 +8,7 @@ public class PluginPermissions {
     public static final String DESELECT_COMMAND = "koth.admin.command.deselect";
 
     public static final String CREATE_ARENA_COMMAND = "koth.admin.command.createarena";
+    public static final String DELETE_ARENA_COMMAND = "koth.admin.command.deletearena";
     public static final String CREATE_HILL_COMMAND = "koth.admin.command.createhill";
 
     public static final String CREATE_ARENA_CLASS_COMMAND = "koth.admin.command.createclass";

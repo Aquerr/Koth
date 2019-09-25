@@ -3,10 +3,7 @@ package io.github.aquerr.koth;
 import com.google.common.reflect.TypeToken;
 import com.google.inject.Inject;
 import io.github.aquerr.koth.command.*;
-import io.github.aquerr.koth.entity.Arena;
-import io.github.aquerr.koth.entity.ArenaTeam;
-import io.github.aquerr.koth.entity.Hill;
-import io.github.aquerr.koth.entity.SelectionPoints;
+import io.github.aquerr.koth.entity.*;
 import io.github.aquerr.koth.listener.PlayerLeaveListener;
 import io.github.aquerr.koth.listener.PlayerMoveListener;
 import io.github.aquerr.koth.listener.WandUsageListener;
@@ -162,13 +159,22 @@ public class Koth {
                 .executor(new CreateArenaClassCommand(this))
                 .build());
 
-        //Create Arena Command
-        this.subcommands.put(Collections.singletonList("createarena"), CommandSpec.builder()
-            .description(Text.of("Creates an arena"))
-            .permission(PluginPermissions.CREATE_ARENA_COMMAND)
-            .arguments(GenericArguments.onlyOne(GenericArguments.string(Text.of("name"))))
-            .executor(new CreateArenaCommand(this))
-            .build());
+		//Create Arena Command
+		this.subcommands.put(Collections.singletonList("createarena"), CommandSpec.builder()
+				.description(Text.of("Creates an arena"))
+				.permission(PluginPermissions.CREATE_ARENA_COMMAND)
+				.arguments(GenericArguments.onlyOne(GenericArguments.string(Text.of("name"))),
+						GenericArguments.onlyOne(GenericArguments.enumValue(Text.of("type"), ArenaType.class)))
+				.executor(new CreateArenaCommand(this))
+				.build());
+
+		//Create Delete Arena
+		this.subcommands.put(Collections.singletonList("deletearena"), CommandSpec.builder()
+				.description(Text.of("Delete an arena"))
+				.permission(PluginPermissions.DELETE_ARENA_COMMAND)
+				.arguments(GenericArguments.onlyOne(GenericArguments.string(Text.of("name"))))
+				.executor(new DeleteArenaCommand(this))
+				.build());
 
         //List Arenas Command
         this.subcommands.put(Collections.singletonList("list"), CommandSpec.builder()

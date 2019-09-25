@@ -14,6 +14,7 @@ public class Arena
     private Vector3i firstPoint;
     private Vector3i secondPoint;
     private UUID worldUUID;
+    private ArenaType type;
 
     private int maxPlayers = 10;
 //    private final Set<UUID> players;
@@ -23,12 +24,12 @@ public class Arena
     private boolean isRoundBased = false;
     private Duration roundTime = Duration.of(3, ChronoUnit.MINUTES);
 
-    public Arena(final String name, final UUID worldUUID, final Vector3i firstPoint, final Vector3i secondPoint)
+    public Arena(final String name, final ArenaType type ,final UUID worldUUID, final Vector3i firstPoint, final Vector3i secondPoint)
     {
-        this(name, worldUUID, firstPoint, secondPoint, new HashSet<>(), new HashSet<>());
+        this(name, type, worldUUID, firstPoint, secondPoint, new HashSet<>(), new HashSet<>());
     }
 
-    public Arena(final String name, final UUID worldUUID, final Vector3i firstPoint, final Vector3i secondPoint, final Set<Hill> hills, final Set<ArenaTeam> teams)
+    public Arena(final String name, final ArenaType type, final UUID worldUUID, final Vector3i firstPoint, final Vector3i secondPoint, final Set<Hill> hills, final Set<ArenaTeam> teams)
     {
         this.name = name;
         this.worldUUID = worldUUID;
@@ -36,6 +37,7 @@ public class Arena
         this.secondPoint = secondPoint;
         this.hills = hills;
         this.teams = teams;
+        this.type = type;
     }
 
     public String getName()
@@ -71,6 +73,11 @@ public class Arena
     public Set<ArenaTeam> getTeams()
     {
         return this.teams;
+    }
+
+    public ArenaType getType()
+    {
+        return this.type;
     }
 
     public Set<UUID> getPlayers()

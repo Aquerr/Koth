@@ -67,7 +67,8 @@ public class ArenaClassStorage
 
     public boolean deleteArenaClass(final String name)
     {
-        return this.configNode.getNode("classes").removeChild(name);
+        this.configNode.getNode("classes").removeChild(name);
+        return saveChanges();
     }
 
     public ArenaClass getArenaClass(final String name) throws ObjectMappingException

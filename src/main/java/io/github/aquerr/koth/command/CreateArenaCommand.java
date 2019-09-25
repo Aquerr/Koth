@@ -3,6 +3,7 @@ package io.github.aquerr.koth.command;
 import io.github.aquerr.koth.Koth;
 import io.github.aquerr.koth.PluginInfo;
 import io.github.aquerr.koth.entity.Arena;
+import io.github.aquerr.koth.entity.ArenaType;
 import io.github.aquerr.koth.entity.SelectionPoints;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
@@ -24,6 +25,7 @@ public class CreateArenaCommand extends AbstractCommand
     public CommandResult execute(final CommandSource source, final CommandContext args) throws CommandException
     {
         final String arenaName = args.requireOne("name");
+        final ArenaType type = args.requireOne("type");
 
         if (!(source instanceof Player))
             throw new CommandException(Text.of(PluginInfo.PLUGIN_ERROR, TextColors.RED, "Only in-game players can use this command!"));
@@ -41,7 +43,7 @@ public class CreateArenaCommand extends AbstractCommand
         if (selectionPoints.getFirstPoint() == null || selectionPoints.getSecondPoint() == null)
             throw new CommandException(Text.of(PluginInfo.PLUGIN_ERROR, TextColors.RED, "You must select two points in the world first before creating an arena!"));
 
-        final Arena arena = new Arena(arenaName, world.getUniqueId(), selectionPoints.getFirstPoint(), selectionPoints.getSecondPoint());
+        final Arena arena = new Arena(arenaName, type, world.getUniqueId(), selectionPoints.getFirstPoint(), selectionPoints.getSecondPoint());
         final boolean didSucceed = super.getPlugin().getArenaManager().addArena(arena);
         if (!didSucceed)
         {
