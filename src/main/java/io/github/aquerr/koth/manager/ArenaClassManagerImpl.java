@@ -45,7 +45,7 @@ public class ArenaClassManagerImpl implements ArenaClassManager
 	}
 
 	@Override
-	public boolean addArenaClass(final ArenaClass arena)
+	public boolean addArenaClass(final ArenaClass arenaClass)
 	{
 		//Add arena to storage by using a separate thread.
 		//We do not want to use main thread for storage.
@@ -53,31 +53,31 @@ public class ArenaClassManagerImpl implements ArenaClassManager
 			boolean didSucceed = false;
 			try
 			{
-				didSucceed = this.storageManager.addArenaClass(arena);
+				didSucceed = this.storageManager.addArenaClass(arenaClass);
 			}
 			catch (ObjectMappingException e)
 			{
 				e.printStackTrace();
 			}
 			if (!didSucceed)
-				Sponge.getServer().getConsole().sendMessage(Text.of(PluginInfo.PLUGIN_ERROR, TextColors.RED, "Class named \"" + arena.getName() + "\" could not be saved into the storage..."));
+				Sponge.getServer().getConsole().sendMessage(Text.of(PluginInfo.PLUGIN_ERROR, TextColors.RED, "Class named \"" + arenaClass.getName() + "\" could not be saved into the storage..."));
 		});
 
 		//Add arena to global arena list (cache)
-		final ArenaClass putArena = arenasCache.put(arena.getName(), arena);
+		final ArenaClass putArena = arenasCache.put(arenaClass.getName(), arenaClass);
 		return putArena == null;
 	}
 
 	@Override
-	public boolean updateArenaClass(final ArenaClass arena)
+	public boolean updateArenaClass(final ArenaClass arenaClass)
 	{
 		//TODO: Should we preform additional update operations here or will commands classes do everything on their own?
 
 		//Delete arena from the storage in a separate thread.
 		CompletableFuture.runAsync(() -> {
-			final boolean didSucceed = this.storageManager.updateArenaClass(arena);
+			final boolean didSucceed = this.storageManager.updateArenaClass(arenaClass);
 			if (!didSucceed)
-				Sponge.getServer().getConsole().sendMessage(Text.of(PluginInfo.PLUGIN_ERROR, TextColors.RED, "Class named \"" + arena.getName() + "\" could not be updated in the storage..."));
+				Sponge.getServer().getConsole().sendMessage(Text.of(PluginInfo.PLUGIN_ERROR, TextColors.RED, "Class named \"" + arenaClass.getName() + "\" could not be updated in the storage..."));
 		});
 
 		//TODO: Hmmmm?

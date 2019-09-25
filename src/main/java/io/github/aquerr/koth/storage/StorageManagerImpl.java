@@ -116,7 +116,7 @@ public class StorageManagerImpl implements StorageManager
     @Override
     public boolean addArenaClass(final ArenaClass arenaClass) throws ObjectMappingException
     {
-        return this.addArenaClass(arenaClass);
+        return this.arenaClassStorage.addArenaClass(arenaClass);
     }
 
     @Override

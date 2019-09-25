@@ -56,7 +56,14 @@ public class ArenaClassStorage
     public boolean addArenaClass(final ArenaClass arenaClass)
     {
         final ConfigurationNode arenaClassNode = this.configNode.getNode("classes", arenaClass.getName());
-        arenaClassNode.getNode("items").setValue(arenaClass.getItems());
+        try
+        {
+            arenaClassNode.getNode("items").setValue(new TypeToken<List<ItemStack>>(){}, arenaClass.getItems());
+        }
+        catch(final ObjectMappingException e)
+        {
+            e.printStackTrace();
+        }
         return saveChanges();
     }
 
