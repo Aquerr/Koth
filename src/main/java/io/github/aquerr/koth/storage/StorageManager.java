@@ -16,7 +16,9 @@ public interface StorageManager
     boolean updateArena(final Arena arena);
     boolean deleteArena(final String name);
 
+    List<ArenaClass> getArenaClasses();
     boolean addArenaClass(final ArenaClass arenaClass) throws ObjectMappingException;
     boolean updateArenaClass(final ArenaClass arenaClass);
     boolean deleteArenaClass(final String name);
+
 }

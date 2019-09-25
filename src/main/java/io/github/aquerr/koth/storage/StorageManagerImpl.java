@@ -100,20 +100,42 @@ public class StorageManagerImpl implements StorageManager
     }
 
     @Override
+    public List<ArenaClass> getArenaClasses()
+    {
+        try
+        {
+            return this.arenaClassStorage.getArenaClasses();
+        }
+        catch(ObjectMappingException e)
+        {
+            e.printStackTrace();
+        }
+        return new ArrayList<>();
+    }
+
+    @Override
     public boolean addArenaClass(final ArenaClass arenaClass) throws ObjectMappingException
     {
-        return false;
+        return this.addArenaClass(arenaClass);
     }
 
     @Override
     public boolean updateArenaClass(final ArenaClass arenaClass)
     {
+        try
+        {
+            return this.arenaClassStorage.updateArenaClass(arenaClass);
+        }
+        catch(ObjectMappingException e)
+        {
+            e.printStackTrace();
+        }
         return false;
     }
 
     @Override
     public boolean deleteArenaClass(final String name)
     {
-        return false;
+        return this.arenaClassStorage.deleteArenaClass(name);
     }
 }
