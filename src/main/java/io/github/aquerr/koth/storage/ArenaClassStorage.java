@@ -81,7 +81,7 @@ public class ArenaClassStorage
     public ArenaClass getArenaClass(final String name) throws ObjectMappingException
     {
         final ConfigurationNode arenaClassNode = this.configNode.getNode("classes", name);
-        final List<ItemStack> items = arenaClassNode.getList(TypeToken.of(ItemStack.class));
+        final List<ItemStack> items = arenaClassNode.getNode("items").getList(new TypeToken<ItemStack>(){});
         return new ArenaClass(name, items);
     }
 
