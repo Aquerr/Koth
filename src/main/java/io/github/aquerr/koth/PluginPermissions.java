@@ -17,5 +17,7 @@ public class PluginPermissions {
     public static final String CREATE_CLASS_COMMAND = "koth.admin.command.createclass";
     public static final String DELETE_CLASS_COMMAND = "koth.admin.command.deleteclass";
 
+    public static final String EDIT_COMMAND = "koth.admin.command.edit";
+
     public static final String VERSION_COMMAND = "koth.admin.command.version";
 }

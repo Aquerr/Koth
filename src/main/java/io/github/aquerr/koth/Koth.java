@@ -215,6 +215,13 @@ public class Koth {
             .executor(new CreateLobbyCommand(this))
             .build());
 
+        //Edit Arena Command
+        this.subcommands.put(Collections.singletonList("edit"), CommandSpec.builder()
+            .description(Text.of("Turns on/off edit mode for the given arena."))
+            .permission(PluginPermissions.EDIT_COMMAND)
+            .executor(new EditArenaCommand(this))
+            .build());
+
         //Version Command
         this.subcommands.put(Collections.singletonList("version"), CommandSpec.builder()
                 .description(Text.of("View version of the plugin"))
