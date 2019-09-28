@@ -67,7 +67,7 @@ public class Arena
     public void setLobbyPoints(final Vector3i firstPoint, final Vector3i secondPoint)
     {
         this.lobbyFirstPoint = firstPoint;
-        this.secondPoint = secondPoint;
+        this.lobbySecondPoint = secondPoint;
     }
 
     public Vector3i getLobbyFirstPoint()
@@ -182,6 +182,45 @@ public class Arena
             intersectZ = true;
         }
         else if (this.firstPoint.getZ() >= this.secondPoint.getZ() && (position.getZ() <= this.firstPoint.getZ() && position.getZ() >= this.secondPoint.getZ()))
+        {
+            intersectZ = true;
+        }
+
+        return intersectX && intersectY && intersectZ;
+    }
+
+    public boolean intersectsWithLobby(final Vector3i position)
+    {
+        boolean intersectX = false;
+        boolean intersectY = false;
+        boolean intersectZ = false;
+
+        //Check X
+        if (this.lobbyFirstPoint.getX() <= this.lobbySecondPoint.getX() && (position.getX() <= this.lobbySecondPoint.getX() && position.getX() >= this.lobbyFirstPoint.getX()))
+        {
+            intersectX = true;
+        }
+        else if (this.lobbyFirstPoint.getX() >= this.lobbySecondPoint.getX() && (position.getX() <= this.lobbyFirstPoint.getX() && position.getX() >= this.lobbySecondPoint.getX()))
+        {
+            intersectX = true;
+        }
+
+        //Check Y
+        if (this.lobbyFirstPoint.getY() < this.lobbySecondPoint.getY() && (position.getY() <= this.lobbySecondPoint.getY() && position.getY() >= this.lobbyFirstPoint.getY()))
+        {
+            intersectY = true;
+        }
+        else if (this.lobbyFirstPoint.getY() >= this.lobbySecondPoint.getY() && (position.getY() <= this.lobbyFirstPoint.getY() && position.getY() >= this.lobbySecondPoint.getY()))
+        {
+            intersectY = true;
+        }
+
+        //Check Z
+        if (this.lobbyFirstPoint.getZ() <= this.lobbySecondPoint.getZ() && (position.getZ() <= this.lobbySecondPoint.getZ() && position.getZ() >= this.lobbyFirstPoint.getZ()))
+        {
+            intersectZ = true;
+        }
+        else if (this.lobbyFirstPoint.getZ() >= this.lobbySecondPoint.getZ() && (position.getZ() <= this.lobbyFirstPoint.getZ() && position.getZ() >= this.lobbySecondPoint.getZ()))
         {
             intersectZ = true;
         }
