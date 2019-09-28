@@ -56,8 +56,7 @@ public class EntitySpawnListener extends AbstractListener
 
 	private boolean canSpawnPlayer(final Player player)
 	{
-		player.sendMessage(Text.of(PluginInfo.PLUGIN_PREFIX, TextColors.GREEN, "Hello! You have just spawned!"));
-		Sponge.getServer().getBroadcastChannel().send(Text.of(PluginInfo.PLUGIN_PREFIX, TextColors.GREEN, "A " + player.getType().getName() + " tried to spawn at: " + player.getLocation().getBlockPosition()));
+		//TODO: Add more here if needed.
 		return true;
 	}
 
@@ -68,12 +67,10 @@ public class EntitySpawnListener extends AbstractListener
 			final Location<World> entityLocation = entity.getLocation();
 			if(arena.intersects(entityLocation.getBlockPosition()))
 			{
-				Sponge.getServer().getBroadcastChannel().send(Text.of(PluginInfo.PLUGIN_PREFIX, TextColors.GREEN, "A " + entity.getType().getName() + " tried to spawn at: " + entity.getLocation().getBlockPosition()));
 				return false;
 			}
 			else if(arena.intersectsWithLobby(entityLocation.getBlockPosition()))
 			{
-				Sponge.getServer().getBroadcastChannel().send(Text.of(PluginInfo.PLUGIN_PREFIX, TextColors.GREEN, "A " + entity.getType().getName() + " tried to spawn at: " + entity.getLocation().getBlockPosition()));
 				return false;
 			}
 		}
