@@ -191,6 +191,13 @@ public class Koth {
             .executor(new CreateHillCommand(this))
             .build());
 
+        //Set Lobby Command
+        this.subcommands.put(Collections.singletonList("createlobby"), CommandSpec.builder()
+            .description(Text.of("Creates arena lobby with selected selection points."))
+            .permission(PluginPermissions.CREATE_LOBBY_COMMAND)
+            .executor(new CreateLobbyCommand(this))
+            .build());
+
         //Version Command
         this.subcommands.put(Collections.singletonList("version"), CommandSpec.builder()
                 .description(Text.of("View version of the plugin"))

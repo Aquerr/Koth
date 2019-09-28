@@ -17,24 +17,28 @@ public class Arena
     private ArenaType type;
 
     private int maxPlayers = 10;
-//    private final Set<UUID> players;
     private final Set<Hill> hills;
     private final Set<ArenaTeam> teams;
 
     private boolean isRoundBased = false;
     private Duration roundTime = Duration.of(3, ChronoUnit.MINUTES);
 
+    private Vector3i lobbyFirstPoint;
+    private Vector3i lobbySecondPoint;
+
     public Arena(final String name, final ArenaType type ,final UUID worldUUID, final Vector3i firstPoint, final Vector3i secondPoint)
     {
-        this(name, type, worldUUID, firstPoint, secondPoint, new HashSet<>(), new HashSet<>());
+        this(name, type, worldUUID, firstPoint, secondPoint, Vector3i.ZERO, Vector3i.ZERO, new HashSet<>(), new HashSet<>());
     }
 
-    public Arena(final String name, final ArenaType type, final UUID worldUUID, final Vector3i firstPoint, final Vector3i secondPoint, final Set<Hill> hills, final Set<ArenaTeam> teams)
+    public Arena(final String name, final ArenaType type, final UUID worldUUID, final Vector3i firstPoint, final Vector3i secondPoint, final Vector3i lobbyFirstPoint, final Vector3i lobbySecondPoint, final Set<Hill> hills, final Set<ArenaTeam> teams)
     {
         this.name = name;
         this.worldUUID = worldUUID;
         this.firstPoint = firstPoint;
         this.secondPoint = secondPoint;
+        this.lobbyFirstPoint = lobbyFirstPoint;
+        this.lobbySecondPoint = lobbySecondPoint;
         this.hills = hills;
         this.teams = teams;
         this.type = type;
@@ -58,6 +62,22 @@ public class Arena
     public UUID getWorldUniqueId()
     {
         return this.worldUUID;
+    }
+
+    public void setLobbyPoints(final Vector3i firstPoint, final Vector3i secondPoint)
+    {
+        this.lobbyFirstPoint = firstPoint;
+        this.secondPoint = secondPoint;
+    }
+
+    public Vector3i getLobbyFirstPoint()
+    {
+        return this.lobbyFirstPoint;
+    }
+
+    public Vector3i getLobbySecondPoint()
+    {
+        return this.lobbySecondPoint;
     }
 
     public int getMaxPlayers()
