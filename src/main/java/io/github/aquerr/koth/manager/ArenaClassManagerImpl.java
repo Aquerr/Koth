@@ -30,7 +30,7 @@ public class ArenaClassManagerImpl implements ArenaClassManager
 	}
 
 	@Override
-	public Map<String, ArenaClass> gerArenaClasses()
+	public Map<String, ArenaClass> getArenaClasses()
 	{
 		return this.arenasCache;
 	}

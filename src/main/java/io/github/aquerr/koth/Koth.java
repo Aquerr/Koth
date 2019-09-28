@@ -154,10 +154,25 @@ public class Koth {
         //Create Arena Class Command
         this.subcommands.put(Collections.singletonList("createclass"), CommandSpec.builder()
                 .description(Text.of("Creates an arena class"))
-                .permission(PluginPermissions.CREATE_ARENA_CLASS_COMMAND)
+                .permission(PluginPermissions.CREATE_CLASS_COMMAND)
                 .arguments(GenericArguments.onlyOne(GenericArguments.string(Text.of("name"))))
                 .executor(new CreateArenaClassCommand(this))
                 .build());
+
+        //Delete Arena Class Command
+        this.subcommands.put(Collections.singletonList("deleteclass"), CommandSpec.builder()
+            .description(Text.of("Deletes a specified class."))
+            .permission(PluginPermissions.DELETE_CLASS_COMMAND)
+            .arguments(GenericArguments.onlyOne(GenericArguments.string(Text.of("name"))))
+            .executor(new DeleteArenaClassCommand(this))
+            .build());
+
+        //List Arena Classes Command
+        this.subcommands.put(Collections.singletonList("classes"), CommandSpec.builder()
+            .description(Text.of("List all classes registered on the server."))
+            .permission(PluginPermissions.LIST_CLASSES_COMMAND)
+            .executor(new ListArenaClassesCommand(this))
+            .build());
 
 		//Create Arena Command
 		this.subcommands.put(Collections.singletonList("createarena"), CommandSpec.builder()

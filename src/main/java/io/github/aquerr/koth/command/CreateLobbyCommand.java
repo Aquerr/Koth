@@ -49,6 +49,8 @@ public class CreateLobbyCommand extends AbstractCommand
 			throw new CommandException(Text.of(PluginInfo.PLUGIN_ERROR, TextColors.RED, "Something went wrong with saving the arena..."));
 		super.getPlugin().getPlayerSelectionPoints().remove(player.getUniqueId());
 		player.sendMessage(Text.of(PluginInfo.PLUGIN_PREFIX, TextColors.GOLD, "Lobby has been added to the arena!"));
+		player.sendMessage(Text.of(PluginInfo.PLUGIN_PREFIX, "If you are done with the lobby. You can now setup hills on the arena. Select two points with your wand and type ", TextColors.GOLD, "/koth createhill <name>", TextColors.WHITE, " to create a hill.\n" +
+				"You can create as many hill as you want."));
 		return CommandResult.success();
 	}
 }

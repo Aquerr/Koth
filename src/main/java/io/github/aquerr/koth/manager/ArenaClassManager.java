@@ -10,7 +10,7 @@ import java.util.Optional;
 public interface ArenaClassManager
 {
 
-	Map<String, ArenaClass> gerArenaClasses();
+	Map<String, ArenaClass> getArenaClasses();
 
 	Optional<ArenaClass> getArenaClass(final String name);
 
