@@ -187,6 +187,7 @@ public class Koth {
         this.subcommands.put(Collections.singletonList("createhill"), CommandSpec.builder()
             .description(Text.of("Creates a hill in arena"))
             .permission(PluginPermissions.CREATE_HILL_COMMAND)
+            .arguments(GenericArguments.onlyOne(GenericArguments.string(Text.of("name"))))
             .executor(new CreateHillCommand(this))
             .build());
 

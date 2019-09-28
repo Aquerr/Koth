@@ -24,6 +24,8 @@ public class CreateHillCommand extends AbstractCommand
     @Override
     public CommandResult execute(final CommandSource source, final CommandContext args) throws CommandException
     {
+        final String name = args.requireOne(Text.of("name"));
+
         if (!(source instanceof Player))
             throw new CommandException(Text.of(PluginInfo.PLUGIN_ERROR, TextColors.RED, "Only in-game players can use this command!"));
 
@@ -35,6 +37,9 @@ public class CreateHillCommand extends AbstractCommand
 
         if(arena == null)
             throw new CommandException(Text.of(PluginInfo.PLUGIN_ERROR, TextColors.RED, "You must be in arena editing mode to do this."));
+
+        if(arena.getHills().stream().anyMatch(x->x.getName().equalsIgnoreCase(name)))
+            throw new CommandException(Text.of(PluginInfo.PLUGIN_ERROR, TextColors.RED, "Hill with such name already exists in this arena!"));
 
         if (!arena.getWorldUniqueId().equals(world.getUniqueId()))
             throw new CommandException(Text.of(PluginInfo.PLUGIN_ERROR, TextColors.RED, "Hills must exists in the same world where arena exists!"));
@@ -52,7 +57,7 @@ public class CreateHillCommand extends AbstractCommand
                 throw new CommandException(Text.of(PluginInfo.PLUGIN_ERROR, TextColors.RED, "Hill cannot be placed on top another hill!"));
         }
 
-        final Hill hill = new Hill(selectionPoints.getFirstPoint(), selectionPoints.getSecondPoint());
+        final Hill hill = new Hill(name, selectionPoints.getFirstPoint(), selectionPoints.getSecondPoint());
         arena.addHill(hill);
         final boolean didSucceed = super.getPlugin().getArenaManager().updateArena(arena);
         if (!didSucceed)

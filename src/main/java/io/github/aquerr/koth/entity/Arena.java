@@ -185,4 +185,28 @@ public class Arena
 
         //End game if timer is done or if points reached theirs limit.
     }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if(this == o) return true;
+        if(o == null || getClass() != o.getClass()) return false;
+        Arena arena = (Arena) o;
+        return maxPlayers == arena.maxPlayers &&
+                isRoundBased == arena.isRoundBased &&
+                name.equals(arena.name) &&
+                firstPoint.equals(arena.firstPoint) &&
+                secondPoint.equals(arena.secondPoint) &&
+                worldUUID.equals(arena.worldUUID) &&
+                type == arena.type &&
+                hills.equals(arena.hills) &&
+                teams.equals(arena.teams) &&
+                roundTime.equals(arena.roundTime);
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(name, firstPoint, secondPoint, worldUUID, type, maxPlayers, hills, teams, isRoundBased, roundTime);
+    }
 }

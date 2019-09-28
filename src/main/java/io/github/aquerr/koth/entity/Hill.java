@@ -2,17 +2,25 @@ package io.github.aquerr.koth.entity;
 
 import com.flowpowered.math.vector.Vector3i;
 
+import java.util.Objects;
 import java.util.UUID;
 
 public class Hill
 {
+    private final String name;
     private final Vector3i firstPoint;
     private final Vector3i secondPoint;
 
-    public Hill(final Vector3i firstPoint, final Vector3i secondPoint)
+    public Hill(final String name, final Vector3i firstPoint, final Vector3i secondPoint)
     {
+        this.name = name;
         this.firstPoint = firstPoint;
         this.secondPoint = secondPoint;
+    }
+
+    public String getName()
+    {
+        return this.name;
     }
 
     public Vector3i getFirstPoint()
@@ -62,5 +70,22 @@ public class Hill
         }
 
         return intersectX && intersectY && intersectZ;
+    }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if(this == o) return true;
+        if(o == null || getClass() != o.getClass()) return false;
+        Hill hill = (Hill) o;
+        return name.equals(hill.name) &&
+                firstPoint.equals(hill.firstPoint) &&
+                secondPoint.equals(hill.secondPoint);
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(name, firstPoint, secondPoint);
     }
 }

@@ -15,14 +15,16 @@ public class HillTypeSerializer implements TypeSerializer<Hill>
     @Override
     public Hill deserialize(@NonNull final TypeToken<?> type, @NonNull final ConfigurationNode value) throws ObjectMappingException
     {
+        final String name = value.getNode("name").getString();
         final Vector3i firstPoint = value.getNode("firstPoint").getValue(TypeToken.of(Vector3i.class));
         final Vector3i secondPoint = value.getNode("secondPoint").getValue(TypeToken.of(Vector3i.class));
-        return new Hill(firstPoint, secondPoint);
+        return new Hill(name, firstPoint, secondPoint);
     }
 
     @Override
     public void serialize(@NonNull final TypeToken<?> type, @Nullable final Hill obj, @NonNull final ConfigurationNode value) throws ObjectMappingException
     {
+        value.getNode("name").setValue(obj.getName());
         value.getNode("firstPoint").setValue(TypeToken.of(Vector3i.class), obj.getFirstPoint());
         value.getNode("secondPoint").setValue(TypeToken.of(Vector3i.class), obj.getSecondPoint());
     }
