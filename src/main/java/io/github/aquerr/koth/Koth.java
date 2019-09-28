@@ -3,6 +3,8 @@ package io.github.aquerr.koth;
 import com.google.common.reflect.TypeToken;
 import com.google.inject.Inject;
 import io.github.aquerr.koth.command.*;
+import io.github.aquerr.koth.command.arguments.ArenaClassNameArgument;
+import io.github.aquerr.koth.command.arguments.ArenaNameArgument;
 import io.github.aquerr.koth.entity.*;
 import io.github.aquerr.koth.listener.PlayerLeaveListener;
 import io.github.aquerr.koth.listener.PlayerMoveListener;
@@ -163,7 +165,7 @@ public class Koth {
         this.subcommands.put(Collections.singletonList("deleteclass"), CommandSpec.builder()
             .description(Text.of("Deletes a specified class."))
             .permission(PluginPermissions.DELETE_CLASS_COMMAND)
-            .arguments(GenericArguments.onlyOne(GenericArguments.string(Text.of("name"))))
+            .arguments(new ArenaClassNameArgument(this, Text.of("name")))
             .executor(new DeleteArenaClassCommand(this))
             .build());
 
@@ -187,7 +189,7 @@ public class Koth {
 		this.subcommands.put(Collections.singletonList("deletearena"), CommandSpec.builder()
 				.description(Text.of("Delete an arena"))
 				.permission(PluginPermissions.DELETE_ARENA_COMMAND)
-				.arguments(GenericArguments.onlyOne(GenericArguments.string(Text.of("name"))))
+				.arguments(new ArenaNameArgument(this, Text.of("name")))
 				.executor(new DeleteArenaCommand(this))
 				.build());
 
