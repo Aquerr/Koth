@@ -7,6 +7,7 @@ import io.github.aquerr.koth.command.arguments.ArenaClassNameArgument;
 import io.github.aquerr.koth.command.arguments.ArenaNameArgument;
 import io.github.aquerr.koth.entity.*;
 import io.github.aquerr.koth.listener.EntitySpawnListener;
+import io.github.aquerr.koth.listener.PlayerAttackListener;
 import io.github.aquerr.koth.listener.PlayerLeaveListener;
 import io.github.aquerr.koth.listener.PlayerMoveListener;
 import io.github.aquerr.koth.listener.WandUsageListener;
@@ -129,6 +130,7 @@ public class Koth {
         this.eventManager.registerListeners(this, new PlayerLeaveListener(this));
         this.eventManager.registerListeners(this, new PlayerMoveListener(this));
         this.eventManager.registerListeners(this, new EntitySpawnListener(this));
+        this.eventManager.registerListeners(this, new PlayerAttackListener(this));
     }
 
     private void registerCommands()
