@@ -69,7 +69,7 @@ public class EntitySpawnListener extends AbstractListener
 			{
 				return false;
 			}
-			else if(arena.intersectsWithLobby(entityLocation.getBlockPosition()))
+			else if(arena.getLobby().intersects(entityLocation.getBlockPosition()))
 			{
 				return false;
 			}

@@ -5,10 +5,7 @@ import com.google.common.reflect.TypeToken;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import io.github.aquerr.koth.Koth;
-import io.github.aquerr.koth.entity.Arena;
-import io.github.aquerr.koth.entity.ArenaTeam;
-import io.github.aquerr.koth.entity.ArenaType;
-import io.github.aquerr.koth.entity.Hill;
+import io.github.aquerr.koth.entity.*;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.ConfigurationOptions;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
@@ -64,10 +61,9 @@ public class ArenaStorage
         arenaNode.getNode("worldUUID").setValue(TypeToken.of(UUID.class), arena.getWorldUniqueId());
         arenaNode.getNode("firstPoint").setValue(TypeToken.of(Vector3i.class), arena.getFirstPoint());
         arenaNode.getNode("secondPoint").setValue(TypeToken.of(Vector3i.class), arena.getSecondPoint());
-        arenaNode.getNode("lobbyFirstPoint").setValue(TypeToken.of(Vector3i.class), arena.getLobbyFirstPoint());
-        arenaNode.getNode("lobbySecondPoint").setValue(TypeToken.of(Vector3i.class), arena.getLobbySecondPoint());
+        arenaNode.getNode("lobby").setValue(new TypeToken<Lobby>() {}, arena.getLobby());
         arenaNode.getNode("hills").setValue(new TypeToken<List<Hill>>() {}, new ArrayList<>(arena.getHills()));
-        arenaNode.getNode("teams").setValue(new TypeToken<ArrayList<ArenaTeam>>() {}, new ArrayList<>(arena.getTeams()));
+        arenaNode.getNode("teams").setValue(new TypeToken<List<ArenaTeam>>() {}, new ArrayList<>(arena.getTeams()));
         arenaNode.getNode("maxPlayers").setValue(arena.getMaxPlayers());
         arenaNode.getNode("isRoundBased").setValue(arena.isRoundBased());
         arenaNode.getNode("roundTime").setValue(arena.getRoundTime().getSeconds());
@@ -93,15 +89,14 @@ public class ArenaStorage
         final UUID worldUUID = arenaNode.getNode("worldUUID").getValue(TypeToken.of(UUID.class));
         final Vector3i firstPoint = arenaNode.getNode("firstPoint").getValue(TypeToken.of(Vector3i.class));
         final Vector3i secondPoint = arenaNode.getNode("secondPoint").getValue(TypeToken.of(Vector3i.class));
-        final Vector3i lobbyFirstPoint = arenaNode.getNode("lobbyFirstPoint").getValue(TypeToken.of(Vector3i.class));
-        final Vector3i lobbySecondPoint = arenaNode.getNode("lobbySecondPoint").getValue(TypeToken.of(Vector3i.class));
+		final Lobby lobby = arenaNode.getNode("lobby").getValue(TypeToken.of(Lobby.class));
 
         //TODO: Do we really need a Set here?
         final Set<Hill> hills = new HashSet<>(arenaNode.getNode("hills").getList(TypeToken.of(Hill.class)));
         final Set<ArenaTeam> teams = new HashSet<>(arenaNode.getNode("teams").getList(TypeToken.of(ArenaTeam.class)));
 
         final ArenaType type = arenaNode.getNode("type").getValue(TypeToken.of(ArenaType.class));
-        final Arena arena = new Arena(name, type , worldUUID, firstPoint, secondPoint, lobbyFirstPoint, lobbySecondPoint, hills, teams);
+        final Arena arena = new Arena(name, type , worldUUID, firstPoint, secondPoint, hills, teams, lobby);
         return arena;
     }
 

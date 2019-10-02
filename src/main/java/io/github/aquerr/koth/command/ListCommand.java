@@ -40,8 +40,8 @@ public class ListCommand extends AbstractCommand
             arenaDescBuilder.append(Text.of(TextColors.BLUE, "World: ", TextColors.GOLD, Sponge.getServer().getWorld(arena.getWorldUniqueId()).get().getName() + "\n"));
             arenaDescBuilder.append(Text.of(TextColors.BLUE, "First Corner: ", TextColors.GOLD, arena.getFirstPoint() + "\n"));
             arenaDescBuilder.append(Text.of(TextColors.BLUE, "Second Corner: ", TextColors.GOLD, arena.getSecondPoint() + "\n"));
-            arenaDescBuilder.append(Text.of(TextColors.BLUE, "Lobby first corner: ", TextColors.GOLD, arena.getLobbyFirstPoint() + "\n"));
-            arenaDescBuilder.append(Text.of(TextColors.BLUE, "Lobby second corner: ", TextColors.GOLD, arena.getLobbySecondPoint() + "\n"));
+            arenaDescBuilder.append(Text.of(TextColors.BLUE, "Lobby first corner: ", TextColors.GOLD, arena.getLobby().getFirstPoint() + "\n"));
+            arenaDescBuilder.append(Text.of(TextColors.BLUE, "Lobby second corner: ", TextColors.GOLD, arena.getLobby().getSecondPoint() + "\n"));
             arenaDescBuilder.append(Text.of(TextColors.BLUE, "Max players: ", TextColors.GOLD, arena.getMaxPlayers() + "\n"));
             arenaDescBuilder.append(Text.of(TextColors.BLUE, "Hills: ", TextColors.GOLD, arena.getHills().size() + "\n"));
             arenaDescBuilder.append(Text.of(TextColors.BLUE, "Teams: ", TextColors.GOLD, arena.getTeams().size() + "\n"));

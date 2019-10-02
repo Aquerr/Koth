@@ -1,12 +1,10 @@
 package io.github.aquerr.koth.entity;
 
 import com.flowpowered.math.vector.Vector3i;
-import org.spongepowered.api.entity.living.player.Player;
 
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class Arena
 {
@@ -23,26 +21,25 @@ public class Arena
     private boolean isRoundBased = false;
     private Duration roundTime = Duration.of(3, ChronoUnit.MINUTES);
 
-    private Vector3i lobbyFirstPoint;
-    private Vector3i lobbySecondPoint;
+    private Lobby lobby;
 
     public Arena(final String name, final ArenaType type ,final UUID worldUUID, final Vector3i firstPoint, final Vector3i secondPoint)
     {
-        this(name, type, worldUUID, firstPoint, secondPoint, Vector3i.ZERO, Vector3i.ZERO, new HashSet<>(), new HashSet<>());
+        this(name, type, worldUUID, firstPoint, secondPoint, new HashSet<>(), new HashSet<>(), new Lobby(Vector3i.ZERO,Vector3i.ZERO,Vector3i.ZERO));
     }
 
-    public Arena(final String name, final ArenaType type, final UUID worldUUID, final Vector3i firstPoint, final Vector3i secondPoint, final Vector3i lobbyFirstPoint, final Vector3i lobbySecondPoint, final Set<Hill> hills, final Set<ArenaTeam> teams)
+    public Arena(final String name, final ArenaType type, final UUID worldUUID, final Vector3i firstPoint, final Vector3i secondPoint, final Set<Hill> hills, final Set<ArenaTeam> teams, final Lobby lobby)
     {
         this.name = name;
         this.worldUUID = worldUUID;
         this.firstPoint = firstPoint;
         this.secondPoint = secondPoint;
-        this.lobbyFirstPoint = lobbyFirstPoint;
-        this.lobbySecondPoint = lobbySecondPoint;
         this.hills = hills;
         this.teams = teams;
         this.type = type;
+        this.lobby = lobby;
     }
+
 
     public String getName()
     {
@@ -66,18 +63,12 @@ public class Arena
 
     public void setLobbyPoints(final Vector3i firstPoint, final Vector3i secondPoint)
     {
-        this.lobbyFirstPoint = firstPoint;
-        this.lobbySecondPoint = secondPoint;
+        this.lobby = new Lobby(firstPoint, secondPoint, Vector3i.ZERO);
     }
 
-    public Vector3i getLobbyFirstPoint()
+    public Lobby getLobby()
     {
-        return this.lobbyFirstPoint;
-    }
-
-    public Vector3i getLobbySecondPoint()
-    {
-        return this.lobbySecondPoint;
+        return this.lobby;
     }
 
     public int getMaxPlayers()
@@ -189,44 +180,7 @@ public class Arena
         return intersectX && intersectY && intersectZ;
     }
 
-    public boolean intersectsWithLobby(final Vector3i position)
-    {
-        boolean intersectX = false;
-        boolean intersectY = false;
-        boolean intersectZ = false;
 
-        //Check X
-        if (this.lobbyFirstPoint.getX() <= this.lobbySecondPoint.getX() && (position.getX() <= this.lobbySecondPoint.getX() && position.getX() >= this.lobbyFirstPoint.getX()))
-        {
-            intersectX = true;
-        }
-        else if (this.lobbyFirstPoint.getX() >= this.lobbySecondPoint.getX() && (position.getX() <= this.lobbyFirstPoint.getX() && position.getX() >= this.lobbySecondPoint.getX()))
-        {
-            intersectX = true;
-        }
-
-        //Check Y
-        if (this.lobbyFirstPoint.getY() < this.lobbySecondPoint.getY() && (position.getY() <= this.lobbySecondPoint.getY() && position.getY() >= this.lobbyFirstPoint.getY()))
-        {
-            intersectY = true;
-        }
-        else if (this.lobbyFirstPoint.getY() >= this.lobbySecondPoint.getY() && (position.getY() <= this.lobbyFirstPoint.getY() && position.getY() >= this.lobbySecondPoint.getY()))
-        {
-            intersectY = true;
-        }
-
-        //Check Z
-        if (this.lobbyFirstPoint.getZ() <= this.lobbySecondPoint.getZ() && (position.getZ() <= this.lobbySecondPoint.getZ() && position.getZ() >= this.lobbyFirstPoint.getZ()))
-        {
-            intersectZ = true;
-        }
-        else if (this.lobbyFirstPoint.getZ() >= this.lobbySecondPoint.getZ() && (position.getZ() <= this.lobbyFirstPoint.getZ() && position.getZ() >= this.lobbySecondPoint.getZ()))
-        {
-            intersectZ = true;
-        }
-
-        return intersectX && intersectY && intersectZ;
-    }
 
     public void startGame()
     {

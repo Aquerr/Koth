@@ -15,6 +15,7 @@ import io.github.aquerr.koth.manager.ArenaClassManager;
 import io.github.aquerr.koth.manager.ArenaManager;
 import io.github.aquerr.koth.storage.serializer.ArenaTeamTypeSerializer;
 import io.github.aquerr.koth.storage.serializer.HillTypeSerializer;
+import io.github.aquerr.koth.storage.serializer.LobbyTypeSerializer;
 import ninja.leaping.configurate.objectmapping.serialize.TypeSerializers;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandCallable;
@@ -92,6 +93,7 @@ public class Koth {
     {
         TypeSerializers.getDefaultSerializers().registerType(TypeToken.of(Hill.class), new HillTypeSerializer());
         TypeSerializers.getDefaultSerializers().registerType(TypeToken.of(ArenaTeam.class), new ArenaTeamTypeSerializer());
+        TypeSerializers.getDefaultSerializers().registerType(TypeToken.of(Lobby.class), new LobbyTypeSerializer());
     }
 
     public ArenaManager getArenaManager()
@@ -219,10 +221,18 @@ public class Koth {
             .executor(new CreateLobbyCommand(this))
             .build());
 
+        //Set Lobby Spawn Command
+        this.subcommands.put(Collections.singletonList("createlobbyspawn"), CommandSpec.builder()
+                .description(Text.of("Creates spawn arena lobby"))
+                .permission(PluginPermissions.CREATE_LOBBYSPAWN_COMMAND)
+                .executor(new CreateLobbySpawnCommand(this))
+                .build());
+
         //Edit Arena Command
         this.subcommands.put(Collections.singletonList("edit"), CommandSpec.builder()
             .description(Text.of("Turns on/off edit mode for the given arena."))
             .permission(PluginPermissions.EDIT_COMMAND)
+            .arguments(GenericArguments.onlyOne(GenericArguments.string(Text.of("name"))))
             .executor(new EditArenaCommand(this))
             .build());
 
