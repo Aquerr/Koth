@@ -9,6 +9,7 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.entity.MoveEntityEvent;
 import org.spongepowered.api.event.filter.cause.Root;
+import org.spongepowered.api.event.filter.type.Exclude;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.world.World;
 
@@ -25,6 +26,7 @@ public class PlayerMoveListener extends AbstractListener
     }
 
     @Listener
+    @Exclude(MoveEntityEvent.Teleport.class)
     public void onPlayerMove(final MoveEntityEvent event, final @Root Player player)
     {
         final Transform<World> fromTransform = event.getFromTransform();

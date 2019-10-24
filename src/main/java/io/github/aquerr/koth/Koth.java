@@ -47,7 +47,7 @@ public class Koth {
     private final Map<UUID, Arena> playersCreatingArena = new HashMap<>();
     private final Map<UUID, Arena> playersEditingArena = new HashMap<>();
 
-    private final Map<UUID, Arena> playersPlayingOnArena = new HashMap<>();
+//    private final Map<UUID, Arena> playersPlayingOnArena = new HashMap<>();
 
     @Inject
     private ArenaManager arenaManager;
@@ -121,10 +121,10 @@ public class Koth {
         return this.playersEditingArena;
     }
 
-    public Map<UUID, Arena> getPlayersPlayingOnArena()
-    {
-        return this.playersPlayingOnArena;
-    }
+//    public Map<UUID, Arena> getPlayersPlayingOnArena()
+//    {
+//        return this.playersPlayingOnArena;
+//    }
 
     private void registerListeners()
     {
@@ -235,6 +235,21 @@ public class Koth {
             .arguments(GenericArguments.onlyOne(GenericArguments.string(Text.of("name"))))
             .executor(new EditArenaCommand(this))
             .build());
+
+        //Join Command
+        this.subcommands.put(Collections.singletonList("join"), CommandSpec.builder()
+            .description(Text.of("Join arena."))
+            .permission(PluginPermissions.JOIN_COMMAND)
+            .arguments(GenericArguments.onlyOne(GenericArguments.string(Text.of("name"))))
+            .executor(new JoinCommand(this))
+            .build());
+
+        //Leave Command
+        this.subcommands.put(Collections.singletonList("leave"), CommandSpec.builder()
+                .description(Text.of("Leave arena."))
+                .permission(PluginPermissions.LEAVE_COMMAND)
+                .executor(new LeaveCommand(this))
+                .build());
 
         //Version Command
         this.subcommands.put(Collections.singletonList("version"), CommandSpec.builder()

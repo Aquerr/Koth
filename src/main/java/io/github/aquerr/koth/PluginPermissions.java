@@ -4,6 +4,9 @@ public class PluginPermissions {
     public static final String HELP_COMMAND = "koth.player.command.help";
     public static final String LIST_COMMAND = "koth.player.command.list";
 
+    public static final String JOIN_COMMAND = "koth.player.command.join";
+    public static final String LEAVE_COMMAND = "koth.player.command.leave";
+
     public static final String WAND_COMMAND = "koth.admin.command.wand";
     public static final String DESELECT_COMMAND = "koth.admin.command.deselect";
 

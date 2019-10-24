@@ -1,6 +1,8 @@
 package io.github.aquerr.koth.entity;
 
 import com.flowpowered.math.vector.Vector3i;
+import com.google.inject.internal.cglib.core.$ProcessArrayCallback;
+import org.spongepowered.api.entity.living.player.Player;
 
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
@@ -8,6 +10,8 @@ import java.util.*;
 
 public class Arena
 {
+    private static final Random RANDOM = new Random();
+
     private String name;
     private Vector3i firstPoint;
     private Vector3i secondPoint;
@@ -139,6 +143,102 @@ public class Arena
     public boolean removeTeam(final ArenaTeam team)
     {
         return this.teams.remove(team);
+    }
+
+    public boolean join(final Player player)
+    {
+        //Add player to correct team
+        if(this.type == ArenaType.FFA)
+        {
+            final ArenaTeam arenaTeam = new ArenaTeam("");
+            arenaTeam.addPlayer(player);
+            return addTeam(arenaTeam);
+        }
+        else if(this.type == ArenaType.TEAMS)
+        {
+            if(this.teams.size() < 2)
+            {
+                ArenaTeam arenaTeam = null;
+                if(hasTeam("blue"))
+                    arenaTeam = new ArenaTeam("red");
+                else if(hasTeam("red"))
+                    arenaTeam = new ArenaTeam("blue");
+                else
+                    arenaTeam = new ArenaTeam("red");
+                arenaTeam.addPlayer(player);
+                return addTeam(arenaTeam);
+            }
+            else
+            {
+                final ArenaTeam arenaTeam = getTeamWithLeastPlayers();
+//                final int randomNumber = RANDOM.nextInt(2);
+//                final ArenaTeam arenaTeam = this.teams.toArray(new ArenaTeam[]{})[randomNumber];
+                return arenaTeam.addPlayer(player);
+            }
+        }
+
+        return false;
+    }
+
+
+    public boolean leave(Player player)
+    {
+        //Add player to correct team
+        if(this.type == ArenaType.FFA)
+        {
+            ArenaTeam arenaTeamToRemove = null;
+            for(final ArenaTeam arenaTeam : this.teams)
+            {
+                if(arenaTeam.getPlayers().contains(player.getUniqueId()))
+                    arenaTeamToRemove = arenaTeam;
+            }
+            return removeTeam(arenaTeamToRemove);
+        }
+        else if(this.type == ArenaType.TEAMS)
+        {
+            ArenaTeam arenaTeamToRemove = null;
+            for(final ArenaTeam arenaTeam : this.teams)
+            {
+                if(arenaTeam.getPlayers().contains(player.getUniqueId()))
+                    arenaTeamToRemove = arenaTeam;
+            }
+
+            if(arenaTeamToRemove.getPlayers().size() == 1)
+            {
+                return removeTeam(arenaTeamToRemove);
+            }
+            else
+            {
+                return arenaTeamToRemove.removePlayer(player);
+            }
+
+            //TODO: Shuffle teams...
+        }
+
+        return false;
+    }
+
+    public boolean hasTeam(final String name)
+    {
+        for(final ArenaTeam arenaTeam : this.teams)
+        {
+            if(arenaTeam.getName().equals(name))
+                return true;
+        }
+        return false;
+    }
+
+    private ArenaTeam getTeamWithLeastPlayers()
+    {
+        ArenaTeam resultArena = null;
+        for(final ArenaTeam arenaTeam : this.teams)
+        {
+            if(resultArena == null)
+                resultArena = arenaTeam;
+            if(arenaTeam.getPlayers().size() < resultArena.getPlayers().size())
+                resultArena = arenaTeam;
+        }
+        return resultArena;
     }
 
     public boolean intersects(final Vector3i position)
