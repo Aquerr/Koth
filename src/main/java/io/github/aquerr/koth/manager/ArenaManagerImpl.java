@@ -7,6 +7,7 @@ import io.github.aquerr.koth.entity.Arena;
 import io.github.aquerr.koth.storage.StorageManager;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 
@@ -112,5 +113,23 @@ public class ArenaManagerImpl implements ArenaManager
             ex.printStackTrace();
             return false;
         }
+    }
+
+    @Override
+    public Optional<Arena> getArenaForPlayer(Player player)
+    {
+        Arena arena = null;
+        for(final Arena possibleArena : getArenas().values())
+        {
+            if(possibleArena.getPlayers().contains(player.getUniqueId()))
+            {
+                arena = possibleArena;
+                break;
+            }
+        }
+
+        if(arena != null)
+            return Optional.of(arena);
+        else return Optional.empty();
     }
 }

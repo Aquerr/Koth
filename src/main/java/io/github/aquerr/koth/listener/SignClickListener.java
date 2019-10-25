@@ -50,17 +50,8 @@ public class SignClickListener extends AbstractListener
 			return;
 
 		//Check if player is playing arena
-		boolean isPlayingArena = false;
-		for(final Arena arena : super.getPlugin().getArenaManager().getArenas().values())
-		{
-			if(arena.getPlayers().contains(player.getUniqueId()))
-			{
-				isPlayingArena = true;
-				break;
-			}
-		}
-
-		if(!isPlayingArena)
+		final Optional<Arena> arena = super.getPlugin().getArenaManager().getArenaForPlayer(player);
+		if(!arena.isPresent())
 			return;
 
 		//Read second line from sign and check if it corresponds to an arena class

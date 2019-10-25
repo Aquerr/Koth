@@ -2,6 +2,7 @@ package io.github.aquerr.koth.manager;
 
 import com.google.inject.ImplementedBy;
 import io.github.aquerr.koth.entity.Arena;
+import org.spongepowered.api.entity.living.player.Player;
 
 import java.util.Map;
 import java.util.Optional;
@@ -48,4 +49,11 @@ public interface ArenaManager
      * @return
      */
     boolean reloadCache();
+
+    /**
+     * Gets arena that player is currently playing on.
+     * @param player that should be checked.
+     * @return {@link Arena} that player is playing on or {@link Optional#empty()}
+     */
+    Optional<Arena> getArenaForPlayer(final Player player);
 }
