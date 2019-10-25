@@ -47,6 +47,7 @@ public class LeaveCommand extends AbstractCommand
 		else
 			player.sendMessage(Text.of(PluginInfo.PLUGIN_ERROR, TextColors.RED, "Could not join the arena."));
 
+		player.getInventory().clear();
 		player.setLocation(player.getWorld().getSpawnLocation());
 		final boolean didSuccess = super.getPlugin().getArenaManager().updateArena(arena);
 		return CommandResult.success();

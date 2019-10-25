@@ -43,13 +43,26 @@ public class PlayerMoveListener extends AbstractListener
         //Check if player entered arena
         for (final Arena arena : this.arenasCache.values())
         {
-            //Enters
+            //Enters/leaves arena
             if(!arena.intersects(fromBlockPosition) && arena.intersects(toBlockPosition))
             {
                 player.sendMessage(Text.of(PluginInfo.PLUGIN_PREFIX, "You can't enter the arena " + arena.getName() + "!"));
                 event.setCancelled(true);
             }
             else if(arena.intersects(fromBlockPosition) && !arena.intersects(toBlockPosition))
+            {
+                player.sendMessage(Text.of(PluginInfo.PLUGIN_PREFIX, "You can't leave the arena " + arena.getName() + "!"));
+                event.setCancelled(true);
+            }
+
+            //Enters/leaves lobby
+            if(!arena.getLobby().intersects(fromBlockPosition) && arena.getLobby().intersects(toBlockPosition))
+            {
+                player.sendMessage(Text.of(PluginInfo.PLUGIN_PREFIX, "You can't enter the arena " + arena.getName() + "!"));
+                event.setCancelled(true);
+            }
+            //Enters/leaves lobby
+            else if(arena.getLobby().intersects(fromBlockPosition) && !arena.getLobby().intersects(toBlockPosition))
             {
                 player.sendMessage(Text.of(PluginInfo.PLUGIN_PREFIX, "You can't leave the arena " + arena.getName() + "!"));
                 event.setCancelled(true);
