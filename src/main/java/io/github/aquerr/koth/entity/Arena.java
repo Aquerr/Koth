@@ -21,6 +21,7 @@ public class Arena
     private int maxPlayers = 10;
     private final Set<Hill> hills;
     private final Set<ArenaTeam> teams;
+    private ArenaStatus status;
 
     private boolean isRoundBased = false;
     private Duration roundTime = Duration.of(3, ChronoUnit.MINUTES);
@@ -42,8 +43,8 @@ public class Arena
         this.teams = teams;
         this.type = type;
         this.lobby = lobby;
+        this.status = ArenaStatus.IDLE;
     }
-
 
     public String getName()
     {
@@ -93,6 +94,11 @@ public class Arena
     public ArenaType getType()
     {
         return this.type;
+    }
+
+    public ArenaStatus getStatus()
+    {
+        return this.status;
     }
 
     public Set<UUID> getPlayers()
@@ -150,31 +156,27 @@ public class Arena
         //Add player to correct team
         if(this.type == ArenaType.FFA)
         {
-            final ArenaTeam arenaTeam = new ArenaTeam("");
+            final ArenaTeam arenaTeam = new ArenaTeam(player.getName() + "'s team");
             arenaTeam.addPlayer(player);
             return addTeam(arenaTeam);
         }
         else if(this.type == ArenaType.TEAMS)
         {
-            if(this.teams.size() < 2)
-            {
-                ArenaTeam arenaTeam = null;
-                if(hasTeam("blue"))
-                    arenaTeam = new ArenaTeam("red");
-                else if(hasTeam("red"))
-                    arenaTeam = new ArenaTeam("blue");
-                else
-                    arenaTeam = new ArenaTeam("red");
-                arenaTeam.addPlayer(player);
-                return addTeam(arenaTeam);
-            }
-            else
+            if(this.teams.size() == 2)
             {
                 final ArenaTeam arenaTeam = getTeamWithLeastPlayers();
-//                final int randomNumber = RANDOM.nextInt(2);
-//                final ArenaTeam arenaTeam = this.teams.toArray(new ArenaTeam[]{})[randomNumber];
                 return arenaTeam.addPlayer(player);
             }
+
+            ArenaTeam arenaTeam;
+            if(hasTeam("blue"))
+                arenaTeam = new ArenaTeam("red");
+            else if(hasTeam("red"))
+                arenaTeam = new ArenaTeam("blue");
+            else
+                arenaTeam = new ArenaTeam("red");
+            arenaTeam.addPlayer(player);
+            return addTeam(arenaTeam);
         }
 
         return false;
