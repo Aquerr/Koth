@@ -44,6 +44,9 @@ public class PlayerMoveListener extends AbstractListener
         for (final Arena arena : this.arenasCache.values())
         {
             //Enters/leaves arena
+            if(super.getPlugin().getPlayersCreatingArena().containsKey(player.getUniqueId()) || super.getPlugin().getPlayersEditingArena().containsKey(player.getUniqueId()))
+                continue;
+
             if(!arena.intersects(fromBlockPosition) && arena.intersects(toBlockPosition))
             {
                 player.sendMessage(Text.of(PluginInfo.PLUGIN_PREFIX, "You can't enter the arena " + arena.getName() + "!"));
