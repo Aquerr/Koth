@@ -6,6 +6,8 @@ import io.github.aquerr.koth.command.*;
 import io.github.aquerr.koth.command.arguments.ArenaClassNameArgument;
 import io.github.aquerr.koth.command.arguments.ArenaNameArgument;
 import io.github.aquerr.koth.command.arguments.ArenaTeamArgument;
+import io.github.aquerr.koth.config.Configuration;
+import io.github.aquerr.koth.config.ConfigurationImpl;
 import io.github.aquerr.koth.entity.*;
 import io.github.aquerr.koth.listener.*;
 import io.github.aquerr.koth.manager.ArenaClassManager;
@@ -46,6 +48,8 @@ public class Koth {
 
 //    private final Map<UUID, Arena> playersPlayingOnArena = new HashMap<>();
 
+    private Configuration configuration;
+
     @Inject
     private ArenaManager arenaManager;
 
@@ -69,6 +73,7 @@ public class Koth {
 
             //Setup storage and managers first so that listeners and commands can use them later.
             registerTypeSerializers();
+            this.configuration = new ConfigurationImpl(this, this.configDir);
             arenaManager.reloadCache();
             arenaClassManager.reloadCache();
 
@@ -91,6 +96,11 @@ public class Koth {
         TypeSerializers.getDefaultSerializers().registerType(TypeToken.of(Hill.class), new HillTypeSerializer());
         TypeSerializers.getDefaultSerializers().registerType(TypeToken.of(ArenaTeam.class), new ArenaTeamTypeSerializer());
         TypeSerializers.getDefaultSerializers().registerType(TypeToken.of(Lobby.class), new LobbyTypeSerializer());
+    }
+
+    public Configuration getConfiguration()
+    {
+        return this.configuration;
     }
 
     public ArenaManager getArenaManager()
