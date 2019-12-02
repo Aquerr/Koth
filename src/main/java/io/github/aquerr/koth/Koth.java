@@ -5,6 +5,7 @@ import com.google.inject.Inject;
 import io.github.aquerr.koth.command.*;
 import io.github.aquerr.koth.command.arguments.ArenaClassNameArgument;
 import io.github.aquerr.koth.command.arguments.ArenaNameArgument;
+import io.github.aquerr.koth.command.arguments.ArenaTeamArgument;
 import io.github.aquerr.koth.entity.*;
 import io.github.aquerr.koth.listener.*;
 import io.github.aquerr.koth.manager.ArenaClassManager;
@@ -232,6 +233,14 @@ public class Koth {
             .arguments(GenericArguments.onlyOne(GenericArguments.string(Text.of("name"))))
             .executor(new EditArenaCommand(this))
             .build());
+
+        //Create Team Spawn
+        this.subcommands.put(Collections.singletonList("createteamspawn"), CommandSpec.builder()
+                .description(Text.of("Create team spawn"))
+                .permission(PluginPermissions.CREATE_TEAM_SPAWN_COMMAND)
+                .arguments(GenericArguments.onlyOne(new ArenaTeamArgument(this, Text.of("team"))))
+                .executor(new CreateTeamSpawnCommand(this))
+                .build());
 
         //Join Command
         this.subcommands.put(Collections.singletonList("join"), CommandSpec.builder()

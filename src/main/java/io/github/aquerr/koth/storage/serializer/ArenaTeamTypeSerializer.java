@@ -1,5 +1,6 @@
 package io.github.aquerr.koth.storage.serializer;
 
+import com.flowpowered.math.vector.Vector3i;
 import com.google.common.reflect.TypeToken;
 import io.github.aquerr.koth.entity.ArenaTeam;
 import ninja.leaping.configurate.ConfigurationNode;
@@ -19,7 +20,8 @@ public class ArenaTeamTypeSerializer implements TypeSerializer<ArenaTeam>
     {
         final String name = value.getNode("name").getString();
         final List<UUID> players = value.getList(TypeToken.of(UUID.class));
-        return new ArenaTeam(name, players);
+        final Vector3i spawnPoint = value.getNode("spawnPoint").getValue(TypeToken.of(Vector3i.class));
+        return new ArenaTeam(name, players, spawnPoint);
     }
 
     @Override
@@ -27,5 +29,6 @@ public class ArenaTeamTypeSerializer implements TypeSerializer<ArenaTeam>
     {
         value.getNode("name").setValue(obj.getName());
         value.getNode("players").setValue(obj.getPlayers());
+        value.getNode("spawnPoint").setValue(TypeToken.of(Vector3i.class), obj.getSpawnPoint());
     }
 }

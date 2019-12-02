@@ -48,8 +48,8 @@ public class Arena
         if(this.type == ArenaType.TEAMS)
         {
             //Precreate two teams
-            final ArenaTeam arenaTeamRed = new ArenaTeam("red", new ArrayList<>());
-            final ArenaTeam arenaTeamBlue = new ArenaTeam("blue", new ArrayList<>());
+            final ArenaTeam arenaTeamRed = new ArenaTeam("red");
+            final ArenaTeam arenaTeamBlue = new ArenaTeam("blue");
             this.teams.add(arenaTeamBlue);
             this.teams.add(arenaTeamRed);
         }

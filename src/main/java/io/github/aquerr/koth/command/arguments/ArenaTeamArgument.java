@@ -12,10 +12,7 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class ArenaTeamArgument extends CommandElement
 {
@@ -47,21 +44,23 @@ public class ArenaTeamArgument extends CommandElement
 					return arenaTeam;
 			}
 		}
-		return null;
+		throw new ArgumentParseException(Text.of("Player is not editing any arena!"), source.getName(), 0);
 	}
 
 	@Override
 	public List<String> complete(final CommandSource src, final CommandArgs args, final CommandContext context)
 	{
 		if(!(src instanceof Player))
-		{
-			return new ArrayList<>();
-		}
+			return Collections.EMPTY_LIST;
+
 
 		final Player player = (Player) src;
 		Arena arena = this.plugin.getPlayersCreatingArena().get(player.getUniqueId());
 		if (arena == null)
 			arena = this.plugin.getPlayersEditingArena().get(player.getUniqueId());
+
+		if (arena == null)
+			return Collections.EMPTY_LIST;
 
 		final Set<ArenaTeam> teams = arena.getTeams();
 		final List<String> teamsNames = new LinkedList<>();

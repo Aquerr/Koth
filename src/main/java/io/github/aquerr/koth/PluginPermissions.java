@@ -12,6 +12,7 @@ public class PluginPermissions {
 
     public static final String CREATE_ARENA_COMMAND = "koth.admin.command.createarena";
     public static final String DELETE_ARENA_COMMAND = "koth.admin.command.deletearena";
+    public static final String CREATE_TEAM_SPAWN_COMMAND = "koth.admin.command.createteamspawn";
     public static final String CREATE_HILL_COMMAND = "koth.admin.command.createhill";
 
     public static final String CREATE_LOBBY_COMMAND = "koth.admin.command.createlobby";
