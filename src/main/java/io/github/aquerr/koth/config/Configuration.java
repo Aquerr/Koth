@@ -7,6 +7,8 @@ public interface Configuration
 {
 	void reload();
 
+	void save();
+
 	int getInt(int defaultValue, Object... nodePath);
 
 	double getDouble(double defaultValue, Object... nodePath);
@@ -18,4 +20,8 @@ public interface Configuration
 	String getString(String defaultValue, Object... nodePath);
 
 	List<String> getListOfStrings(Collection<String> defaultValue, Object... nodePath);
+
+	String getLanguageFileName();
+
+	List<String> getWhiteListedCommandsOnArena();
 }

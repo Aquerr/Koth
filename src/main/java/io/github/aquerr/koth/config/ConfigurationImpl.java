@@ -13,10 +13,7 @@ import org.spongepowered.api.asset.Asset;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Singleton
 public class ConfigurationImpl implements Configuration
@@ -26,6 +23,10 @@ public class ConfigurationImpl implements Configuration
 
 	private ConfigurationLoader<CommentedConfigurationNode> configLoader;
 	private CommentedConfigurationNode configNode;
+
+	//Config fields
+	private String languageFile;
+	private List<String> whiteListedCommandsOnArena;
 
 	public ConfigurationImpl(final Koth plugin, final Path configDir)
 	{
@@ -49,8 +50,13 @@ public class ConfigurationImpl implements Configuration
 		this.configLoader = HoconConfigurationLoader.builder().setHeaderMode(HeaderMode.PRESERVE).setPath(settingsPath).build();
 		reload();
 		save();
+
+		//TODO: Load config fields...
+		this.whiteListedCommandsOnArena = getListOfStrings(Collections.emptyList(), "whitelisted-commands");
+		this.languageFile = getString("english.lang", "language-file");
 	}
 
+	@Override
 	public void reload()
 	{
 		try
@@ -63,6 +69,7 @@ public class ConfigurationImpl implements Configuration
 		}
 	}
 
+	@Override
 	public void save()
 	{
 		try
@@ -128,5 +135,17 @@ public class ConfigurationImpl implements Configuration
 			e.printStackTrace();
 		}
 		return new ArrayList<>();
+	}
+
+	@Override
+	public String getLanguageFileName()
+	{
+		return this.languageFile;
+	}
+
+	@Override
+	public List<String> getWhiteListedCommandsOnArena()
+	{
+		return this.whiteListedCommandsOnArena;
 	}
 }
