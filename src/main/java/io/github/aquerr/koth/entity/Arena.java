@@ -44,6 +44,15 @@ public class Arena
         this.type = type;
         this.lobby = lobby;
         this.status = ArenaStatus.IDLE;
+
+        if(this.type == ArenaType.TEAMS)
+        {
+            //Precreate two teams
+            final ArenaTeam arenaTeamRed = new ArenaTeam("red", new ArrayList<>());
+            final ArenaTeam arenaTeamBlue = new ArenaTeam("blue", new ArrayList<>());
+            this.teams.add(arenaTeamBlue);
+            this.teams.add(arenaTeamRed);
+        }
     }
 
     public String getName()
@@ -162,21 +171,8 @@ public class Arena
         }
         else if(this.type == ArenaType.TEAMS)
         {
-            if(this.teams.size() == 2)
-            {
-                final ArenaTeam arenaTeam = getTeamWithLeastPlayers();
-                return arenaTeam.addPlayer(player);
-            }
-
-            ArenaTeam arenaTeam;
-            if(hasTeam("blue"))
-                arenaTeam = new ArenaTeam("red");
-            else if(hasTeam("red"))
-                arenaTeam = new ArenaTeam("blue");
-            else
-                arenaTeam = new ArenaTeam("red");
-            arenaTeam.addPlayer(player);
-            return addTeam(arenaTeam);
+            final ArenaTeam arenaTeam = getTeamWithLeastPlayers();
+            return arenaTeam.addPlayer(player);
         }
 
         return false;
@@ -205,15 +201,7 @@ public class Arena
                     arenaTeamToRemove = arenaTeam;
             }
 
-            if(arenaTeamToRemove.getPlayers().size() == 1)
-            {
-                return removeTeam(arenaTeamToRemove);
-            }
-            else
-            {
-                return arenaTeamToRemove.removePlayer(player);
-            }
-
+            return arenaTeamToRemove.removePlayer(player);
             //TODO: Shuffle teams...
         }
 
