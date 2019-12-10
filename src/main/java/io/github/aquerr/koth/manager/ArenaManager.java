@@ -3,6 +3,7 @@ package io.github.aquerr.koth.manager;
 import com.google.inject.ImplementedBy;
 import io.github.aquerr.koth.entity.Arena;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.entity.living.player.User;
 
 import java.util.Map;
 import java.util.Optional;
@@ -55,5 +56,5 @@ public interface ArenaManager
      * @param player that should be checked.
      * @return {@link Arena} that player is playing on or {@link Optional#empty()}
      */
-    Optional<Arena> getArenaForPlayer(final Player player);
+    Optional<Arena> getArenaForUser(final User player);
 }

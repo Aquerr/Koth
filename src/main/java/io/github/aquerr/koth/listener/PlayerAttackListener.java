@@ -27,7 +27,7 @@ public class PlayerAttackListener extends AbstractListener
 		final Player attackedPlayer = (Player)entity;
 
 		//Check if player is playing arena
-		final Optional<Arena> arena = super.getPlugin().getArenaManager().getArenaForPlayer(attackedPlayer);
+		final Optional<Arena> arena = super.getPlugin().getArenaManager().getArenaForUser(attackedPlayer);
 		if(!arena.isPresent())
 			return;
 

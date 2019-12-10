@@ -9,11 +9,9 @@ import org.spongepowered.api.block.tileentity.Sign;
 import org.spongepowered.api.block.tileentity.TileEntity;
 import org.spongepowered.api.block.tileentity.TileEntityTypes;
 import org.spongepowered.api.data.manipulator.mutable.tileentity.SignData;
-import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.InteractBlockEvent;
-import org.spongepowered.api.event.entity.InteractEntityEvent;
 import org.spongepowered.api.event.filter.cause.Root;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Text;
@@ -50,7 +48,7 @@ public class SignClickListener extends AbstractListener
 			return;
 
 		//Check if player is playing arena
-		final Optional<Arena> arena = super.getPlugin().getArenaManager().getArenaForPlayer(player);
+		final Optional<Arena> arena = super.getPlugin().getArenaManager().getArenaForUser(player);
 		if(!arena.isPresent())
 			return;
 

@@ -25,6 +25,7 @@ import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.config.ConfigDir;
 import org.spongepowered.api.event.EventManager;
 import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.game.GameReloadEvent;
 import org.spongepowered.api.event.game.state.GameInitializationEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.text.Text;
@@ -91,6 +92,14 @@ public class Koth {
         }
     }
 
+    @Listener
+    public void onGameReload(final GameReloadEvent event)
+    {
+        this.configuration.reload();
+        this.arenaManager.reloadCache();
+        this.arenaClassManager.reloadCache();
+    }
+
     private void registerTypeSerializers()
     {
         TypeSerializers.getDefaultSerializers().registerType(TypeToken.of(Hill.class), new HillTypeSerializer());
@@ -141,6 +150,7 @@ public class Koth {
         this.eventManager.registerListeners(this, new EntitySpawnListener(this));
         this.eventManager.registerListeners(this, new PlayerAttackListener(this));
         this.eventManager.registerListeners(this, new SignClickListener(this));
+        this.eventManager.registerListeners(this, new CommandUsageListener(this));
     }
 
     private void registerCommands()
