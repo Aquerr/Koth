@@ -262,6 +262,14 @@ public class Koth {
                 .executor(new CreateTeamSpawnCommand(this))
                 .build());
 
+        //Add Team Command
+        this.subcommands.put(Collections.singletonList("addteam"), CommandSpec.builder()
+            .description(Text.of("Adds a team to the arena"))
+            .permission(PluginPermissions.ADD_TEAM_COMMAND)
+            .arguments(GenericArguments.onlyOne(GenericArguments.string(Text.of("name"))))
+            .executor(new AddTeamCommand(this))
+            .build());
+
         //Join Command
         this.subcommands.put(Collections.singletonList("join"), CommandSpec.builder()
             .description(Text.of("Join arena."))
