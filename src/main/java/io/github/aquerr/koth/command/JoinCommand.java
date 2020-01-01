@@ -29,6 +29,9 @@ public class JoinCommand extends AbstractCommand
 			throw new CommandException(Text.of(PluginInfo.PLUGIN_ERROR, TextColors.RED, "Only in-game players can use this command!"));
 
 		final Player player = (Player)source;
+		if(super.getPlugin().getArenaManager().getArenaForUser(player).isPresent())
+			throw new CommandException(Text.of(PluginInfo.PLUGIN_ERROR, TextColors.RED, "You are already playing on one arena! You must leave it first!"));
+
 		final Optional<Arena> optionalArena = super.getPlugin().getArenaManager().getArena(arenaName);
 		if(!optionalArena.isPresent())
 			throw new CommandException(Text.of(PluginInfo.PLUGIN_ERROR, TextColors.RED, "Arena with such name does not exist!"));
