@@ -12,9 +12,9 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 
-public class AddTeamCommand extends AbstractCommand
+public class RemoveTeamCommand extends AbstractCommand
 {
-    public AddTeamCommand(final Koth plugin)
+    public RemoveTeamCommand(final Koth plugin)
     {
         super(plugin);
     }
@@ -36,13 +36,13 @@ public class AddTeamCommand extends AbstractCommand
         if(arena == null)
             throw new CommandException(Text.of(PluginInfo.PLUGIN_ERROR, TextColors.RED, "You must be in arena editing mode to do this."));
 
-        if (arena.hasTeam(name))
-            throw new CommandException(Text.of(PluginInfo.PLUGIN_ERROR, TextColors.RED, "Team with such name already exists in this arena!"));
+        if (!arena.hasTeam(name))
+            throw new CommandException(Text.of(PluginInfo.PLUGIN_ERROR, TextColors.RED, "Team with such name does not exists in this arena!"));
 
-        final ArenaTeam arenaTeam = new ArenaTeam(name);
-        arena.addTeam(arenaTeam);
+        final ArenaTeam arenaTeam = arena.getTeams().stream().filter(x->x.getName().equals(name)).findFirst().get();
+        arena.removeTeam(arenaTeam);
         super.getPlugin().getArenaManager().updateArena(arena);
-        source.sendMessage(Text.of(PluginInfo.PLUGIN_PREFIX, TextColors.GREEN, "Successfully added team to the arena!"));
+        source.sendMessage(Text.of(PluginInfo.PLUGIN_PREFIX, TextColors.GREEN, "Successfully removed team from the arena!"));
         return CommandResult.success();
     }
 }

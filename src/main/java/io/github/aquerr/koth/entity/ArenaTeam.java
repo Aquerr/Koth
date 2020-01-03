@@ -5,6 +5,7 @@ import org.spongepowered.api.entity.living.player.Player;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 public class ArenaTeam
@@ -53,5 +54,26 @@ public class ArenaTeam
     public Vector3i getSpawnPoint()
     {
         return this.spawnPoint;
+    }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ArenaTeam arenaTeam = (ArenaTeam)o;
+        return name.equals(arenaTeam.name) && players.equals(arenaTeam.players) && spawnPoint.equals(arenaTeam.spawnPoint);
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(name, players, spawnPoint);
+    }
+
+    @Override
+    public String toString()
+    {
+        return "ArenaTeam{" + "name='" + name + '\'' + ", players=" + players + ", spawnPoint=" + spawnPoint + '}';
     }
 }

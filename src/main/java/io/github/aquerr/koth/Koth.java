@@ -270,6 +270,14 @@ public class Koth {
             .executor(new AddTeamCommand(this))
             .build());
 
+        //Remove Team Command
+        this.subcommands.put(Collections.singletonList("removeteam"), CommandSpec.builder()
+                .description(Text.of("Removes a team from the arena"))
+                .permission(PluginPermissions.REMOVE_TEAM_COMMAND)
+                .arguments(GenericArguments.onlyOne(GenericArguments.string(Text.of("name"))))
+                .executor(new RemoveTeamCommand(this))
+                .build());
+
         //Join Command
         this.subcommands.put(Collections.singletonList("join"), CommandSpec.builder()
             .description(Text.of("Join arena."))

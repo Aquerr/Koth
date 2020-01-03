@@ -292,24 +292,15 @@ public class Arena
     @Override
     public boolean equals(Object o)
     {
-        if(this == o) return true;
-        if(o == null || getClass() != o.getClass()) return false;
-        Arena arena = (Arena) o;
-        return maxPlayers == arena.maxPlayers &&
-                isRoundBased == arena.isRoundBased &&
-                name.equals(arena.name) &&
-                firstPoint.equals(arena.firstPoint) &&
-                secondPoint.equals(arena.secondPoint) &&
-                worldUUID.equals(arena.worldUUID) &&
-                type == arena.type &&
-                hills.equals(arena.hills) &&
-                teams.equals(arena.teams) &&
-                roundTime.equals(arena.roundTime);
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Arena arena = (Arena)o;
+        return maxPlayers == arena.maxPlayers && isRoundBased == arena.isRoundBased && name.equals(arena.name) && firstPoint.equals(arena.firstPoint) && secondPoint.equals(arena.secondPoint) && worldUUID.equals(arena.worldUUID) && type == arena.type && hills.equals(arena.hills) && teams.equals(arena.teams) && status == arena.status && roundTime.equals(arena.roundTime) && lobby.equals(arena.lobby);
     }
 
     @Override
     public int hashCode()
     {
-        return Objects.hash(name, firstPoint, secondPoint, worldUUID, type, maxPlayers, hills, teams, isRoundBased, roundTime);
+        return Objects.hash(name, firstPoint, secondPoint, worldUUID, type, maxPlayers, hills, teams, status, isRoundBased, roundTime, lobby);
     }
 }
