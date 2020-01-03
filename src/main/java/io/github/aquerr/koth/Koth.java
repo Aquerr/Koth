@@ -12,6 +12,7 @@ import io.github.aquerr.koth.entity.*;
 import io.github.aquerr.koth.listener.*;
 import io.github.aquerr.koth.manager.ArenaClassManager;
 import io.github.aquerr.koth.manager.ArenaManager;
+import io.github.aquerr.koth.storage.serializer.ArenaPropertiesTypeSerializer;
 import io.github.aquerr.koth.storage.serializer.ArenaTeamTypeSerializer;
 import io.github.aquerr.koth.storage.serializer.HillTypeSerializer;
 import io.github.aquerr.koth.storage.serializer.LobbyTypeSerializer;
@@ -105,6 +106,7 @@ public class Koth {
         TypeSerializers.getDefaultSerializers().registerType(TypeToken.of(Hill.class), new HillTypeSerializer());
         TypeSerializers.getDefaultSerializers().registerType(TypeToken.of(ArenaTeam.class), new ArenaTeamTypeSerializer());
         TypeSerializers.getDefaultSerializers().registerType(TypeToken.of(Lobby.class), new LobbyTypeSerializer());
+        TypeSerializers.getDefaultSerializers().registerType(TypeToken.of(ArenaProperties.class), new ArenaPropertiesTypeSerializer());
     }
 
     public Configuration getConfiguration()

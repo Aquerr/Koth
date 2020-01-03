@@ -68,6 +68,7 @@ public class ArenaStorage
         arenaNode.getNode("isRoundBased").setValue(arena.isRoundBased());
         arenaNode.getNode("roundTime").setValue(arena.getRoundTime().getSeconds());
         arenaNode.getNode("type").setValue(TypeToken.of(ArenaType.class), arena.getType());
+        arenaNode.getNode("properties").setValue(TypeToken.of(ArenaProperties.class), arena.getProperties());
 
         return saveChanges();
     }
@@ -90,13 +91,14 @@ public class ArenaStorage
         final Vector3i firstPoint = arenaNode.getNode("firstPoint").getValue(TypeToken.of(Vector3i.class));
         final Vector3i secondPoint = arenaNode.getNode("secondPoint").getValue(TypeToken.of(Vector3i.class));
 		final Lobby lobby = arenaNode.getNode("lobby").getValue(TypeToken.of(Lobby.class));
+		final ArenaProperties arenaProperties = arenaNode.getNode("properties").getValue(TypeToken.of(ArenaProperties.class));
 
         //TODO: Do we really need a Set here?
         final Set<Hill> hills = new HashSet<>(arenaNode.getNode("hills").getList(TypeToken.of(Hill.class)));
         final Set<ArenaTeam> teams = new HashSet<>(arenaNode.getNode("teams").getList(TypeToken.of(ArenaTeam.class)));
 
         final ArenaType type = arenaNode.getNode("type").getValue(TypeToken.of(ArenaType.class));
-        final Arena arena = new Arena(name, type , worldUUID, firstPoint, secondPoint, hills, teams, lobby);
+        final Arena arena = new Arena(name, type , worldUUID, firstPoint, secondPoint, hills, teams, lobby, arenaProperties);
         return arena;
     }
 

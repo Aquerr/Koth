@@ -23,17 +23,16 @@ public class Arena
     private final Set<ArenaTeam> teams;
     private ArenaStatus status;
 
-    private boolean isRoundBased = false;
-    private Duration roundTime = Duration.of(3, ChronoUnit.MINUTES);
-
     private Lobby lobby;
+
+    private ArenaProperties arenaProperties;
 
     public Arena(final String name, final ArenaType type ,final UUID worldUUID, final Vector3i firstPoint, final Vector3i secondPoint)
     {
-        this(name, type, worldUUID, firstPoint, secondPoint, new HashSet<>(), new HashSet<>(), new Lobby(Vector3i.ZERO,Vector3i.ZERO,Vector3i.ZERO));
+        this(name, type, worldUUID, firstPoint, secondPoint, new HashSet<>(), new HashSet<>(), new Lobby(Vector3i.ZERO,Vector3i.ZERO,Vector3i.ZERO), ArenaProperties.getDefaultProperties());
     }
 
-    public Arena(final String name, final ArenaType type, final UUID worldUUID, final Vector3i firstPoint, final Vector3i secondPoint, final Set<Hill> hills, final Set<ArenaTeam> teams, final Lobby lobby)
+    public Arena(final String name, final ArenaType type, final UUID worldUUID, final Vector3i firstPoint, final Vector3i secondPoint, final Set<Hill> hills, final Set<ArenaTeam> teams, final Lobby lobby, final ArenaProperties arenaProperties)
     {
         this.name = name;
         this.worldUUID = worldUUID;
@@ -43,6 +42,7 @@ public class Arena
         this.teams = teams;
         this.type = type;
         this.lobby = lobby;
+        this.arenaProperties = arenaProperties;
         this.status = ArenaStatus.IDLE;
 
         if(this.type == ArenaType.TEAMS)
@@ -110,6 +110,21 @@ public class Arena
         return this.status;
     }
 
+    public Object getProperty(final ArenaProperties.PropertyKey propertyKey)
+    {
+        return this.arenaProperties.get(propertyKey);
+    }
+
+    public void putProperty(final ArenaProperties.PropertyKey propertyKey, final Object value)
+    {
+        this.arenaProperties.put(propertyKey, value);
+    }
+
+    public ArenaProperties getProperties()
+    {
+        return this.arenaProperties;
+    }
+
     public Set<UUID> getPlayers()
     {
         return this.teams.stream().map(ArenaTeam::getPlayers).collect(HashSet::new, AbstractCollection::addAll, AbstractCollection::addAll);
@@ -117,17 +132,17 @@ public class Arena
 
     public boolean isRoundBased()
     {
-        return this.isRoundBased;
+        return (boolean)this.arenaProperties.get(ArenaProperties.PropertyKey.ROUND_BASED);
     }
 
     public void setRoundBased(final boolean isRoundBased)
     {
-        this.isRoundBased = isRoundBased;
+        this.arenaProperties.put(ArenaProperties.PropertyKey.ROUND_BASED, isRoundBased);
     }
 
     public Duration getRoundTime()
     {
-        return this.roundTime;
+        return (Duration)this.arenaProperties.get(ArenaProperties.PropertyKey.ROUND_TIME);
     }
 
 //    public boolean addPlayer(final Player player)
@@ -270,8 +285,6 @@ public class Arena
         return intersectX && intersectY && intersectZ;
     }
 
-
-
     public void startGame()
     {
         //TODO: Start game on arena...
@@ -295,12 +308,12 @@ public class Arena
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Arena arena = (Arena)o;
-        return maxPlayers == arena.maxPlayers && isRoundBased == arena.isRoundBased && name.equals(arena.name) && firstPoint.equals(arena.firstPoint) && secondPoint.equals(arena.secondPoint) && worldUUID.equals(arena.worldUUID) && type == arena.type && hills.equals(arena.hills) && teams.equals(arena.teams) && status == arena.status && roundTime.equals(arena.roundTime) && lobby.equals(arena.lobby);
+        return maxPlayers == arena.maxPlayers && name.equals(arena.name) && firstPoint.equals(arena.firstPoint) && secondPoint.equals(arena.secondPoint) && worldUUID.equals(arena.worldUUID) && type == arena.type && hills.equals(arena.hills) && teams.equals(arena.teams) && status == arena.status && lobby.equals(arena.lobby);
     }
 
     @Override
     public int hashCode()
     {
-        return Objects.hash(name, firstPoint, secondPoint, worldUUID, type, maxPlayers, hills, teams, status, isRoundBased, roundTime, lobby);
+        return Objects.hash(name, firstPoint, secondPoint, worldUUID, type, maxPlayers, hills, teams, status, lobby);
     }
 }
