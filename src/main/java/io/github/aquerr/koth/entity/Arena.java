@@ -160,7 +160,7 @@ public class Arena
         return this.teams.remove(team);
     }
 
-    public boolean join(final Player player)
+    public boolean addPlayer(final Player player)
     {
         //Add player to correct team
         if(this.type == ArenaType.FFA)
@@ -179,7 +179,7 @@ public class Arena
     }
 
 
-    public boolean leave(Player player)
+    public boolean removePlayer(Player player)
     {
         //Add player to correct team
         if(this.type == ArenaType.FFA)

@@ -145,7 +145,7 @@ public class Koth {
     private void registerListeners()
     {
         this.eventManager.registerListeners(this, new WandUsageListener(this));
-        this.eventManager.registerListeners(this, new PlayerLeaveListener(this));
+        this.eventManager.registerListeners(this, new PlayerDisconnectListener(this));
         this.eventManager.registerListeners(this, new PlayerMoveListener(this));
         this.eventManager.registerListeners(this, new EntitySpawnListener(this));
         this.eventManager.registerListeners(this, new PlayerAttackListener(this));

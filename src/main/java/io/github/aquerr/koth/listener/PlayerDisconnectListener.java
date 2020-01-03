@@ -1,14 +1,17 @@
 package io.github.aquerr.koth.listener;
 
 import io.github.aquerr.koth.Koth;
+import io.github.aquerr.koth.entity.Arena;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.filter.cause.Root;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
 
-public class PlayerLeaveListener extends AbstractListener
+import java.util.Optional;
+
+public class PlayerDisconnectListener extends AbstractListener
 {
-    public PlayerLeaveListener(final Koth plugin)
+    public PlayerDisconnectListener(final Koth plugin)
     {
         super(plugin);
     }
@@ -18,5 +21,8 @@ public class PlayerLeaveListener extends AbstractListener
     {
         super.getPlugin().getPlayersCreatingArena().remove(player.getUniqueId());
         super.getPlugin().getPlayersEditingArena().remove(player.getUniqueId());
+
+        final Optional<Arena> optionalArena = super.getPlugin().getArenaManager().getArenaForUser(player);
+        optionalArena.ifPresent(arena -> arena.removePlayer(player));
     }
 }

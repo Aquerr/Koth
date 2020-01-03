@@ -3,7 +3,6 @@ package io.github.aquerr.koth.command;
 import io.github.aquerr.koth.Koth;
 import io.github.aquerr.koth.PluginInfo;
 import io.github.aquerr.koth.entity.Arena;
-import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -41,7 +40,7 @@ public class LeaveCommand extends AbstractCommand
 		if(!isPlayingArena)
 			throw new CommandException(Text.of(PluginInfo.PLUGIN_ERROR, TextColors.RED, "You have not joined any arena yet!"));
 
-		final boolean didLeave = arena.leave(player);
+		final boolean didLeave = arena.removePlayer(player);
 		if(didLeave)
 			player.sendMessage(Text.of(PluginInfo.PLUGIN_PREFIX, TextColors.GREEN, "You left the arena!"));
 		else

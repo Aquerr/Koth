@@ -40,7 +40,7 @@ public class JoinCommand extends AbstractCommand
 			throw new CommandException(Text.of(PluginInfo.PLUGIN_ERROR, TextColors.RED, "You must empty your inventory before joining the arena!"));
 
 		final Arena arena = optionalArena.get();
-		final boolean didJoin = arena.join(player);
+		final boolean didJoin = arena.addPlayer(player);
 		if(didJoin)
 			player.sendMessage(Text.of(PluginInfo.PLUGIN_PREFIX, TextColors.GREEN, "You joined arena " + arenaName));
 		else
