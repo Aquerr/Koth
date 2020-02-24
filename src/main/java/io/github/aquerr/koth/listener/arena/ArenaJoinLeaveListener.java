@@ -16,12 +16,12 @@ public class ArenaJoinLeaveListener extends AbstractListener
     @Listener
     public void onArenaJoin(final ArenaJoinEvent event)
     {
-
+        event.getArena().onArenaJoinEvent(event);
     }
 
     @Listener
     public void onArenaLeave(final ArenaLeaveEvent event)
     {
-
+        event.getArena().onArenaLeaveEvent(event);
     }
 }

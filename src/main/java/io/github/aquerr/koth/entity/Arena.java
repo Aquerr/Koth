@@ -2,6 +2,7 @@ package io.github.aquerr.koth.entity;
 
 import com.flowpowered.math.vector.Vector3i;
 import com.google.inject.internal.cglib.core.$ProcessArrayCallback;
+import io.github.aquerr.koth.event.*;
 import org.spongepowered.api.entity.living.player.Player;
 
 import java.time.Duration;
@@ -344,6 +345,36 @@ public class Arena implements Runnable
             if (this.getPlayers().size() > 1)
                 break;
         }
+    }
+
+    public void onArenaStartEvent(final ArenaStartEvent event)
+    {
+
+    }
+
+    public void onArenaStopEvent(final ArenaStopEvent event)
+    {
+
+    }
+
+    public void onArenaJoinEvent(final ArenaJoinEvent event)
+    {
+
+    }
+
+    public void onArenaLeaveEvent(final ArenaLeaveEvent event)
+    {
+
+    }
+
+    public void onArenaStatusChangeEvent(final ArenaStatusChangeEvent event)
+    {
+
+    }
+
+    public void onArenaHillCaptureEvent(final ArenaHillCaptureEvent event)
+    {
+
     }
 
     @Override

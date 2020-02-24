@@ -15,6 +15,6 @@ public class ArenaHillCaptureListener extends AbstractListener
     @Listener
     public void onHillCapture(final ArenaHillCaptureEvent event)
     {
-
+        event.getArena().onArenaHillCaptureEvent(event);
     }
 }

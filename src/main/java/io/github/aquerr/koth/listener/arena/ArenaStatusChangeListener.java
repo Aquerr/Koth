@@ -15,6 +15,6 @@ public class ArenaStatusChangeListener extends AbstractListener
     @Listener
     public void onArenaStatusChangeListener(final ArenaStatusChangeEvent event)
     {
-
+        event.getArena().onArenaStatusChangeEvent(event);
     }
 }

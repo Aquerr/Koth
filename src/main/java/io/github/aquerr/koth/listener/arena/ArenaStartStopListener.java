@@ -16,12 +16,12 @@ public class ArenaStartStopListener extends AbstractListener
     @Listener
     public void onArenaStart(final ArenaStartEvent event)
     {
-
+        event.getArena().onArenaStartEvent(event);
     }
 
     @Listener
     public void onArenaStop(final ArenaStopEvent event)
     {
-
+        event.getArena().onArenaStopEvent(event);
     }
 }
