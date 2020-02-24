@@ -19,6 +19,7 @@ public class Arena implements Runnable
     private UUID worldUUID;
     private ArenaType type;
 
+    private int minPlayers = 2;
     private int maxPlayers = 10;
     private final Set<Hill> hills;
     private final Set<ArenaTeam> teams;
@@ -84,6 +85,11 @@ public class Arena implements Runnable
     public Lobby getLobby()
     {
         return this.lobby;
+    }
+
+    public int getMinPlayers()
+    {
+        return this.minPlayers;
     }
 
     public int getMaxPlayers()
@@ -333,6 +339,11 @@ public class Arena implements Runnable
         this.status = ArenaStatus.IDLE;
     }
 
+    public void startQueue()
+    {
+
+    }
+
     public void stop()
     {
 
@@ -357,11 +368,13 @@ public class Arena implements Runnable
 
     }
 
+    //Occurs before actual join
     public void onArenaJoinEvent(final ArenaJoinEvent event)
     {
 
     }
 
+    //Occurs before actual leave
     public void onArenaLeaveEvent(final ArenaLeaveEvent event)
     {
 
@@ -383,12 +396,12 @@ public class Arena implements Runnable
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Arena arena = (Arena)o;
-        return maxPlayers == arena.maxPlayers && name.equals(arena.name) && firstPoint.equals(arena.firstPoint) && secondPoint.equals(arena.secondPoint) && worldUUID.equals(arena.worldUUID) && type == arena.type && hills.equals(arena.hills) && teams.equals(arena.teams) && status == arena.status && lobby.equals(arena.lobby);
+        return minPlayers == arena.minPlayers && maxPlayers == arena.maxPlayers && name.equals(arena.name) && firstPoint.equals(arena.firstPoint) && secondPoint.equals(arena.secondPoint) && worldUUID.equals(arena.worldUUID) && type == arena.type && hills.equals(arena.hills) && teams.equals(arena.teams) && status == arena.status && lobby.equals(arena.lobby);
     }
 
     @Override
     public int hashCode()
     {
-        return Objects.hash(name, firstPoint, secondPoint, worldUUID, type, maxPlayers, hills, teams, status, lobby);
+        return Objects.hash(name, firstPoint, secondPoint, worldUUID, type, minPlayers, maxPlayers, hills, teams, status, lobby);
     }
 }
