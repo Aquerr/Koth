@@ -8,7 +8,7 @@ import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
-public class Arena
+public class Arena implements Runnable
 {
     private static final Random RANDOM = new Random();
 
@@ -246,8 +246,11 @@ public class Arena
         return resultArena;
     }
 
-    public boolean intersects(final Vector3i position)
+    public boolean intersects(final UUID worldUUID, final Vector3i position)
     {
+        if (!this.worldUUID.equals(worldUUID))
+            return false;
+
         boolean intersectX = false;
         boolean intersectY = false;
         boolean intersectZ = false;
@@ -285,13 +288,38 @@ public class Arena
         return intersectX && intersectY && intersectZ;
     }
 
-    public void startGame()
+    @Override
+    public void run()
     {
+        this.status = ArenaStatus.IDLE;
+        waitForPlayers();
+        //Listen for joining players...
+
         //TODO: Start game on arena...
+        this.status = ArenaStatus.QUEUE;
+
+        //Start queue;
 
         //Cleanup points
 
+        if (this.status == ArenaStatus.IDLE)
+        {
+
+        }
+        else if (this.status == ArenaStatus.QUEUE)
+        {
+
+        }
+        else
+        {
+
+        }
+
         //Spawn players in proper lobbies
+        for (final UUID playerUUID : this.getPlayers())
+        {
+
+        }
 
         //Start lobby timer
 
@@ -300,6 +328,22 @@ public class Arena
         //Start game and start game timer
 
         //End game if timer is done or if points reached theirs limit.
+
+        this.status = ArenaStatus.IDLE;
+    }
+
+    public void stop()
+    {
+
+    }
+
+    public void waitForPlayers()
+    {
+        while (true)
+        {
+            if (this.getPlayers().size() > 1)
+                break;
+        }
     }
 
     @Override

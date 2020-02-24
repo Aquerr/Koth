@@ -36,7 +36,9 @@ import java.nio.file.Path;
 import java.util.*;
 
 @Plugin(id = PluginInfo.ID, name = PluginInfo.NAME, version = PluginInfo.VERSION, description = PluginInfo.DESCRIPTION, authors = {"Aquerr/Nerdi"})
-public class Koth {
+public class Koth
+{
+    private static Koth INSTANCE;
 
     private final Map<List<String>, CommandCallable> subcommands = new HashMap<>();
     private final CommandManager commandManager;
@@ -64,6 +66,12 @@ public class Koth {
         this.commandManager = commandManager;
         this.eventManager = eventManager;
         this.configDir = configDir;
+        INSTANCE = this;
+    }
+
+    public static Koth getInstance()
+    {
+        return INSTANCE;
     }
 
     @Listener

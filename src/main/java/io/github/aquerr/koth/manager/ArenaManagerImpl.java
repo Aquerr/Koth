@@ -133,4 +133,9 @@ public class ArenaManagerImpl implements ArenaManager
             return Optional.of(arena);
         else return Optional.empty();
     }
+
+//    public void startQueueForArena(final Arena arena)
+//    {
+//
+//    }
 }
