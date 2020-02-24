@@ -48,7 +48,7 @@ public class CreateHillCommand extends AbstractCommand
             throw new CommandException(Text.of(PluginInfo.PLUGIN_ERROR, TextColors.RED, "You must select two points in the world first before creating an arena."));
 
         final SelectionPoints selectionPoints = super.getPlugin().getPlayerSelectionPoints().get(player.getUniqueId());
-        if(!arena.intersects(selectionPoints.getFirstPoint()) || !arena.intersects(selectionPoints.getSecondPoint()))
+        if(!arena.intersects(world.getUniqueId(), selectionPoints.getFirstPoint()) || !arena.intersects(world.getUniqueId(), selectionPoints.getSecondPoint()))
             throw new CommandException(Text.of(PluginInfo.PLUGIN_ERROR, TextColors.RED, "Hill must be placed inside the editing arena!"));
 
         for (final Hill hill : arena.getHills())

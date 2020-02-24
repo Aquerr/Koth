@@ -11,6 +11,7 @@ import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.world.World;
 
 public class CreateLobbyCommand extends AbstractCommand
 {
@@ -26,6 +27,7 @@ public class CreateLobbyCommand extends AbstractCommand
 			throw new CommandException(Text.of(PluginInfo.PLUGIN_ERROR, TextColors.RED, "Only in-game players can use this command!"));
 
 		final Player player = (Player)source;
+		final World world = player.getWorld();
 		if (!super.getPlugin().getPlayerSelectionPoints().containsKey(player.getUniqueId()))
 			throw new CommandException(Text.of(PluginInfo.PLUGIN_ERROR, TextColors.RED, "You must select two points in the world first before creating an arena!"));
 
@@ -40,7 +42,7 @@ public class CreateLobbyCommand extends AbstractCommand
 		if(arena == null)
 			throw new CommandException(Text.of(PluginInfo.PLUGIN_ERROR, TextColors.RED, "You must be in arena editing mode to do this."));
 
-		if(arena.intersects(selectionPoints.getFirstPoint()) || arena.intersects(selectionPoints.getSecondPoint()))
+		if(arena.intersects(world.getUniqueId(), selectionPoints.getFirstPoint()) || arena.intersects(world.getUniqueId(), selectionPoints.getSecondPoint()))
 			throw new CommandException(Text.of(PluginInfo.PLUGIN_ERROR, TextColors.RED, "Lobby must be placed outside the arena!"));
 
 		arena.setLobbyPoints(selectionPoints.getFirstPoint(), selectionPoints.getSecondPoint());

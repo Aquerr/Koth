@@ -10,6 +10,10 @@ import io.github.aquerr.koth.config.Configuration;
 import io.github.aquerr.koth.config.ConfigurationImpl;
 import io.github.aquerr.koth.entity.*;
 import io.github.aquerr.koth.listener.*;
+import io.github.aquerr.koth.listener.arena.ArenaHillCaptureListener;
+import io.github.aquerr.koth.listener.arena.ArenaJoinLeaveListener;
+import io.github.aquerr.koth.listener.arena.ArenaStartStopListener;
+import io.github.aquerr.koth.listener.arena.ArenaStatusChangeListener;
 import io.github.aquerr.koth.manager.ArenaClassManager;
 import io.github.aquerr.koth.manager.ArenaManager;
 import io.github.aquerr.koth.storage.serializer.ArenaPropertiesTypeSerializer;
@@ -161,6 +165,13 @@ public class Koth
         this.eventManager.registerListeners(this, new PlayerAttackListener(this));
         this.eventManager.registerListeners(this, new SignClickListener(this));
         this.eventManager.registerListeners(this, new CommandUsageListener(this));
+
+        //Arena events
+
+        this.eventManager.registerListeners(this, new ArenaJoinLeaveListener(this));
+        this.eventManager.registerListeners(this, new ArenaStartStopListener(this));
+        this.eventManager.registerListeners(this, new ArenaStatusChangeListener(this));
+        this.eventManager.registerListeners(this, new ArenaHillCaptureListener(this));
     }
 
     private void registerCommands()

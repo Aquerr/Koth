@@ -11,6 +11,7 @@ import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.world.World;
 
 public class CreateTeamSpawnCommand extends AbstractCommand
 {
@@ -28,6 +29,7 @@ public class CreateTeamSpawnCommand extends AbstractCommand
 			throw new CommandException(Text.of(PluginInfo.PLUGIN_ERROR, TextColors.RED, "Only in-game players can use this command!"));
 
 		final Player player = (Player)source;
+		final World world = player.getWorld();
 
 		Arena arena = super.getPlugin().getPlayersCreatingArena().get(player.getUniqueId());
 		if (arena == null)
@@ -36,7 +38,7 @@ public class CreateTeamSpawnCommand extends AbstractCommand
 		if(arena == null)
 			throw new CommandException(Text.of(PluginInfo.PLUGIN_ERROR, TextColors.RED, "You must be in arena editing mode to do this."));
 
-		if(!arena.intersects(player.getLocation().getBlockPosition()))
+		if(!arena.intersects(world.getUniqueId(), player.getLocation().getBlockPosition()))
 			throw new CommandException(Text.of(PluginInfo.PLUGIN_ERROR, TextColors.RED, "Spawn must be placed inside the editing arena!"));
 
 		team.setSpawnPoint(player.getLocation().getBlockPosition());

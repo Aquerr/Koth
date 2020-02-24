@@ -29,6 +29,8 @@ public class PlayerMoveListener extends AbstractListener
     @Exclude(MoveEntityEvent.Teleport.class)
     public void onPlayerMove(final MoveEntityEvent event, final @Root Player player)
     {
+        final World world = player.getWorld();
+
         final Transform<World> fromTransform = event.getFromTransform();
         final Transform<World> toTransform = event.getToTransform();
 
@@ -38,8 +40,6 @@ public class PlayerMoveListener extends AbstractListener
         if (fromBlockPosition.equals(toBlockPosition))
             return;
 
-        //TODO: This is a debug code and should be removed in the future.
-        //TODO: Normally we should check if player goes outside the arena during game and if he/she goes outside then we should move them back or kick from the arena.
         //Check if player entered arena
         for (final Arena arena : this.arenasCache.values())
         {
@@ -47,12 +47,12 @@ public class PlayerMoveListener extends AbstractListener
             if(super.getPlugin().getPlayersCreatingArena().containsKey(player.getUniqueId()) || super.getPlugin().getPlayersEditingArena().containsKey(player.getUniqueId()))
                 continue;
 
-            if(!arena.intersects(fromBlockPosition) && arena.intersects(toBlockPosition))
+            if(!arena.intersects(world.getUniqueId(), fromBlockPosition) && arena.intersects(world.getUniqueId(), toBlockPosition))
             {
                 player.sendMessage(Text.of(PluginInfo.PLUGIN_PREFIX, "You can't enter the arena " + arena.getName() + "!"));
                 event.setCancelled(true);
             }
-            else if(arena.intersects(fromBlockPosition) && !arena.intersects(toBlockPosition))
+            else if(arena.intersects(world.getUniqueId(), fromBlockPosition) && !arena.intersects(world.getUniqueId(), toBlockPosition))
             {
                 player.sendMessage(Text.of(PluginInfo.PLUGIN_PREFIX, "You can't leave the arena " + arena.getName() + "!"));
                 event.setCancelled(true);

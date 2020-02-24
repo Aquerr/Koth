@@ -6,7 +6,7 @@ public abstract class AbstractListener
 {
     private final Koth plugin;
 
-    AbstractListener(final Koth plugin)
+    protected AbstractListener(final Koth plugin)
     {
         this.plugin = plugin;
     }

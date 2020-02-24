@@ -65,7 +65,7 @@ public class EntitySpawnListener extends AbstractListener
 		for(final Arena arena : this.arenasCache.values())
 		{
 			final Location<World> entityLocation = entity.getLocation();
-			if(arena.intersects(entityLocation.getBlockPosition()))
+			if(arena.intersects(entityLocation.getExtent().getUniqueId(), entityLocation.getBlockPosition()))
 			{
 				return false;
 			}
