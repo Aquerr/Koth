@@ -63,7 +63,7 @@ public class ArenaStorage
         arenaNode.getNode("secondPoint").setValue(TypeToken.of(Vector3i.class), arena.getSecondPoint());
         arenaNode.getNode("lobby").setValue(new TypeToken<Lobby>() {}, arena.getLobby());
         arenaNode.getNode("hills").setValue(new TypeToken<List<Hill>>() {}, new ArrayList<>(arena.getHills()));
-        arenaNode.getNode("teams").setValue(new TypeToken<List<ArenaTeam>>() {}, new ArrayList<>(arena.getTeams()));
+        arenaNode.getNode("teams").setValue(new TypeToken<List<ArenaTeam>>() {}, new ArrayList<>(arena.getTeams().values()));
         arenaNode.getNode("maxPlayers").setValue(arena.getMaxPlayers());
         arenaNode.getNode("isRoundBased").setValue(arena.isRoundBased());
         arenaNode.getNode("roundTime").setValue(arena.getRoundTime().getSeconds());

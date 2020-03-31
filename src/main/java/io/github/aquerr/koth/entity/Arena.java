@@ -1,16 +1,30 @@
 package io.github.aquerr.koth.entity;
 
 import com.flowpowered.math.vector.Vector3i;
-import com.google.inject.internal.cglib.core.$ProcessArrayCallback;
+import io.github.aquerr.koth.PluginInfo;
 import io.github.aquerr.koth.event.*;
+import io.github.aquerr.koth.scheduling.KothScheduler;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.item.ItemTypes;
+import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.scheduler.Task;
+import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.text.title.Title;
+import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 
 import java.time.Duration;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 public class Arena implements Runnable
 {
+    private static final KothScheduler KOTH_SCHEDULER = KothScheduler.getInstance();
     private static final Random RANDOM = new Random();
 
     private String name;
@@ -22,11 +36,14 @@ public class Arena implements Runnable
     private int minPlayers = 2;
     private int maxPlayers = 10;
     private final Set<Hill> hills;
-    private final Set<ArenaTeam> teams;
+    private final Map<String, ArenaTeam> teams;
     private ArenaStatus status;
 
-    private Lobby lobby;
+    private Map<String, Integer> teamPoints = new HashMap<>();
 
+    private Map<Hill, Set<Player>> hillUnderCapture = new HashMap<>();
+
+    private Lobby lobby;
     private ArenaProperties arenaProperties;
 
     public Arena(final String name, final ArenaType type ,final UUID worldUUID, final Vector3i firstPoint, final Vector3i secondPoint)
@@ -41,19 +58,20 @@ public class Arena implements Runnable
         this.firstPoint = firstPoint;
         this.secondPoint = secondPoint;
         this.hills = hills;
-        this.teams = teams;
         this.type = type;
         this.lobby = lobby;
         this.arenaProperties = arenaProperties;
         this.status = ArenaStatus.IDLE;
+
+        this.teams = teams.stream().collect(Collectors.toMap(ArenaTeam::getName, arenaTeam -> arenaTeam));
 
         if(this.type == ArenaType.TEAMS)
         {
             //Precreate two teams
             final ArenaTeam arenaTeamRed = new ArenaTeam("red");
             final ArenaTeam arenaTeamBlue = new ArenaTeam("blue");
-            this.teams.add(arenaTeamBlue);
-            this.teams.add(arenaTeamRed);
+            this.teams.put(arenaTeamBlue.getName(), arenaTeamBlue);
+            this.teams.put(arenaTeamRed.getName(), arenaTeamRed);
         }
     }
 
@@ -102,7 +120,7 @@ public class Arena implements Runnable
         return this.hills;
     }
 
-    public Set<ArenaTeam> getTeams()
+    public Map<String, ArenaTeam> getTeams()
     {
         return this.teams;
     }
@@ -134,7 +152,7 @@ public class Arena implements Runnable
 
     public Set<UUID> getPlayers()
     {
-        return this.teams.stream().map(ArenaTeam::getPlayers).collect(HashSet::new, AbstractCollection::addAll, AbstractCollection::addAll);
+        return this.teams.values().stream().map(ArenaTeam::getPlayers).collect(HashSet::new, AbstractCollection::addAll, AbstractCollection::addAll);
     }
 
     public boolean isRoundBased()
@@ -152,16 +170,6 @@ public class Arena implements Runnable
         return (Duration)this.arenaProperties.get(ArenaProperties.PropertyKey.ROUND_TIME);
     }
 
-//    public boolean addPlayer(final Player player)
-//    {
-//        return this.players.add(player.getUniqueId());
-//    }
-
-//    public boolean removePlayer(final Player player)
-//    {
-//        return this.players.remove(player.getUniqueId());
-//    }
-
     public boolean addHill(final Hill hill)
     {
         return this.hills.add(hill);
@@ -174,16 +182,21 @@ public class Arena implements Runnable
 
     public boolean addTeam(final ArenaTeam team)
     {
-        return this.teams.add(team);
+        this.teams.put(team.getName(), team);
+        return true;
     }
 
     public boolean removeTeam(final ArenaTeam team)
     {
-        return this.teams.remove(team);
+        this.teams.remove(team.getName());
+        return true;
     }
 
     public boolean addPlayer(final Player player)
     {
+        if (!canJoin())
+            return false;
+
         //Add player to correct team
         if(this.type == ArenaType.FFA)
         {
@@ -200,14 +213,13 @@ public class Arena implements Runnable
         return false;
     }
 
-
     public boolean removePlayer(Player player)
     {
         //Add player to correct team
         if(this.type == ArenaType.FFA)
         {
             ArenaTeam arenaTeamToRemove = null;
-            for(final ArenaTeam arenaTeam : this.teams)
+            for(final ArenaTeam arenaTeam : this.teams.values())
             {
                 if(arenaTeam.getPlayers().contains(player.getUniqueId()))
                     arenaTeamToRemove = arenaTeam;
@@ -217,7 +229,7 @@ public class Arena implements Runnable
         else if(this.type == ArenaType.TEAMS)
         {
             ArenaTeam arenaTeamToRemove = null;
-            for(final ArenaTeam arenaTeam : this.teams)
+            for(final ArenaTeam arenaTeam : this.teams.values())
             {
                 if(arenaTeam.getPlayers().contains(player.getUniqueId()))
                     arenaTeamToRemove = arenaTeam;
@@ -232,18 +244,13 @@ public class Arena implements Runnable
 
     public boolean hasTeam(final String name)
     {
-        for(final ArenaTeam arenaTeam : this.teams)
-        {
-            if(arenaTeam.getName().equals(name))
-                return true;
-        }
-        return false;
+        return this.teams.containsKey(name);
     }
 
     private ArenaTeam getTeamWithLeastPlayers()
     {
         ArenaTeam resultArena = null;
-        for(final ArenaTeam arenaTeam : this.teams)
+        for(final ArenaTeam arenaTeam : this.teams.values())
         {
             if(resultArena == null)
                 resultArena = arenaTeam;
@@ -295,66 +302,200 @@ public class Arena implements Runnable
         return intersectX && intersectY && intersectZ;
     }
 
+    public int getPointsForTeam(final ArenaTeam arenaTeam)
+    {
+        return this.teamPoints.get(arenaTeam.getName());
+    }
+
+    public boolean setPointsForTeam(final ArenaTeam arenaTeam, final int points)
+    {
+        this.teamPoints.put(arenaTeam.getName(), points);
+        return true;
+    }
+
     @Override
     public void run()
     {
         this.status = ArenaStatus.IDLE;
-        waitForPlayers();
-        //Listen for joining players...
 
-        //TODO: Start game on arena...
-        this.status = ArenaStatus.QUEUE;
+        //Fires every 5 seconds and sets appropriate arena status
+        KOTH_SCHEDULER.runAsyncWithInterval(5, TimeUnit.SECONDS, this::playerCountChecker);
 
         //Start queue;
+    }
 
-        //Cleanup points
+    private void startQueue()
+    {
+        if (this.status == ArenaStatus.QUEUE)
+            return;
 
-        if (this.status == ArenaStatus.IDLE)
+        if (this.getPlayers().size() > this.minPlayers)
         {
-
+            this.status = ArenaStatus.QUEUE;
+            KOTH_SCHEDULER.runAsyncWithInterval(1, TimeUnit.SECONDS, new ArenaQueueTask(this));
         }
-        else if (this.status == ArenaStatus.QUEUE)
+    }
+
+    private void startGame()
+    {
+        if (this.status == ArenaStatus.RUNNING)
+            return;
+        this.status = ArenaStatus.RUNNING;
+
+        for (final ArenaTeam arenaTeam : this.teams.values())
         {
-
-        }
-        else
-        {
-
+            this.teamPoints.put(arenaTeam.getName(), 0);
         }
 
-        //Spawn players in proper lobbies
-        for (final UUID playerUUID : this.getPlayers())
-        {
+        KOTH_SCHEDULER.runAsyncWithInterval(1, TimeUnit.SECONDS, new ArenaTimerTask(this));
 
-        }
+        // Spawn players in proper spawn points
+        spawnPlayers();
+    }
 
-        //Start lobby timer
+    private void endGame()
+    {
+        // Calculate winner
+        final Set<Player> winners = calculateWinners();
+        awardPlayers(winners);
 
-        //End lobby timer
+        // Move all players to lobby.
+        movePlayersToLobby();
 
-        //Start game and start game timer
-
-        //End game if timer is done or if points reached theirs limit.
-
+        // Cleanup
+        this.teamPoints.clear();
         this.status = ArenaStatus.IDLE;
     }
 
-    public void startQueue()
+    private Set<Player> calculateWinners()
     {
-
-    }
-
-    public void stop()
-    {
-
-    }
-
-    public void waitForPlayers()
-    {
-        while (true)
+        Map.Entry<String, Integer> maxEntry = null;
+        for (final Map.Entry<String, Integer> entry : this.teamPoints.entrySet())
         {
-            if (this.getPlayers().size() > 1)
-                break;
+            if (maxEntry == null || entry.getValue().compareTo(maxEntry.getValue()) > 0)
+            {
+                maxEntry = entry;
+            }
+        }
+
+        if (maxEntry == null)
+            return new HashSet<>();
+
+        final ArenaTeam arenaTeam = this.teams.get(maxEntry.getKey());
+        return getSpongePlayers(arenaTeam.getPlayers());
+    }
+
+    private void awardPlayers(final Set<Player> players)
+    {
+        for (final Player player : players)
+        {
+            //TODO: Setup reward for winner.
+            player.getInventory().offer(ItemStack.builder().itemType(ItemTypes.GOLDEN_APPLE).quantity(1).build());
+            player.sendMessage(PluginInfo.PLUGIN_PREFIX.concat(Text.of(TextColors.GREEN, "You won! A reward has been placed in your inventory.")));
+        }
+    }
+
+    private Set<Player> getSpongePlayers(final Collection<UUID> playerUUIDs)
+    {
+        final Set<Player> players = new HashSet<>();
+        for (final UUID playerUUID : playerUUIDs)
+        {
+            final Optional<Player> optionalPlayer = Sponge.getServer().getPlayer(playerUUID);
+            optionalPlayer.ifPresent(players::add);
+        }
+        return players;
+    }
+
+    private void movePlayersToLobby()
+    {
+        final World world = Sponge.getServer().getWorld(this.worldUUID).get();
+        final Location<World> lobbyLocation = new Location<>(world, this.lobby.getSpawnPoint());
+        for (final Player player : getSpongePlayers(getPlayers()))
+        {
+            player.setLocation(lobbyLocation);
+        }
+    }
+
+//    private void movePlayerToLocation(final Set<Player> players, final Location<World> location)
+//    {
+//        for (final Player player : players)
+//            player.setLocation(location);
+//    }
+
+    private void spawnPlayers()
+    {
+        final World world = Sponge.getServer().getWorld(this.worldUUID).get();
+        for (final ArenaTeam arenaTeam : this.teams.values())
+        {
+            final Location<World> teamSpawnLocation = new Location<>(world, arenaTeam.getSpawnPoint());
+            for (final UUID playerUUID : arenaTeam.getPlayers())
+            {
+                final Optional<Player> optionalPlayer = Sponge.getServer().getPlayer(playerUUID);
+                if (!optionalPlayer.isPresent())
+                {
+                    // Illegal state! Player who is offline should not be in player list!
+                    Sponge.getServer().getConsole().sendMessage(Text.of(PluginInfo.PLUGIN_ERROR, "Illegal arena state! Offline player exists in arena team! Player UUID: " + playerUUID));
+                    continue;
+                }
+                final Player player = optionalPlayer.get();
+                player.setLocation(teamSpawnLocation);
+                player.sendTitle(Title.builder().title(Text.of(TextColors.RED, "KOTH game started!")).build());
+            }
+        }
+    }
+
+    public void playerCountChecker()
+    {
+        if (this.status == ArenaStatus.IDLE)
+        {
+            if (getPlayers().size() > this.minPlayers)
+            {
+                startQueue();
+            }
+        }
+        else if (this.status == ArenaStatus.QUEUE)
+        {
+            if (getPlayers().size() < this.minPlayers)
+                this.status = ArenaStatus.IDLE;
+        }
+        else if (this.status == ArenaStatus.RUNNING)
+        {
+            if (getPlayers().size() < this.minPlayers)
+            {
+                this.status = ArenaStatus.ENDING;
+                //Prepare to end game...
+            }
+        }
+        else if (this.status == ArenaStatus.ENDING)
+        {
+            //What can we put here?
+        }
+    }
+
+    public boolean canJoin()
+    {
+        if (this.status == ArenaStatus.RUNNING || this.status == ArenaStatus.ENDING)
+            return false;
+
+        if (this.status == ArenaStatus.IDLE || this.status == ArenaStatus.QUEUE)
+            return this.getPlayers().size() < this.maxPlayers;
+
+        return false;
+    }
+
+    private void notifyPlayers(final Text text)
+    {
+        for (final UUID playerUUID : getPlayers())
+        {
+            final Optional<Player> optionalPlayer = Sponge.getServer().getPlayer(playerUUID);
+            if (!optionalPlayer.isPresent())
+            {
+                // Illegal state! Player who is offline should not be in player list!
+                Sponge.getServer().getConsole().sendMessage(Text.of(PluginInfo.PLUGIN_ERROR, "Illegal arena state! Offline player exists in arena team! Player UUID: " + playerUUID));
+                continue;
+            }
+            final Player player = optionalPlayer.get();
+            player.sendMessage(PluginInfo.PLUGIN_PREFIX.concat(text));
         }
     }
 
@@ -368,13 +509,13 @@ public class Arena implements Runnable
 
     }
 
-    //Occurs before actual join
+    //Occurs before the actual join
     public void onArenaJoinEvent(final ArenaJoinEvent event)
     {
 
     }
 
-    //Occurs before actual leave
+    //Occurs before the actual leave
     public void onArenaLeaveEvent(final ArenaLeaveEvent event)
     {
 
@@ -395,13 +536,95 @@ public class Arena implements Runnable
     {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Arena arena = (Arena)o;
-        return minPlayers == arena.minPlayers && maxPlayers == arena.maxPlayers && name.equals(arena.name) && firstPoint.equals(arena.firstPoint) && secondPoint.equals(arena.secondPoint) && worldUUID.equals(arena.worldUUID) && type == arena.type && hills.equals(arena.hills) && teams.equals(arena.teams) && status == arena.status && lobby.equals(arena.lobby);
+        Arena arena = (Arena) o;
+        return name.equals(arena.name) &&
+                firstPoint.equals(arena.firstPoint) &&
+                secondPoint.equals(arena.secondPoint) &&
+                worldUUID.equals(arena.worldUUID) &&
+                Objects.equals(arenaProperties, arena.arenaProperties);
     }
 
     @Override
     public int hashCode()
     {
-        return Objects.hash(name, firstPoint, secondPoint, worldUUID, type, minPlayers, maxPlayers, hills, teams, status, lobby);
+        return Objects.hash(name, firstPoint, secondPoint, worldUUID);
+    }
+
+    public static class ArenaQueueTask implements Consumer<Task>
+    {
+        private final Arena arena;
+
+        private int seconds = 0;
+        private int maxQueueTime = 60; // 60 seconds
+
+        public ArenaQueueTask(final Arena arena)
+        {
+            this.arena = arena;
+        }
+
+        @Override
+        public void accept(Task task)
+        {
+            seconds++;
+
+            if (seconds >= maxQueueTime)
+            {
+                task.cancel();
+                CompletableFuture.runAsync(arena::startGame);
+                return;
+            }
+
+            //Stop queue if number of players is less than minimum.
+            if (this.arena.getPlayers().size() < this.arena.getMinPlayers())
+            {
+                arena.status = ArenaStatus.IDLE;
+                task.cancel();
+                return;
+            }
+        }
+    }
+
+    public static class ArenaTimerTask implements Consumer<Task>
+    {
+        private final Arena arena;
+        private int seconds = 0;
+        private int maxGameTime = 900;
+
+        public ArenaTimerTask(final Arena arena)
+        {
+            this.arena = arena;
+        }
+
+        @Override
+        public void accept(Task task)
+        {
+            if (seconds >= maxGameTime || this.arena.status != ArenaStatus.RUNNING)
+            {
+                task.cancel();
+                CompletableFuture.runAsync(arena::endGame);
+                return;
+            }
+            else if (seconds > maxGameTime - 10)
+            {
+                arena.notifyPlayers(Text.of("Game ends in " + seconds));
+            }
+            seconds++;
+        }
+    }
+
+    public static class CaptureHillTask implements Consumer<Task>
+    {
+        private final Arena arena;
+
+        public CaptureHillTask(final Arena arena)
+        {
+            this.arena = arena;
+        }
+
+        @Override
+        public void accept(Task task)
+        {
+
+        }
     }
 }

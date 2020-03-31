@@ -39,7 +39,7 @@ public class RemoveTeamCommand extends AbstractCommand
         if (!arena.hasTeam(name))
             throw new CommandException(Text.of(PluginInfo.PLUGIN_ERROR, TextColors.RED, "Team with such name does not exists in this arena!"));
 
-        final ArenaTeam arenaTeam = arena.getTeams().stream().filter(x->x.getName().equals(name)).findFirst().get();
+        final ArenaTeam arenaTeam = arena.getTeams().get(name);
         arena.removeTeam(arenaTeam);
         super.getPlugin().getArenaManager().updateArena(arena);
         source.sendMessage(Text.of(PluginInfo.PLUGIN_PREFIX, TextColors.GREEN, "Successfully removed team from the arena!"));

@@ -46,9 +46,9 @@ public class ArenaTeamArgument extends CommandElement
 		if(arena == null)
 			throw new ArgumentParseException(Text.of(PluginInfo.PLUGIN_ERROR, "Player is not editing any arena!"), source.getName(), 0);
 
-		for(final ArenaTeam arenaTeam : arena.getTeams())
+		for(final ArenaTeam arenaTeam : arena.getTeams().values())
 		{
-			if(arenaTeam.getName().equals(arg))
+			if(arenaTeam.getName().equalsIgnoreCase(arg))
 				return arenaTeam;
 		}
 		return null;
@@ -74,13 +74,7 @@ public class ArenaTeamArgument extends CommandElement
 		if (arena == null)
 			return Collections.EMPTY_LIST;
 
-		final Set<ArenaTeam> teams = arena.getTeams();
-		final List<String> teamsNames = new LinkedList<>();
-
-		for(final ArenaTeam arenaTeam : teams)
-		{
-			teamsNames.add(arenaTeam.getName());
-		}
-		return teamsNames.stream().filter(x->x.contains(charSequence)).collect(Collectors.toList());
+		final Set<String> teams = arena.getTeams().keySet();
+		return teams.stream().filter(x->x.toLowerCase().contains(charSequence.toLowerCase())).collect(Collectors.toList());
 	}
 }
