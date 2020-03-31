@@ -10,7 +10,7 @@ public class ArenaHillCaptureEvent extends AbstractArenaEvent
     private final Hill hill;
     private final ArenaTeam arenaTeam;
 
-    ArenaHillCaptureEvent(final Arena arena, final Hill hill, final ArenaTeam arenaTeam, final Cause cause)
+    public ArenaHillCaptureEvent(final Arena arena, final Hill hill, final ArenaTeam arenaTeam, final Cause cause)
     {
         super(arena, cause);
         this.hill = hill;
@@ -25,5 +25,21 @@ public class ArenaHillCaptureEvent extends AbstractArenaEvent
     public ArenaTeam getAssociatedTeam()
     {
         return this.arenaTeam;
+    }
+
+    public static class Pre extends ArenaHillCaptureEvent
+    {
+        public Pre(Arena arena, Hill hill, ArenaTeam arenaTeam, Cause cause)
+        {
+            super(arena, hill, arenaTeam, cause);
+        }
+    }
+
+    public static class Captured extends ArenaHillCaptureEvent
+    {
+        public Captured(Arena arena, Hill hill, ArenaTeam arenaTeam, Cause cause)
+        {
+            super(arena, hill, arenaTeam, cause);
+        }
     }
 }

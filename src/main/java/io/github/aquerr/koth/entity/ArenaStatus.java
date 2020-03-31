@@ -2,5 +2,5 @@ package io.github.aquerr.koth.entity;
 
 public enum ArenaStatus
 {
-	IDLE, QUEUE, RUNNING
+	IDLE, QUEUE, RUNNING, ENDING
 }

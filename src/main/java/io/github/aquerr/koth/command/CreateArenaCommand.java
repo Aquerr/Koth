@@ -51,6 +51,8 @@ public class CreateArenaCommand extends AbstractCommand
             return CommandResult.success();
         }
 
+        arena.run();
+
         super.getPlugin().getPlayersCreatingArena().put(player.getUniqueId(), arena);
         super.getPlugin().getPlayerSelectionPoints().remove(player.getUniqueId()); //TODO: Shouldn't we remove player from map even if adding of arena fails?
         player.sendMessage(Text.of(PluginInfo.PLUGIN_PREFIX, "The arena has been created!"));
