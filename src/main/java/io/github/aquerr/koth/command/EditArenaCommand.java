@@ -29,9 +29,10 @@ public class EditArenaCommand extends AbstractCommand
 			throw new CommandException(Text.of(PluginInfo.PLUGIN_ERROR, TextColors.RED, "Only in-game players can use this command!"));
 
 		final Player player = (Player)source;
-		if(super.getPlugin().getPlayersEditingArena().containsKey(player.getUniqueId()))
+		if(super.getPlugin().getPlayersEditingArena().containsKey(player.getUniqueId()) || super.getPlugin().getPlayersCreatingArena().containsKey(player.getUniqueId()))
 		{
 			super.getPlugin().getPlayersEditingArena().remove(player.getUniqueId());
+			super.getPlugin().getPlayersCreatingArena().remove(player.getUniqueId());
 			player.sendMessage(Text.of(PluginInfo.PLUGIN_PREFIX, TextColors.GREEN, "Turned off edit mode."));
 			return CommandResult.success();
 		}

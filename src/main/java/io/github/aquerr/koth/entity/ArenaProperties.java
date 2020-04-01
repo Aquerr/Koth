@@ -5,19 +5,19 @@ import java.util.Map;
 
 public class ArenaProperties
 {
-    private Map<PropertyKey, Object> properties = new HashMap<>();
+    private Map<PropertyKey<?>, Object> properties = new HashMap<>();
 
-    public void put(final PropertyKey propertyKey, final Object value)
+    public <T> void put(final PropertyKey<T> propertyKey, final T value)
     {
         this.properties.put(propertyKey, value);
     }
 
-    public Object get(final PropertyKey key)
+    public <T> T get(final PropertyKey<T> key)
     {
-        return this.properties.get(key);
+        return (T)this.properties.get(key);
     }
 
-    public Map<PropertyKey, Object> getProperties()
+    public Map<PropertyKey<?>, Object> getProperties()
     {
         return this.properties;
     }
@@ -27,14 +27,15 @@ public class ArenaProperties
         final ArenaProperties arenaProperties = new ArenaProperties();
         arenaProperties.put(PropertyKey.SHUFFLE, false);
         arenaProperties.put(PropertyKey.DROP_ITEMS_AFTER_DEATH, false);
+        arenaProperties.put(PropertyKey.ROUND_TIME, 300);
         return arenaProperties;
     }
 
-    public enum PropertyKey
+    public static class PropertyKey<T>
     {
-        SHUFFLE,
-        DROP_ITEMS_AFTER_DEATH,
-        ROUND_BASED,
-        ROUND_TIME;
+        public static final PropertyKey<Boolean> SHUFFLE = new PropertyKey<>();
+        public static final PropertyKey<Boolean> DROP_ITEMS_AFTER_DEATH = new PropertyKey<>();
+        public static final PropertyKey<Integer> ROUND_TIME = new PropertyKey<>();
+        public static final PropertyKey<Boolean> ROUND_BASED = new PropertyKey<>();
     }
 }

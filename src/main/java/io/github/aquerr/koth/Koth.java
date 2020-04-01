@@ -303,7 +303,7 @@ public class Koth
         this.subcommands.put(Collections.singletonList("join"), CommandSpec.builder()
             .description(Text.of("Join arena."))
             .permission(PluginPermissions.JOIN_COMMAND)
-            .arguments(GenericArguments.onlyOne(GenericArguments.string(Text.of("name"))))
+            .arguments(GenericArguments.onlyOne(new ArenaNameArgument(this, Text.of("name"))))
             .executor(new JoinCommand(this))
             .build());
 

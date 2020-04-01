@@ -31,12 +31,12 @@ public class ArenaTeamArgument extends CommandElement
 	protected ArenaTeam parseValue(final CommandSource source, final CommandArgs args) throws ArgumentParseException
 	{
 		if(!args.hasNext())
-			throw new ArgumentParseException(Text.of(PluginInfo.PLUGIN_ERROR, "Team name has not been specified!"), "", 0);
+			throw args.createError(Text.of(PluginInfo.PLUGIN_ERROR, "Team name has not been specified!"));
 
 		final String arg = args.next();
 
 		if(arg.equals(""))
-			throw new ArgumentParseException(Text.of(PluginInfo.PLUGIN_ERROR, "Team name has not been specified!"), arg, 0);
+			throw args.createError(Text.of(PluginInfo.PLUGIN_ERROR, "Team name has not been specified!"));
 
 		final Player player = (Player) source;
 		Arena arena = this.plugin.getPlayersCreatingArena().get(player.getUniqueId());
@@ -44,14 +44,14 @@ public class ArenaTeamArgument extends CommandElement
 			arena = this.plugin.getPlayersEditingArena().get(player.getUniqueId());
 
 		if(arena == null)
-			throw new ArgumentParseException(Text.of(PluginInfo.PLUGIN_ERROR, "Player is not editing any arena!"), source.getName(), 0);
+			throw args.createError(Text.of(PluginInfo.PLUGIN_ERROR, "Player is not editing any arena!"));
 
 		for(final ArenaTeam arenaTeam : arena.getTeams().values())
 		{
 			if(arenaTeam.getName().equalsIgnoreCase(arg))
 				return arenaTeam;
 		}
-		return null;
+		throw args.createError(Text.of(PluginInfo.PLUGIN_ERROR, "Wrong arena name!"));
 	}
 
 	@Override

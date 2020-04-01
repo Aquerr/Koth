@@ -32,7 +32,7 @@ public class ArenaPropertiesTypeSerializer implements TypeSerializer<ArenaProper
         if (obj == null)
             return;
 
-        for (Map.Entry<ArenaProperties.PropertyKey, Object> property : obj.getProperties().entrySet())
+        for (Map.Entry<ArenaProperties.PropertyKey<?>, Object> property : obj.getProperties().entrySet())
         {
             value.getNode(property.getKey().toString()).setValue(property.getValue());
         }

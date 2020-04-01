@@ -66,7 +66,7 @@ public class ArenaStorage
         arenaNode.getNode("teams").setValue(new TypeToken<List<ArenaTeam>>() {}, new ArrayList<>(arena.getTeams().values()));
         arenaNode.getNode("maxPlayers").setValue(arena.getMaxPlayers());
         arenaNode.getNode("isRoundBased").setValue(arena.isRoundBased());
-        arenaNode.getNode("roundTime").setValue(arena.getRoundTime().getSeconds());
+        arenaNode.getNode("roundTime").setValue(arena.getRoundTime());
         arenaNode.getNode("type").setValue(TypeToken.of(ArenaType.class), arena.getType());
         arenaNode.getNode("properties").setValue(TypeToken.of(ArenaProperties.class), arena.getProperties());
 

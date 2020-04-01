@@ -33,7 +33,7 @@ public class Arena implements Runnable
     private UUID worldUUID;
     private ArenaType type;
 
-    private int minPlayers = 2;
+    private int minPlayers = 1;
     private int maxPlayers = 10;
     private final Set<Hill> hills;
     private final Map<String, ArenaTeam> teams;
@@ -165,9 +165,9 @@ public class Arena implements Runnable
         this.arenaProperties.put(ArenaProperties.PropertyKey.ROUND_BASED, isRoundBased);
     }
 
-    public Duration getRoundTime()
+    public int getRoundTime()
     {
-        return (Duration)this.arenaProperties.get(ArenaProperties.PropertyKey.ROUND_TIME);
+        return this.arenaProperties.get(ArenaProperties.PropertyKey.ROUND_TIME);
     }
 
     public boolean addHill(final Hill hill)
@@ -448,7 +448,7 @@ public class Arena implements Runnable
     {
         if (this.status == ArenaStatus.IDLE)
         {
-            if (getPlayers().size() > this.minPlayers)
+            if (getPlayers().size() >= this.minPlayers)
             {
                 startQueue();
             }

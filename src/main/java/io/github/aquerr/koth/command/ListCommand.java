@@ -49,7 +49,7 @@ public class ListCommand extends AbstractCommand
             arenaDescBuilder.append(Text.of(TextColors.BLUE, "Max players: ", TextColors.GOLD, arena.getMaxPlayers() + "\n"));
             arenaDescBuilder.append(Text.of(TextColors.BLUE, "Hills: ", TextColors.GOLD, arena.getHills().size() + "\n"));
             arenaDescBuilder.append(Text.of(TextColors.BLUE, "Teams: ", TextColors.GOLD, arena.getTeams().size() + "\n"));
-            arenaDescBuilder.append(Text.of(TextColors.BLUE, "Round time: ", TextColors.GOLD, arena.getRoundTime().getSeconds() + "\n"));
+            arenaDescBuilder.append(Text.of(TextColors.BLUE, "Round time: ", TextColors.GOLD, arena.getRoundTime() + "s\n"));
             arenaDescBuilder.append(Text.of(TextColors.GREEN, "Click to join!"));
 
             final Text arenaText = Text.builder()
