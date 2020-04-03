@@ -54,7 +54,7 @@ public class ArenaManagerImpl implements ArenaManager
             {
                 didSucceed = this.storageManager.addArena(arena);
             }
-            catch (ObjectMappingException e)
+            catch (Exception e)
             {
                 e.printStackTrace();
             }
@@ -109,7 +109,7 @@ public class ArenaManagerImpl implements ArenaManager
             }
             return true;
         }
-        catch (final  Exception ex)
+        catch (final Exception ex)
         {
             ex.printStackTrace();
             return false;

@@ -1,6 +1,7 @@
 package io.github.aquerr.koth.entity;
 
 import com.flowpowered.math.vector.Vector3i;
+import io.github.aquerr.koth.Koth;
 import io.github.aquerr.koth.PluginInfo;
 import io.github.aquerr.koth.event.*;
 import io.github.aquerr.koth.scheduling.KothScheduler;
@@ -8,6 +9,7 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.scheduler.SpongeExecutorService;
 import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
@@ -326,13 +328,15 @@ public class Arena implements Runnable
 
     private void startQueue()
     {
+        //We don't want to start queue multiple times.
         if (this.status == ArenaStatus.QUEUE)
             return;
 
-        if (this.getPlayers().size() > this.minPlayers)
+        if (this.getPlayers().size() >= this.minPlayers)
         {
             this.status = ArenaStatus.QUEUE;
             KOTH_SCHEDULER.runAsyncWithInterval(1, TimeUnit.SECONDS, new ArenaQueueTask(this));
+            notifyPlayers(Text.of("Queue has been started! The game will start in 60 seconds!"));
         }
     }
 
@@ -350,17 +354,17 @@ public class Arena implements Runnable
         KOTH_SCHEDULER.runAsyncWithInterval(1, TimeUnit.SECONDS, new ArenaTimerTask(this));
 
         // Spawn players in proper spawn points
-        spawnPlayers();
+        KOTH_SCHEDULER.getSyncExecutor().execute(this::spawnPlayers);
     }
 
     private void endGame()
     {
         // Calculate winner
         final Set<Player> winners = calculateWinners();
-        awardPlayers(winners);
+        KOTH_SCHEDULER.getSyncExecutor().execute(() -> awardPlayers(winners));
 
         // Move all players to lobby.
-        movePlayersToLobby();
+        KOTH_SCHEDULER.getSyncExecutor().execute(this::movePlayersToLobby);
 
         // Cleanup
         this.teamPoints.clear();
@@ -573,6 +577,10 @@ public class Arena implements Runnable
                 CompletableFuture.runAsync(arena::startGame);
                 return;
             }
+            else if (seconds > maxQueueTime - 10)
+            {
+                arena.notifyPlayers(Text.of("Game starts in " + seconds));
+            }
 
             //Stop queue if number of players is less than minimum.
             if (this.arena.getPlayers().size() < this.arena.getMinPlayers())
@@ -598,7 +606,7 @@ public class Arena implements Runnable
         @Override
         public void accept(Task task)
         {
-            if (seconds >= maxGameTime || this.arena.status != ArenaStatus.RUNNING)
+            if (seconds >= maxGameTime || this.arena.getStatus() != ArenaStatus.RUNNING)
             {
                 task.cancel();
                 CompletableFuture.runAsync(arena::endGame);

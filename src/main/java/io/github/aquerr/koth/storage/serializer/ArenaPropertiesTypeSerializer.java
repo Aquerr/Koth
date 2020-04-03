@@ -8,6 +8,7 @@ import ninja.leaping.configurate.objectmapping.serialize.TypeSerializer;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+import java.lang.reflect.Field;
 import java.util.Map;
 
 public class ArenaPropertiesTypeSerializer implements TypeSerializer<ArenaProperties>
@@ -18,10 +19,21 @@ public class ArenaPropertiesTypeSerializer implements TypeSerializer<ArenaProper
     {
         final ArenaProperties arenaProperties = new ArenaProperties();
 
+        final Class propertyKeyClass = ArenaProperties.PropertyKey.class;
         Map<Object, ? extends ConfigurationNode> map = value.getChildrenMap();
         for (Map.Entry<Object, ? extends ConfigurationNode> mapEntry : map.entrySet())
         {
-            arenaProperties.put((ArenaProperties.PropertyKey)mapEntry.getKey(), mapEntry.getValue().getValue());
+            final String propertyName = (String) mapEntry.getKey();
+            try
+            {
+                final Field field = propertyKeyClass.getField(propertyName);
+                final Object fieldObject = field.get(null);
+                arenaProperties.put((ArenaProperties.PropertyKey<? super Object>) fieldObject, mapEntry.getValue().getValue());
+            }
+            catch (NoSuchFieldException | IllegalAccessException e)
+            {
+                e.printStackTrace();
+            }
         }
         return arenaProperties;
     }
