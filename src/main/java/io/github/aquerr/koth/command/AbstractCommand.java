@@ -1,34 +1,22 @@
 package io.github.aquerr.koth.command;
 
-import io.github.aquerr.koth.Koth;
-import org.spongepowered.api.command.CommandCallable;
-import org.spongepowered.api.command.CommandException;
+import io.github.aquerr.koth.PluginInfo;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import org.spongepowered.api.command.CommandExecutor;
 import org.spongepowered.api.command.CommandResult;
-import org.spongepowered.api.command.CommandSource;
-import org.spongepowered.api.command.args.CommandContext;
-import org.spongepowered.api.command.spec.CommandExecutor;
-import org.spongepowered.api.text.Text;
-import org.spongepowered.api.world.Location;
-import org.spongepowered.api.world.World;
-
-import javax.annotation.Nullable;
-import java.util.List;
-import java.util.Optional;
+import org.spongepowered.api.command.exception.CommandException;
+import org.spongepowered.api.command.parameter.CommandContext;
+import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 
 public abstract class AbstractCommand implements CommandExecutor
 {
-    private final Koth plugin;
-
-    public AbstractCommand(final Koth plugin)
-    {
-        this.plugin = plugin;
-    }
-
     @Override
-    public abstract CommandResult execute(final CommandSource source, final CommandContext args) throws CommandException;
+    public abstract CommandResult execute(CommandContext context) throws CommandException;
 
-    public Koth getPlugin()
+    protected ServerPlayer requireServerPlayer(CommandContext context) throws CommandException
     {
-        return this.plugin;
+        return context.cause().first(ServerPlayer.class)
+                .orElseThrow(() -> new CommandException(PluginInfo.PLUGIN_ERROR.append(Component.text("Only in-game player can use this command!", NamedTextColor.RED))));
     }
 }

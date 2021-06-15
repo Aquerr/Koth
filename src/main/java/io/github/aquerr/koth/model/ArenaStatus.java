@@ -1,4 +1,4 @@
-package io.github.aquerr.koth.entity;
+package io.github.aquerr.koth.model;
 
 public enum ArenaStatus
 {

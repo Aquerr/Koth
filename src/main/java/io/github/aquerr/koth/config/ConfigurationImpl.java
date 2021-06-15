@@ -1,15 +1,15 @@
 package io.github.aquerr.koth.config;
 
-import com.google.common.reflect.TypeToken;
 import com.google.inject.Singleton;
 import io.github.aquerr.koth.Koth;
-import ninja.leaping.configurate.commented.CommentedConfigurationNode;
-import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
-import ninja.leaping.configurate.loader.ConfigurationLoader;
-import ninja.leaping.configurate.loader.HeaderMode;
-import ninja.leaping.configurate.objectmapping.ObjectMappingException;
+import io.leangen.geantyref.TypeToken;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.asset.Asset;
+import org.spongepowered.configurate.CommentedConfigurationNode;
+import org.spongepowered.configurate.hocon.HoconConfigurationLoader;
+import org.spongepowered.configurate.loader.ConfigurationLoader;
+import org.spongepowered.configurate.loader.HeaderMode;
+import org.spongepowered.configurate.serialize.SerializationException;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -18,8 +18,9 @@ import java.util.*;
 @Singleton
 public class ConfigurationImpl implements Configuration
 {
+	private static final String SETTINGS_FILE_NAME = "settings.conf";
+
 	private final Koth plugin;
-	private final Path configDir;
 
 	private ConfigurationLoader<CommentedConfigurationNode> configLoader;
 	private CommentedConfigurationNode configNode;
@@ -31,23 +32,21 @@ public class ConfigurationImpl implements Configuration
 	public ConfigurationImpl(final Koth plugin, final Path configDir)
 	{
 		this.plugin = plugin;
-		this.configDir = configDir;
-		final Optional<Asset> optionalAsset = Sponge.getAssetManager().getAsset(this.plugin, "settings.conf");
+		final Optional<Asset> optionalAsset = Sponge.assetManager().asset(this.plugin.getPluginContainer(), SETTINGS_FILE_NAME);
 		if(!optionalAsset.isPresent())
-			Sponge.getServer().shutdown();
+			Sponge.server().shutdown();
 
 		final Asset asset = optionalAsset.get();
-		final Path settingsPath = configDir.resolve("settings.conf");
 		try
 		{
-			asset.copyToFile(settingsPath, false, true);
+			asset.copyToDirectory(configDir, false, true);
 		}
 		catch(IOException e)
 		{
 			e.printStackTrace();
 		}
 
-		this.configLoader = HoconConfigurationLoader.builder().setHeaderMode(HeaderMode.PRESERVE).setPath(settingsPath).build();
+		this.configLoader = HoconConfigurationLoader.builder().headerMode(HeaderMode.PRESERVE).path(configDir.resolve(SETTINGS_FILE_NAME)).build();
 		reload();
 		save();
 
@@ -85,13 +84,13 @@ public class ConfigurationImpl implements Configuration
 	@Override
 	public int getInt(final int defaultValue, final Object... nodePath)
 	{
-		return configNode.getNode(nodePath).getInt(defaultValue);
+		return configNode.node(nodePath).getInt(defaultValue);
 	}
 
 	@Override
 	public double getDouble(final double defaultValue, final Object... nodePath)
 	{
-		Object value = configNode.getNode(nodePath).getValue(defaultValue);
+		Object value = configNode.node(nodePath).getDouble(defaultValue);
 
 		if (value instanceof Integer)
 		{
@@ -108,19 +107,19 @@ public class ConfigurationImpl implements Configuration
 	@Override
 	public float getFloat(final float defaultValue, final Object... nodePath)
 	{
-		return configNode.getNode(nodePath).getFloat(defaultValue);
+		return configNode.node(nodePath).getFloat(defaultValue);
 	}
 
 	@Override
 	public boolean getBoolean(final boolean defaultValue, final Object... nodePath)
 	{
-		return configNode.getNode(nodePath).getBoolean(defaultValue);
+		return configNode.node(nodePath).getBoolean(defaultValue);
 	}
 
 	@Override
 	public String getString(final String defaultValue, final Object... nodePath)
 	{
-		return configNode.getNode(nodePath).getString(defaultValue);
+		return configNode.node(nodePath).getString(defaultValue);
 	}
 
 	@Override
@@ -128,9 +127,9 @@ public class ConfigurationImpl implements Configuration
 	{
 		try
 		{
-			return configNode.getNode(nodePath).getList(TypeToken.of(String.class), new ArrayList<>(defaultValue));
+			return configNode.node(nodePath).getList(TypeToken.get(String.class), new ArrayList<>(defaultValue));
 		}
-		catch(ObjectMappingException e)
+		catch(SerializationException e)
 		{
 			e.printStackTrace();
 		}

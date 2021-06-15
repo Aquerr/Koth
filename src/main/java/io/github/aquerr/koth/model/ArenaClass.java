@@ -1,4 +1,4 @@
-package io.github.aquerr.koth.entity;
+package io.github.aquerr.koth.model;
 
 import org.spongepowered.api.item.inventory.ItemStack;
 

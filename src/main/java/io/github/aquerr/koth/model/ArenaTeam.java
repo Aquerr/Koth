@@ -1,7 +1,7 @@
-package io.github.aquerr.koth.entity;
+package io.github.aquerr.koth.model;
 
-import com.flowpowered.math.vector.Vector3i;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.math.vector.Vector3i;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,12 +33,12 @@ public class ArenaTeam
 
     boolean addPlayer(final Player player)
     {
-        return this.players.add(player.getUniqueId());
+        return this.players.add(player.uniqueId());
     }
 
     boolean removePlayer(final Player player)
     {
-        return this.players.remove(player.getUniqueId());
+        return this.players.remove(player.uniqueId());
     }
 
     public List<UUID> getPlayers()

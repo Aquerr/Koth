@@ -1,29 +1,30 @@
 package io.github.aquerr.koth.command;
 
-import io.github.aquerr.koth.Koth;
 import io.github.aquerr.koth.PluginInfo;
-import org.spongepowered.api.command.CommandException;
+import io.github.aquerr.koth.manager.SelectionManager;
+import net.kyori.adventure.identity.Identity;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.spongepowered.api.command.CommandResult;
-import org.spongepowered.api.command.CommandSource;
-import org.spongepowered.api.command.args.CommandContext;
-import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.command.exception.CommandException;
+import org.spongepowered.api.command.parameter.CommandContext;
+import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 
 public class DeselectCommand extends AbstractCommand
 {
-    public DeselectCommand(final Koth plugin)
+    private final SelectionManager selectionManager;
+
+    public DeselectCommand(final SelectionManager selectionManager)
     {
-        super(plugin);
+        this.selectionManager = selectionManager;
     }
 
     @Override
-    public CommandResult execute(final CommandSource source, final CommandContext args) throws CommandException
+    public CommandResult execute(final CommandContext context) throws CommandException
     {
-        if (!(source instanceof Player))
-            throw new CommandException(Text.of(PluginInfo.PLUGIN_ERROR, TextColors.RED, "Only in-game player can use this command!"));
-        super.getPlugin().getPlayerSelectionPoints().remove(((Player) source).getUniqueId());
-        source.sendMessage(Text.of(PluginInfo.PLUGIN_PREFIX, TextColors.GREEN, "Selection points have been cleared!"));
+        ServerPlayer serverPlayer = requireServerPlayer(context);
+        this.selectionManager.removeSelectionPointsForPlayer(serverPlayer);
+        context.sendMessage(Identity.nil(), PluginInfo.PLUGIN_PREFIX.append(Component.text("Selection points have been cleared!", NamedTextColor.GREEN)));
         return CommandResult.success();
     }
 }

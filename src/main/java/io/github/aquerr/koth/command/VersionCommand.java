@@ -1,26 +1,20 @@
 package io.github.aquerr.koth.command;
 
-import io.github.aquerr.koth.Koth;
 import io.github.aquerr.koth.PluginInfo;
-import org.spongepowered.api.command.CommandException;
+import net.kyori.adventure.identity.Identity;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.spongepowered.api.command.CommandResult;
-import org.spongepowered.api.command.CommandSource;
-import org.spongepowered.api.command.args.CommandContext;
-import org.spongepowered.api.command.spec.CommandExecutor;
-import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.command.exception.CommandException;
+import org.spongepowered.api.command.parameter.CommandContext;
 
 public class VersionCommand extends AbstractCommand
 {
-	public VersionCommand(final Koth plugin)
-	{
-		super(plugin);
-	}
-
 	@Override
-	public CommandResult execute(final CommandSource source, final CommandContext args) throws CommandException
+	public CommandResult execute(final CommandContext context) throws CommandException
 	{
-		source.sendMessage(Text.of(PluginInfo.PLUGIN_PREFIX, TextColors.GREEN, "Version: " + PluginInfo.VERSION));
+		context.sendMessage(Identity.nil(), TextComponent.ofChildren(PluginInfo.PLUGIN_PREFIX.append(Component.text("Version: " + PluginInfo.VERSION, NamedTextColor.GREEN))));
 		return CommandResult.success();
 	}
 }

@@ -1,7 +1,7 @@
 package io.github.aquerr.koth.manager;
 
 import com.google.inject.ImplementedBy;
-import io.github.aquerr.koth.entity.ArenaClass;
+import io.github.aquerr.koth.model.ArenaClass;
 
 import java.util.Map;
 import java.util.Optional;

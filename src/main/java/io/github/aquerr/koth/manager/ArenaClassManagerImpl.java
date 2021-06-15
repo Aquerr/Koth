@@ -3,12 +3,13 @@ package io.github.aquerr.koth.manager;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import io.github.aquerr.koth.PluginInfo;
-import io.github.aquerr.koth.entity.ArenaClass;
+import io.github.aquerr.koth.model.ArenaClass;
 import io.github.aquerr.koth.storage.StorageManager;
-import ninja.leaping.configurate.objectmapping.ObjectMappingException;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.spongepowered.api.Sponge;
-import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.configurate.serialize.SerializationException;
 
 import java.util.HashMap;
 import java.util.List;
@@ -55,12 +56,12 @@ public class ArenaClassManagerImpl implements ArenaClassManager
 			{
 				didSucceed = this.storageManager.addArenaClass(arenaClass);
 			}
-			catch (ObjectMappingException e)
+			catch (SerializationException e)
 			{
 				e.printStackTrace();
 			}
 			if (!didSucceed)
-				Sponge.getServer().getConsole().sendMessage(Text.of(PluginInfo.PLUGIN_ERROR, TextColors.RED, "Class named \"" + arenaClass.getName() + "\" could not be saved into the storage..."));
+				Sponge.server().sendMessage(TextComponent.ofChildren(PluginInfo.PLUGIN_ERROR.append(Component.text("Class named \"" + arenaClass.getName() + "\" could not be saved into the storage...", NamedTextColor.RED))));
 		});
 
 		//Add arena to global arena list (cache)
@@ -77,7 +78,7 @@ public class ArenaClassManagerImpl implements ArenaClassManager
 		CompletableFuture.runAsync(() -> {
 			final boolean didSucceed = this.storageManager.updateArenaClass(arenaClass);
 			if (!didSucceed)
-				Sponge.getServer().getConsole().sendMessage(Text.of(PluginInfo.PLUGIN_ERROR, TextColors.RED, "Class named \"" + arenaClass.getName() + "\" could not be updated in the storage..."));
+				Sponge.server().sendMessage(TextComponent.ofChildren(PluginInfo.PLUGIN_ERROR.append(Component.text("Class named \"" + arenaClass.getName() + "\" could not be updated in the storage...", NamedTextColor.RED))));
 		});
 
 		//TODO: Hmmmm?
@@ -89,9 +90,9 @@ public class ArenaClassManagerImpl implements ArenaClassManager
 	{
 		//Delete arena from the storage in a separate thread.
 		CompletableFuture.runAsync(() -> {
-			final boolean didSucceed = this.storageManager.deleteArena(name);
+			final boolean didSucceed = this.storageManager.deleteArenaClass(name);
 			if (!didSucceed)
-				Sponge.getServer().getConsole().sendMessage(Text.of(PluginInfo.PLUGIN_ERROR, TextColors.RED, "Class named \"" + name + "\" could not be deleted from the storage..."));
+				Sponge.server().sendMessage(TextComponent.ofChildren(PluginInfo.PLUGIN_ERROR.append(Component.text("Class named \"" + name + "\" could not be deleted from the storage...", NamedTextColor.RED))));
 		});
 
 		final ArenaClass deletedArena = this.arenasCache.remove(name);

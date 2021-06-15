@@ -3,12 +3,11 @@ package io.github.aquerr.koth.scheduling;
 import io.github.aquerr.koth.Koth;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.scheduler.Scheduler;
-import org.spongepowered.api.scheduler.SpongeExecutorService;
 import org.spongepowered.api.scheduler.Task;
+import org.spongepowered.api.scheduler.TaskExecutorService;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Consumer;
 
 /**
  * A wrapper around Sponge Scheduler which adds additional functionality used by KOTH.
@@ -16,11 +15,11 @@ import java.util.function.Consumer;
 public class KothScheduler
 {
     private static KothScheduler INSTANCE = new KothScheduler();
-    private final Scheduler scheduler = Sponge.getScheduler();
+    private final Scheduler scheduler = Sponge.asyncScheduler();
     private final Koth plugin = Koth.getInstance();
 
-    private final SpongeExecutorService syncExecutor = scheduler.createSyncExecutor(plugin);
-    private final SpongeExecutorService asyncExecutor = scheduler.createAsyncExecutor(plugin);
+    private final TaskExecutorService syncExecutor = scheduler.createExecutor(plugin.getPluginContainer());
+    private final TaskExecutorService asyncExecutor = Sponge.server().scheduler().createExecutor(plugin.getPluginContainer());
 
     public static KothScheduler getInstance()
     {
@@ -29,17 +28,17 @@ public class KothScheduler
 
     public void runSyncWithInterval(final long interval, final TimeUnit timeUnit, final Runnable runnable)
     {
-        scheduler.createTaskBuilder().interval(interval, timeUnit).execute(runnable).submit(this.plugin);
+        syncExecutor.schedule(runnable, interval, timeUnit);
     }
 
     public void runAsyncWithInterval(final long interval, final TimeUnit timeUnit, final Runnable runnable)
     {
-        scheduler.createTaskBuilder().async().interval(interval, timeUnit).execute(runnable).submit(this.plugin);
+        asyncExecutor.schedule(runnable, interval, timeUnit);
     }
 
-    public void runAsyncWithInterval(final long interval, final TimeUnit timeUnit, final Consumer<Task> consumer)
+    public void runAsyncWithInterval(final long interval, final TimeUnit timeUnit, final Callable<Task> consumer)
     {
-        scheduler.createTaskBuilder().async().interval(interval, timeUnit).execute(consumer).submit(this.plugin);
+        asyncExecutor.schedule(consumer, interval, timeUnit);
     }
 
     public Scheduler getUnderlyingScheduler()
@@ -47,12 +46,12 @@ public class KothScheduler
         return this.scheduler;
     }
 
-    public SpongeExecutorService getAsyncExecutor()
+    public TaskExecutorService getAsyncExecutor()
     {
         return asyncExecutor;
     }
 
-    public SpongeExecutorService getSyncExecutor()
+    public TaskExecutorService getSyncExecutor()
     {
         return syncExecutor;
     }

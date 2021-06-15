@@ -1,50 +1,39 @@
 package io.github.aquerr.koth.command;
 
-import io.github.aquerr.koth.Koth;
-import org.spongepowered.api.command.CommandException;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.spongepowered.api.command.CommandResult;
-import org.spongepowered.api.command.CommandSource;
-import org.spongepowered.api.command.args.CommandContext;
-import org.spongepowered.api.data.key.Keys;
-import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.command.exception.CommandException;
+import org.spongepowered.api.command.parameter.CommandContext;
+import org.spongepowered.api.data.Keys;
+import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.ItemStack;
-import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.format.TextColors;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class WandCommand extends AbstractCommand
 {
-    private final Koth plugin;
-
-    public WandCommand(final Koth plugin)
-    {
-        super(plugin);
-        this.plugin = plugin;
-    }
-
     @Override
-    public CommandResult execute(final CommandSource source, final CommandContext args) throws CommandException {
-        if (!(source instanceof Player))
-            throw new CommandException(Text.of("Only in-game players can use this command!"));
+    public CommandResult execute(final CommandContext args) throws CommandException
+    {
+        ServerPlayer serverPlayer = requireServerPlayer(args);
+        final Inventory inventory = serverPlayer.inventory();
 
-        final Player player = (Player) source;
-        final Inventory inventory = player.getInventory();
-
-        final List<Text> wandDescriptionLines = new ArrayList<>();
-        final Text firstLine = Text.of("Select first point with your", TextColors.GOLD, " left click.");
-        final Text secondLine = Text.of("Select second point with your", TextColors.GOLD, " right click.");
+        final List<Component> wandDescriptionLines = new ArrayList<>();
+        final TextComponent firstLine = Component.text("Select first point with your").append(Component.text(" left click.", NamedTextColor.GOLD));
+        final TextComponent secondLine = Component.text("Select second point with your").append(Component.text(" right click.", NamedTextColor.GOLD));
         wandDescriptionLines.add(firstLine);
         wandDescriptionLines.add(secondLine);
 
         final ItemStack kothWand = ItemStack.builder()
                 .itemType(ItemTypes.IRON_SWORD)
                 .quantity(1)
-                .add(Keys.DISPLAY_NAME, Text.of(TextColors.GOLD, "Koth Wand"))
-                .add(Keys.ITEM_LORE, wandDescriptionLines)
+                .add(Keys.CUSTOM_NAME, Component.text("Koth Wand", NamedTextColor.GOLD))
+                .add(Keys.LORE, wandDescriptionLines)
                 .build();
 
         inventory.offer(kothWand);

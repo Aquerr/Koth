@@ -1,57 +1,71 @@
 package io.github.aquerr.koth.command;
 
 import io.github.aquerr.koth.Koth;
-import org.spongepowered.api.command.CommandCallable;
-import org.spongepowered.api.command.CommandException;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
+import org.spongepowered.api.command.Command;
 import org.spongepowered.api.command.CommandResult;
-import org.spongepowered.api.command.CommandSource;
-import org.spongepowered.api.command.args.CommandContext;
+import org.spongepowered.api.command.exception.CommandException;
+import org.spongepowered.api.command.parameter.CommandContext;
+import org.spongepowered.api.command.parameter.Parameter;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.service.pagination.PaginationList;
-import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.format.TextColors;
 
 import java.util.*;
 
 public class HelpCommand extends AbstractCommand
 {
+    private final Koth koth;
+
     public HelpCommand(final Koth plugin)
     {
-        super(plugin);
+        this.koth = plugin;
     }
 
     @Override
-    public CommandResult execute(final CommandSource source, final CommandContext args) throws CommandException
+    public CommandResult execute(final CommandContext context) throws CommandException
     {
-        final Optional<Integer> helpPage = args.getOne(Text.of("page"));
+        final Optional<Integer> helpPage = context.one(Parameter.integerNumber().key("page").optional().build());
         int pageNumber = helpPage.orElse(1);
-        final Map<List<String>, CommandCallable> subcommands = super.getPlugin().getSubcommands();
-        final List<Text> helpList = new ArrayList<>();
+        final Map<List<String>, Command.Parameterized> subcommands = this.koth.getSubcommands();
+        final List<Component> helpList = new ArrayList<>();
 
         for (final List<String> aliases: subcommands.keySet())
         {
-            final CommandCallable commandCallable = subcommands.get(aliases);
-            if(source instanceof Player)
-            {
-                final Player player = (Player)source;
-                if(!commandCallable.testPermission(player))
-                {
-                    continue;
-                }
-            }
+            Command.Parameterized command = subcommands.get(aliases);
 
-            final Text.Builder textBuilder = Text.builder();
-            textBuilder.append(Text.of(TextColors.GOLD, "/koth " + String.join(", ", aliases) + " " + commandCallable.getUsage(source).toPlain()));
-            textBuilder.append(Text.of(TextColors.WHITE, " - " + commandCallable.getShortDescription(source).get().toPlain()));
+            if(context.cause().audience() instanceof Player && !command.canExecute(context.cause()))
+                continue;
+
+            final TextComponent textComponent = Component.empty()
+//            textComponent.append(Component.text("/koth " + String.join(", ", aliases) + " " + ((TextComponent)command.usage(context.cause())).content(), NamedTextColor.GOLD));
+            .append(Component.text("/koth " + String.join(", ", aliases) + " " + command.parameters(), NamedTextColor.GOLD))
+            .append(Component.text(" - " + PlainTextComponentSerializer.plainText().serialize(command.shortDescription(context.cause()).get()), NamedTextColor.WHITE));
             //            textBuilder.append(Text.of(TextColors.WHITE, " - " + commandCallable.getShortDescription(source).get().toPlain()  + "\n"));
 //            textBuilder.append(Text.of(TextColors.GRAY, "Usage: " + "/koth " + String.join("", aliases) + " " + commandCallable.getUsage(source).toPlain()));
-            helpList.add(textBuilder.build());
+            helpList.add(textComponent);
         }
 
-        helpList.sort(Text::compareTo);
+        //TODO: Sort commands alphabetically
+//        helpList.sort(Text::compareTo);
+        helpList.sort((o1, o2) ->
+        {
+            if (o1 instanceof TextComponent && o2 instanceof TextComponent)
+            {
+                return PlainTextComponentSerializer.plainText().serialize(o1).compareTo(PlainTextComponentSerializer.plainText().serialize(o2));
+            }
+            return 0;
+        });
 
-        final PaginationList paginationList = PaginationList.builder().linesPerPage(14).padding(Text.of(TextColors.BLUE, "-")).title(Text.of(TextColors.GOLD, "Commands List")).contents(helpList).build();
-        paginationList.sendTo(source, pageNumber);
+        final PaginationList paginationList = PaginationList.builder()
+                .linesPerPage(14)
+                .padding(Component.text("-", NamedTextColor.BLUE))
+                .title(Component.text("Commands List", NamedTextColor.GOLD))
+                .contents(helpList)
+                .build();
+        paginationList.sendTo(context.cause().audience(), pageNumber);
 
         return CommandResult.success();
     }

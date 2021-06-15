@@ -1,21 +1,28 @@
+import org.spongepowered.gradle.plugin.config.PluginLoaders
+import org.spongepowered.plugin.metadata.PluginDependency
+
 plugins {
     id 'java'
     id 'idea'
-    id 'org.spongepowered.plugin' version '0.9.0'
+    id 'java-library'
+    id 'org.spongepowered.gradle.plugin' version '1.1.1'
 }
 
 group 'io.github.aquerr'
 version '0.5.0'
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(16)
+    }
+}
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    compile "org.spongepowered:spongeapi:7.2.0"
+
 }
 
 jar {
@@ -26,6 +33,32 @@ jar {
         version = version + "-SNAPSHOT"
     }
 }
+
+sponge {
+    apiVersion ("8.0.0")
+    plugin("koth") {
+        loader(PluginLoaders.JAVA_PLAIN)
+        displayName("Koth")
+        mainClass("io.github.aquerr.koth.Koth")
+        description("Create King of the Hill arenas!")
+        links {
+            homepage("https://github.com/Aquerr/Koth")
+            source("https://github.com/Aquerr/Koth")
+            issues("https://github.com/Aquerr/Koth/issues")
+        }
+        contributor("Aquerr") {
+            description("Lead Developer")
+        }
+        contributor("PKNCK") {
+            description("Developer")
+        }
+        dependency("spongeapi") {
+            loadOrder(PluginDependency.LoadOrder.AFTER)
+            optional(false)
+        }
+    }
+}
+
 
 tasks.create("publishBuildOnDiscord") {
     group = "Publishing"

@@ -3,9 +3,8 @@ package io.github.aquerr.koth.storage;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import io.github.aquerr.koth.Koth;
-import io.github.aquerr.koth.entity.Arena;
-import io.github.aquerr.koth.entity.ArenaClass;
-import ninja.leaping.configurate.objectmapping.ObjectMappingException;
+import io.github.aquerr.koth.model.ArenaClass;
+import org.spongepowered.configurate.serialize.SerializationException;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -18,14 +17,14 @@ public class StorageManagerImpl implements StorageManager
 {
     private final Koth plugin;
 
-    private final ArenaStorage arenaStorage;
+//    private final ArenaStorage arenaStorage;
     private final ArenaClassStorage arenaClassStorage;
 
     @Inject
-    public StorageManagerImpl(final Koth plugin, final ArenaStorage arenaStorage, final ArenaClassStorage arenaClassStorage)
+    public StorageManagerImpl(final Koth plugin, final ArenaClassStorage arenaClassStorage)
     {
         this.plugin = plugin;
-        this.arenaStorage = arenaStorage;
+//        this.arenaStorage = arenaStorage;
         this.arenaClassStorage = arenaClassStorage;
 
         //Prepare storage directory
@@ -54,50 +53,50 @@ public class StorageManagerImpl implements StorageManager
         }
     }
 
-    @Override
-    public List<Arena> getArenas()
-    {
-        try
-        {
-            return this.arenaStorage.getArenas();
-        }
-        catch (ObjectMappingException e)
-        {
-            e.printStackTrace();
-        }
-        return new ArrayList<>();
-    }
+//    @Override
+//    public List<Arena> getArenas()
+//    {
+//        try
+//        {
+//            return this.arenaStorage.getArenas();
+//        }
+//        catch (ObjectMappingException e)
+//        {
+//            e.printStackTrace();
+//        }
+//        return new ArrayList<>();
+//    }
+//
+//    public Arena getArena(final String arenaName)
+//    {
+//        return null;
+//    }
+//
+//    @Override
+//    public boolean addArena(final Arena arena) throws ObjectMappingException
+//    {
+//        return this.arenaStorage.addArena(arena);
+//    }
+//
+//    @Override
+//    public boolean updateArena(final Arena arena)
+//    {
+//        try
+//        {
+//            return this.arenaStorage.updateArena(arena);
+//        }
+//        catch (final ObjectMappingException e)
+//        {
+//            e.printStackTrace();
+//        }
+//        return false;
+//    }
 
-    public Arena getArena(final String arenaName)
-    {
-        return null;
-    }
-
-    @Override
-    public boolean addArena(final Arena arena) throws ObjectMappingException
-    {
-        return this.arenaStorage.addArena(arena);
-    }
-
-    @Override
-    public boolean updateArena(final Arena arena)
-    {
-        try
-        {
-            return this.arenaStorage.updateArena(arena);
-        }
-        catch (final ObjectMappingException e)
-        {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-    @Override
-    public boolean deleteArena(final String name)
-    {
-        return this.arenaStorage.deleteArena(name);
-    }
+//    @Override
+//    public boolean deleteArena(final String name)
+//    {
+//        return this.arenaStorage.deleteArena(name);
+//    }
 
     @Override
     public List<ArenaClass> getArenaClasses()
@@ -106,7 +105,7 @@ public class StorageManagerImpl implements StorageManager
         {
             return this.arenaClassStorage.getArenaClasses();
         }
-        catch(ObjectMappingException e)
+        catch(SerializationException e)
         {
             e.printStackTrace();
         }
@@ -114,7 +113,7 @@ public class StorageManagerImpl implements StorageManager
     }
 
     @Override
-    public boolean addArenaClass(final ArenaClass arenaClass) throws ObjectMappingException
+    public boolean addArenaClass(final ArenaClass arenaClass) throws SerializationException
     {
         return this.arenaClassStorage.addArenaClass(arenaClass);
     }
@@ -126,7 +125,7 @@ public class StorageManagerImpl implements StorageManager
         {
             return this.arenaClassStorage.updateArenaClass(arenaClass);
         }
-        catch(ObjectMappingException e)
+        catch(SerializationException e)
         {
             e.printStackTrace();
         }
