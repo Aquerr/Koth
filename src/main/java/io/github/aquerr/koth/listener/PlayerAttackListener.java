@@ -7,13 +7,8 @@ import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.entity.AttackEntityEvent;
 import org.spongepowered.api.event.filter.cause.Root;
 
-public class PlayerAttackListener extends AbstractListener
+public class PlayerAttackListener
 {
-	public PlayerAttackListener(final Koth plugin)
-	{
-		super(plugin);
-	}
-
 	@Listener
 	public void onPlayerAttack(final AttackEntityEvent event, final @Root Player player)
 	{

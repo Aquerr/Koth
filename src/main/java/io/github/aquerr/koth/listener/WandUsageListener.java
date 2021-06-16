@@ -1,6 +1,6 @@
 package io.github.aquerr.koth.listener;
 
-import io.github.aquerr.koth.Koth;
+import io.github.aquerr.koth.manager.SelectionManager;
 import io.github.aquerr.koth.util.SelectionPoints;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
@@ -16,11 +16,13 @@ import org.spongepowered.api.event.block.InteractBlockEvent;
 import org.spongepowered.api.event.filter.cause.Root;
 import org.spongepowered.api.item.inventory.ItemStack;
 
-public class WandUsageListener extends AbstractListener
+public class WandUsageListener
 {
-    public WandUsageListener(final Koth plugin)
+    private final SelectionManager selectionManager;
+
+    public WandUsageListener(final SelectionManager selectionManager)
     {
-        super(plugin);
+        this.selectionManager = selectionManager;
     }
 
     @Listener
@@ -44,11 +46,11 @@ public class WandUsageListener extends AbstractListener
         if (itemName == null || !itemName.equals("Koth Wand"))
             return;
 
-        SelectionPoints selectionPoints = super.getPlugin().getSelectionManager().getSelectionPointsForPlayer(player)
+        SelectionPoints selectionPoints = this.selectionManager.getSelectionPointsForPlayer(player)
                 .orElse(new SelectionPoints(null, event.block().position()));
         selectionPoints.setSecondPoint(event.block().position());
 
-        super.getPlugin().getSelectionManager().setSelectionPointsForPlayer(player, selectionPoints);
+        this.selectionManager.setSelectionPointsForPlayer(player, selectionPoints);
         player.sendMessage(TextComponent.ofChildren(Component.text("Second point", NamedTextColor.GOLD).append(Component.text(" has been selected at ", NamedTextColor.BLUE)).append(Component.text(event.block().position().toString(), NamedTextColor.GOLD))));
         event.setCancelled(true);
     }
@@ -74,11 +76,11 @@ public class WandUsageListener extends AbstractListener
         if (itemName == null || !itemName.equals("Koth Wand"))
             return;
 
-        SelectionPoints selectionPoints = super.getPlugin().getSelectionManager().getSelectionPointsForPlayer(player)
+        SelectionPoints selectionPoints = this.selectionManager.getSelectionPointsForPlayer(player)
                 .orElse(new SelectionPoints(event.block().position(), null));
         selectionPoints.setFirstPoint(event.block().position());
 
-        super.getPlugin().getSelectionManager().setSelectionPointsForPlayer(player, selectionPoints);
+        this.selectionManager.setSelectionPointsForPlayer(player, selectionPoints);
         player.sendMessage(TextComponent.ofChildren(Component.text("First point", NamedTextColor.GOLD).append(Component.text(" has been selected at ", NamedTextColor.BLUE)).append(Component.text(event.block().position().toString(), NamedTextColor.GOLD))));
         event.setCancelled(true);
     }

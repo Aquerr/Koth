@@ -1,17 +1,11 @@
 package io.github.aquerr.koth.listener;
 
-import io.github.aquerr.koth.Koth;
 import org.spongepowered.api.entity.living.player.Player;
 
-public class EntitySpawnListener extends AbstractListener
+public class EntitySpawnListener
 {
 //	private final Map<String, Arena> arenasCache;
 
-	public EntitySpawnListener(final Koth plugin)
-	{
-		super(plugin);
-//		this.arenasCache = plugin.getArenaManager().getArenas();
-	}
 
 //	@Listener(order = Order.EARLY, beforeModifications = true)
 //	public void onLivingMobSpawn(final SpawnEntityEvent event)

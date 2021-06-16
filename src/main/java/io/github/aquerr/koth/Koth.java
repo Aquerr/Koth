@@ -157,13 +157,13 @@ public class Koth
 
     private void registerListeners()
     {
-        this.eventManager.registerListeners(this.pluginContainer, new WandUsageListener(this));
-        this.eventManager.registerListeners(this.pluginContainer, new PlayerDisconnectListener(this));
-        this.eventManager.registerListeners(this.pluginContainer, new PlayerMoveListener(this));
-        this.eventManager.registerListeners(this.pluginContainer, new EntitySpawnListener(this));
-        this.eventManager.registerListeners(this.pluginContainer, new PlayerAttackListener(this));
-        this.eventManager.registerListeners(this.pluginContainer, new SignClickListener(this));
-        this.eventManager.registerListeners(this.pluginContainer, new CommandUsageListener(this));
+        this.eventManager.registerListeners(this.pluginContainer, new WandUsageListener(this.selectionManager));
+        this.eventManager.registerListeners(this.pluginContainer, new PlayerDisconnectListener(this.selectionManager));
+        this.eventManager.registerListeners(this.pluginContainer, new PlayerMoveListener());
+        this.eventManager.registerListeners(this.pluginContainer, new EntitySpawnListener());
+        this.eventManager.registerListeners(this.pluginContainer, new PlayerAttackListener());
+        this.eventManager.registerListeners(this.pluginContainer, new SignClickListener());
+        this.eventManager.registerListeners(this.pluginContainer, new CommandUsageListener());
 
         //Arena events
 
