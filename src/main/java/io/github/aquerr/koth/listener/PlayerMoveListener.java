@@ -1,16 +1,10 @@
 package io.github.aquerr.koth.listener;
 
-import io.github.aquerr.koth.Koth;
-
-public class PlayerMoveListener extends AbstractListener
+public class PlayerMoveListener
 {
 //    private final Map<String, Arena> arenasCache;
 
-    public PlayerMoveListener(final Koth plugin)
-    {
-        super(plugin);
 //        this.arenasCache = plugin.getArenaManager().getArenas();
-    }
 
 //    @Listener
 //    @Exclude(MoveEntityEvent.Teleport.class)

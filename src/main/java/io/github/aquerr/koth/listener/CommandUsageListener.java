@@ -1,18 +1,13 @@
 package io.github.aquerr.koth.listener;
 
-import io.github.aquerr.koth.Koth;
 import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.command.ExecuteCommandEvent;
 import org.spongepowered.api.event.filter.cause.Root;
 
-public class CommandUsageListener extends AbstractListener
+public class CommandUsageListener
 {
-	public CommandUsageListener(final Koth plugin)
-	{
-		super(plugin);
-	}
 
 	@Listener(order = Order.FIRST, beforeModifications = true)
 	public void onCommandUsage(final ExecuteCommandEvent event, final @Root User player)

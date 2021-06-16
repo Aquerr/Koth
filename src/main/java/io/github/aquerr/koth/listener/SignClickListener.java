@@ -1,6 +1,5 @@
 package io.github.aquerr.koth.listener;
 
-import io.github.aquerr.koth.Koth;
 import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.block.entity.BlockEntity;
 import org.spongepowered.api.block.entity.BlockEntityTypes;
@@ -12,13 +11,8 @@ import org.spongepowered.api.world.server.ServerLocation;
 
 import java.util.Optional;
 
-public class SignClickListener extends AbstractListener
+public class SignClickListener
 {
-	public SignClickListener(final Koth plugin)
-	{
-		super(plugin);
-	}
-
 	@Listener
 	public void onSignClick(final InteractBlockEvent.Secondary event, final @Root Player player)
 	{
