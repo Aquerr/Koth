@@ -2,6 +2,7 @@ package io.github.aquerr.koth.command;
 
 import io.github.aquerr.koth.PluginInfo;
 import io.github.aquerr.koth.manager.SelectionManager;
+import io.github.aquerr.koth.util.KothWand;
 import net.kyori.adventure.identity.Identity;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
