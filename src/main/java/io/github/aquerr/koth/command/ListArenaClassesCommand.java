@@ -10,6 +10,7 @@ import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.exception.CommandException;
 import org.spongepowered.api.command.parameter.CommandContext;
 import org.spongepowered.api.data.Keys;
+import org.spongepowered.api.registry.RegistryTypes;
 import org.spongepowered.api.service.pagination.PaginationList;
 
 import java.util.ArrayList;
@@ -34,20 +35,20 @@ public class ListArenaClassesCommand extends AbstractCommand
 
 		for (final ArenaClass arenaClass : arenaClasses)
 		{
-			final TextComponent arenaClassDescBuilder = Component.empty()
-                    .append(Component.text("Name: ", NamedTextColor.BLUE))
-                    .append(Component.text(arenaClass.getName(), NamedTextColor.GOLD))
-                    .append(Component.newline())
-			        .append(Component.text("Items: ", NamedTextColor.GREEN))
-                    .append(Component.newline());
+			final TextComponent.Builder arenaClassDescBuilder = Component.text()
+					.append(Component.text("Name: ", NamedTextColor.BLUE))
+					.append(Component.text(arenaClass.getName(), NamedTextColor.GOLD))
+					.append(Component.newline())
+					.append(Component.text("Items: ", NamedTextColor.GREEN))
+					.append(Component.newline());
 
-			arenaClass.getItems().forEach(x -> arenaClassDescBuilder.append(x.type().get(Keys.DISPLAY_NAME).get())
+			arenaClass.getItems().forEach(x -> arenaClassDescBuilder.append(Component.text(x.type().key(RegistryTypes.ITEM_TYPE).asString()))
 					.append(Component.text(" x" + x.quantity()))
 					.append(Component.newline()));
 
 			final TextComponent arenaText = Component.empty()
 					.append(Component.text("- ", NamedTextColor.BLUE).append(Component.text(arenaClass.getName(), NamedTextColor.GOLD)))
-                    .hoverEvent(HoverEvent.showText(arenaClassDescBuilder));
+					.hoverEvent(HoverEvent.showText(arenaClassDescBuilder.build()));
 			helpList.add(arenaText);
 		}
 
