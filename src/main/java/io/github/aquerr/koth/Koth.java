@@ -1,6 +1,7 @@
 package io.github.aquerr.koth;
 
 import com.google.inject.Inject;
+import io.github.aquerr.koth.command.CreateArenaClassCommand;
 import io.github.aquerr.koth.command.DeselectCommand;
 import io.github.aquerr.koth.command.HelpCommand;
 import io.github.aquerr.koth.command.ListArenaClassesCommand;
@@ -26,6 +27,7 @@ import org.spongepowered.api.config.ConfigDir;
 import org.spongepowered.api.event.EventManager;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.lifecycle.ConstructPluginEvent;
+import org.spongepowered.api.event.lifecycle.LoadedGameEvent;
 import org.spongepowered.api.event.lifecycle.RefreshGameEvent;
 import org.spongepowered.api.event.lifecycle.RegisterCommandEvent;
 import org.spongepowered.plugin.PluginContainer;
@@ -87,7 +89,6 @@ public class Koth
             registerTypeSerializers();
             this.configuration = new ConfigurationImpl(this, this.configDir);
 //            arenaManager.reloadCache();
-            arenaClassManager.reloadCache();
 
             //Register commands and listeners
             registerListeners();
@@ -100,6 +101,12 @@ public class Koth
         {
             disablePlugin();
         }
+    }
+
+    @Listener
+    public void onLoadedGame(final LoadedGameEvent event)
+    {
+        arenaClassManager.reloadCache();
     }
 
     @Listener
@@ -198,12 +205,12 @@ public class Koth
             .build());
 //
 //        //Create Arena Class Command
-//        this.subcommands.put(Collections.singletonList("createclass"), CommandSpec.builder()
-//                .description(Text.of("Creates an arena class"))
-//                .permission(PluginPermissions.CREATE_CLASS_COMMAND)
-//                .arguments(GenericArguments.onlyOne(GenericArguments.string(Text.of("name"))))
-//                .executor(new CreateArenaClassCommand(this))
-//                .build());
+        this.subcommands.put(Collections.singletonList("createclass"), Command.builder()
+                .shortDescription(Component.text("Creates an arena class"))
+                .permission(PluginPermissions.CREATE_CLASS_COMMAND)
+                .addParameter(Parameter.string().key("name").build())
+                .executor(new CreateArenaClassCommand(this.arenaClassManager))
+                .build());
 //
 //        //Delete Arena Class Command
 //        this.subcommands.put(Collections.singletonList("deleteclass"), CommandSpec.builder()

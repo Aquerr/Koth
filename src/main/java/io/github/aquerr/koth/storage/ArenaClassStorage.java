@@ -5,11 +5,15 @@ import com.google.inject.Singleton;
 import io.github.aquerr.koth.Koth;
 import io.github.aquerr.koth.model.ArenaClass;
 import io.leangen.geantyref.TypeToken;
+import org.spongepowered.api.data.persistence.DataContainer;
+import org.spongepowered.api.data.persistence.DataFormats;
+import org.spongepowered.api.entity.Item;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.configurate.CommentedConfigurationNode;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.hocon.HoconConfigurationLoader;
 import org.spongepowered.configurate.loader.ConfigurationLoader;
+import org.spongepowered.configurate.serialize.Scalars;
 import org.spongepowered.configurate.serialize.SerializationException;
 
 import java.io.IOException;
@@ -71,9 +75,16 @@ public class ArenaClassStorage
         final ConfigurationNode arenaClassNode = this.configNode.node("classes", arenaClass.getName());
         try
         {
-            arenaClassNode.node("items").get(new TypeToken<List<ItemStack>>(){}, arenaClass.getItems());
+            final List<String> itemStacksAsStrings = new LinkedList<>();
+
+            for (final ItemStack itemStack : arenaClass.getItems())
+            {
+                itemStacksAsStrings.add(DataFormats.HOCON.get().write(itemStack.toContainer()));
+            }
+
+            arenaClassNode.node("items").setList(Scalars.STRING.type(), itemStacksAsStrings);
         }
-        catch(final SerializationException e)
+        catch(final IOException e)
         {
             e.printStackTrace();
         }
@@ -94,7 +105,24 @@ public class ArenaClassStorage
     public ArenaClass getArenaClass(final String name) throws SerializationException
     {
         final ConfigurationNode arenaClassNode = this.configNode.node("classes", name);
-        final List<ItemStack> items = arenaClassNode.node("items").getList(new TypeToken<ItemStack>(){});
+
+        final List<String> itemsAsStrings = arenaClassNode.node("items").getList(String.class);
+        final List<ItemStack> items = new LinkedList<>();
+
+        for (final String itemAsString : itemsAsStrings)
+        {
+            try
+            {
+                DataContainer dataContainer = DataFormats.HOCON.get().read(itemAsString);
+                ItemStack itemStack = ItemStack.builder().fromContainer(dataContainer).build();
+                items.add(itemStack);
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+        }
+
         return new ArenaClass(name, items);
     }
 
