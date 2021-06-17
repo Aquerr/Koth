@@ -18,9 +18,7 @@ import io.github.aquerr.koth.listener.SignClickListener;
 import io.github.aquerr.koth.listener.WandUsageListener;
 import io.github.aquerr.koth.manager.ArenaClassManager;
 import io.github.aquerr.koth.manager.SelectionManager;
-import io.github.aquerr.koth.util.SelectionPoints;
 import net.kyori.adventure.text.Component;
-import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.Command;
 import org.spongepowered.api.command.parameter.Parameter;
 import org.spongepowered.api.config.ConfigDir;
@@ -34,7 +32,11 @@ import org.spongepowered.plugin.PluginContainer;
 import org.spongepowered.plugin.jvm.Plugin;
 
 import java.nio.file.Path;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Plugin("koth")
 public class Koth
@@ -86,19 +88,17 @@ public class Koth
             this.pluginContainer.logger().info("Loading Koth listeners and commands...");
 
             //Setup storage and managers first so that listeners and commands can use them later.
-            registerTypeSerializers();
             this.configuration = new ConfigurationImpl(this, this.configDir);
-//            arenaManager.reloadCache();
 
             //Register commands and listeners
             registerListeners();
 
-            //If something went wrong, disable plugin.
 
             this.pluginContainer.logger().info("Koth loaded successfully! Time for a fight on the arena!");
         }
         catch (final Exception exception)
         {
+            //If something went wrong, disable plugin.
             disablePlugin();
         }
     }
@@ -106,6 +106,7 @@ public class Koth
     @Listener
     public void onLoadedGame(final LoadedGameEvent event)
     {
+        // arenaManager.reloadCache();
         arenaClassManager.reloadCache();
     }
 
@@ -122,14 +123,6 @@ public class Koth
         this.configuration.reload();
 //        this.arenaManager.reloadCache();
         this.arenaClassManager.reloadCache();
-    }
-
-    private void registerTypeSerializers()
-    {
-//        TypeSerializerCollection.defaults().childBuilder().register(TypeToken.get(Hill.class), new HillTypeSerializer());
-//        TypeSerializerCollection.defaults().childBuilder().register(TypeToken.get(ArenaTeam.class), new ArenaTeamTypeSerializer());
-//        TypeSerializerCollection.defaults().childBuilder().register(TypeToken.get(Lobby.class), new LobbyTypeSerializer());
-//        TypeSerializerCollection.defaults().childBuilder().register(TypeToken.get(ArenaProperties.class), new ArenaPropertiesTypeSerializer());
     }
 
     public Configuration getConfiguration()

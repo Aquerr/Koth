@@ -11,7 +11,6 @@ public class ArenaClass
 {
     private final String name;
     private final List<ItemStack> items;
-//    private final int cost;
 
     public ArenaClass(final String name, final List<ItemStack> items)
     {
@@ -28,6 +27,4 @@ public class ArenaClass
     {
         return this.items;
     }
-
-    //Maybe we should have fields for helment, chestplate, leggins and boots respectively?
 }

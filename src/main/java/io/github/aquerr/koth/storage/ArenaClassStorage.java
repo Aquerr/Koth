@@ -4,14 +4,11 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import io.github.aquerr.koth.Koth;
 import io.github.aquerr.koth.model.ArenaClass;
-import io.leangen.geantyref.TypeToken;
 import org.spongepowered.api.data.persistence.DataContainer;
 import org.spongepowered.api.data.persistence.DataFormats;
-import org.spongepowered.api.entity.Item;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.configurate.CommentedConfigurationNode;
 import org.spongepowered.configurate.ConfigurationNode;
-import org.spongepowered.configurate.hocon.HoconConfigurationLoader;
 import org.spongepowered.configurate.loader.ConfigurationLoader;
 import org.spongepowered.configurate.serialize.Scalars;
 import org.spongepowered.configurate.serialize.SerializationException;
@@ -19,7 +16,10 @@ import org.spongepowered.configurate.serialize.SerializationException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @Singleton
 public class ArenaClassStorage
@@ -58,10 +58,12 @@ public class ArenaClassStorage
                 e.printStackTrace();
             }
         }
-        this.configurationLoader = HoconConfigurationLoader.builder().path(this.arenaClassesFile).build();
+
+
+        this.configurationLoader = KothConfigurateHelper.loaderForPath(this.arenaClassesFile);
         try
         {
-            this.configNode = this.configurationLoader.load();
+            this.configNode = this.configurationLoader.load(KothConfigurateHelper.getDefaultOptions());
             this.configurationLoader.save(this.configNode);
         }
         catch (final IOException e)
@@ -131,7 +133,7 @@ public class ArenaClassStorage
         final ConfigurationNode arenaClassesNode = this.configNode.node("classes");
         final Map<Object, ? extends ConfigurationNode> arenaClassesNodes =  arenaClassesNode.childrenMap();
         final Set<Object> arenaClassesNames = arenaClassesNodes.keySet();
-        final List<ArenaClass> arenaClasses = new ArrayList<>();
+        final List<ArenaClass> arenaClasses = new LinkedList<>();
         for (final Object arenaClassName : arenaClassesNames)
         {
             if(!(arenaClassName instanceof String))
