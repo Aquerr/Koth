@@ -2,6 +2,7 @@ package io.github.aquerr.koth;
 
 import com.google.inject.Inject;
 import io.github.aquerr.koth.command.CreateArenaClassCommand;
+import io.github.aquerr.koth.command.DeleteArenaClassCommand;
 import io.github.aquerr.koth.command.DeselectCommand;
 import io.github.aquerr.koth.command.HelpCommand;
 import io.github.aquerr.koth.command.ListArenaClassesCommand;
@@ -196,30 +197,30 @@ public class Koth
             .permission(PluginPermissions.DESELECT_COMMAND)
             .executor(new DeselectCommand(this.selectionManager))
             .build());
-//
-//        //Create Arena Class Command
+
+       //Create Arena Class Command
         this.subcommands.put(Collections.singletonList("createclass"), Command.builder()
                 .shortDescription(Component.text("Creates an arena class"))
                 .permission(PluginPermissions.CREATE_CLASS_COMMAND)
                 .addParameter(Parameter.string().key("name").build())
                 .executor(new CreateArenaClassCommand(this.arenaClassManager))
                 .build());
-//
-//        //Delete Arena Class Command
-//        this.subcommands.put(Collections.singletonList("deleteclass"), CommandSpec.builder()
-//            .description(Text.of("Deletes a specified class."))
-//            .permission(PluginPermissions.DELETE_CLASS_COMMAND)
-//            .arguments(new ArenaClassNameArgument(this, Text.of("name")))
-//            .executor(new DeleteArenaClassCommand(this))
-//            .build());
-//
+
+        //Delete Arena Class Command
+        this.subcommands.put(Collections.singletonList("deleteclass"), Command.builder()
+            .shortDescription(Component.text("Deletes a specified class."))
+            .permission(PluginPermissions.DELETE_CLASS_COMMAND)
+            .addParameter(Parameter.string().key("name").build())
+            .executor(new DeleteArenaClassCommand(this.arenaClassManager))
+            .build());
+
         //List Arena Classes Command
         this.subcommands.put(Collections.singletonList("classes"), Command.builder()
             .shortDescription(Component.text("List all classes registered on the server."))
             .permission(PluginPermissions.LIST_CLASSES_COMMAND)
             .executor(new ListArenaClassesCommand(this.arenaClassManager))
             .build());
-//
+
 //		//Create Arena Command
 //		this.subcommands.put(Collections.singletonList("createarena"), CommandSpec.builder()
 //				.description(Text.of("Creates an arena"))
