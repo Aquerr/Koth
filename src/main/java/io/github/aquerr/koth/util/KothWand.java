@@ -11,7 +11,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class KothWand {
+public final class KothWand
+{
+    private KothWand()
+    {
+
+    }
 
     public static ItemStack getKothWand()
     {
