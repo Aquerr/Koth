@@ -14,6 +14,7 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.service.pagination.PaginationList;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class HelpCommand extends AbstractCommand
 {
@@ -38,14 +39,20 @@ public class HelpCommand extends AbstractCommand
 
             if(context.cause().audience() instanceof Player && !command.canExecute(context.cause()))
                 continue;
-
-            final TextComponent textComponent = Component.empty()
-//            textComponent.append(Component.text("/koth " + String.join(", ", aliases) + " " + ((TextComponent)command.usage(context.cause())).content(), NamedTextColor.GOLD));
-            .append(Component.text("/koth " + String.join(", ", aliases) + " " + command.parameters(), NamedTextColor.GOLD))
-            .append(Component.text(" - " + PlainTextComponentSerializer.plainText().serialize(command.shortDescription(context.cause()).get()), NamedTextColor.WHITE));
-            //            textBuilder.append(Text.of(TextColors.WHITE, " - " + commandCallable.getShortDescription(source).get().toPlain()  + "\n"));
-//            textBuilder.append(Text.of(TextColors.GRAY, "Usage: " + "/koth " + String.join("", aliases) + " " + commandCallable.getUsage(source).toPlain()));
+            TextComponent textComponent = Component.empty()
+                    .append(Component.text("/koth " + String.join(", ", aliases), NamedTextColor.GOLD));
+            if(!command.parameters().isEmpty())
+            {
+                textComponent = textComponent.append(Component.text(" <" + command.parameters().stream()
+                        .filter(Parameter.Value.class::isInstance)
+                        .map(Parameter.Value.class::cast)
+                        .map(Parameter.Value::key)
+                        .map(Parameter.Key::key)
+                        .collect(Collectors.joining(", ")) + ">", NamedTextColor.GRAY));
+            }
+            textComponent = textComponent.append(Component.text(" - " + PlainTextComponentSerializer.plainText().serialize(command.shortDescription(context.cause()).get()), NamedTextColor.WHITE));
             helpList.add(textComponent);
+
         }
 
         //TODO: Sort commands alphabetically
