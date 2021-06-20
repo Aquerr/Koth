@@ -39,7 +39,7 @@ public class ArenaClassStorage
         {
             try
             {
-                Files.createDirectory(storageDirPath);
+                Files.createDirectories(storageDirPath);
             }
             catch (IOException e)
             {
