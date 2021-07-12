@@ -1,4 +1,4 @@
-//package io.github.aquerr.koth.storage.serializer;
+//package io.github.aquerr.koth.storage.hocon.serializer;
 //
 //import com.google.common.reflect.TypeToken;
 //import io.github.aquerr.koth.entity.ArenaTeam;

@@ -14,9 +14,7 @@ public interface ArenaClassManager
 
 	Optional<ArenaClass> getArenaClass(final String name);
 
-	boolean addArenaClass(final ArenaClass arenaClass);
-
-	boolean updateArenaClass(final ArenaClass arenaClass);
+	boolean saveOrUpdate(final ArenaClass arenaClass);
 
 	boolean deleteArenaClass(final String name);
 

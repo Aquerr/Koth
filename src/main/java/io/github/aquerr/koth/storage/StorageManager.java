@@ -2,7 +2,6 @@ package io.github.aquerr.koth.storage;
 
 import com.google.inject.ImplementedBy;
 import io.github.aquerr.koth.model.ArenaClass;
-import org.spongepowered.configurate.serialize.SerializationException;
 
 import java.util.List;
 
@@ -16,8 +15,7 @@ public interface StorageManager
 //    boolean deleteArena(final String name);
 
     List<ArenaClass> getArenaClasses();
-    boolean addArenaClass(final ArenaClass arenaClass) throws SerializationException;
-    boolean updateArenaClass(final ArenaClass arenaClass);
+    boolean addOrUpdateArenaClass(final ArenaClass arenaClass);
     boolean deleteArenaClass(final String name);
 
 }

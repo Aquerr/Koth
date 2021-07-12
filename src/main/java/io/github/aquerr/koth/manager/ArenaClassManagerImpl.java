@@ -9,13 +9,13 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.spongepowered.api.Sponge;
-import org.spongepowered.configurate.serialize.SerializationException;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 @Singleton
 public class ArenaClassManagerImpl implements ArenaClassManager
@@ -46,43 +46,26 @@ public class ArenaClassManagerImpl implements ArenaClassManager
 	}
 
 	@Override
-	public boolean addArenaClass(final ArenaClass arenaClass)
+	public boolean saveOrUpdate(final ArenaClass arenaClass)
 	{
 		//Add arena to storage by using a separate thread.
 		//We do not want to use main thread for storage.
-		CompletableFuture.runAsync(() -> {
-			boolean didSucceed = false;
-			try
-			{
-				didSucceed = this.storageManager.addArenaClass(arenaClass);
-			}
-			catch (SerializationException e)
-			{
-				e.printStackTrace();
-			}
-			if (!didSucceed)
-				Sponge.server().sendMessage(TextComponent.ofChildren(PluginInfo.PLUGIN_ERROR.append(Component.text("Class named \"" + arenaClass.getName() + "\" could not be saved into the storage...", NamedTextColor.RED))));
-		});
-
-		//Add arena to global arena list (cache)
-		final ArenaClass putArena = arenasCache.put(arenaClass.getName(), arenaClass);
-		return putArena == null;
-	}
-
-	@Override
-	public boolean updateArenaClass(final ArenaClass arenaClass)
-	{
-		//TODO: Should we preform additional update operations here or will commands classes do everything on their own?
-
-		//Delete arena from the storage in a separate thread.
-		CompletableFuture.runAsync(() -> {
-			final boolean didSucceed = this.storageManager.updateArenaClass(arenaClass);
-			if (!didSucceed)
-				Sponge.server().sendMessage(TextComponent.ofChildren(PluginInfo.PLUGIN_ERROR.append(Component.text("Class named \"" + arenaClass.getName() + "\" could not be updated in the storage...", NamedTextColor.RED))));
-		});
-
-		//TODO: Hmmmm?
-		return true;
+		try
+		{
+			return CompletableFuture.runAsync(() -> {
+				boolean didSucceed = this.storageManager.addOrUpdateArenaClass(arenaClass);
+				if (!didSucceed)
+					Sponge.server().sendMessage(TextComponent.ofChildren(PluginInfo.PLUGIN_ERROR.append(Component.text("Class named \"" + arenaClass.getName() + "\" could not be saved into the storage...", NamedTextColor.RED))));
+			})
+			.thenRunAsync(() -> arenasCache.put(arenaClass.getName(), arenaClass))
+			.thenApplyAsync(nothing -> arenasCache.get(arenaClass.getName()) != null)
+			.get();
+		}
+		catch (InterruptedException | ExecutionException e)
+		{
+			e.printStackTrace();
+		}
+		return false;
 	}
 
 	@Override

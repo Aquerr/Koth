@@ -4,12 +4,10 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import io.github.aquerr.koth.Koth;
 import io.github.aquerr.koth.model.ArenaClass;
-import org.spongepowered.configurate.serialize.SerializationException;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.List;
 
 @Singleton
@@ -101,40 +99,18 @@ public class StorageManagerImpl implements StorageManager
     @Override
     public List<ArenaClass> getArenaClasses()
     {
-        try
-        {
-            return this.arenaClassStorage.getArenaClasses();
-        }
-        catch(SerializationException e)
-        {
-            e.printStackTrace();
-        }
-        return new ArrayList<>();
+        return this.arenaClassStorage.getArenaClasses();
     }
 
     @Override
-    public boolean addArenaClass(final ArenaClass arenaClass) throws SerializationException
+    public boolean addOrUpdateArenaClass(ArenaClass arenaClass)
     {
-        return this.arenaClassStorage.addArenaClass(arenaClass);
-    }
-
-    @Override
-    public boolean updateArenaClass(final ArenaClass arenaClass)
-    {
-        try
-        {
-            return this.arenaClassStorage.updateArenaClass(arenaClass);
-        }
-        catch(SerializationException e)
-        {
-            e.printStackTrace();
-        }
-        return false;
+        return this.arenaClassStorage.saveOrUpdate(arenaClass);
     }
 
     @Override
     public boolean deleteArenaClass(final String name)
     {
-        return this.arenaClassStorage.deleteArenaClass(name);
+        return this.arenaClassStorage.delete(name);
     }
 }

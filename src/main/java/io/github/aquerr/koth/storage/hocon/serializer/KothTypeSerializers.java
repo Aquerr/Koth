@@ -8,10 +8,8 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package io.github.aquerr.koth.storage.serializer;
+package io.github.aquerr.koth.storage.hocon.serializer;
 
-import io.github.aquerr.koth.model.ArenaClass;
-import org.spongepowered.configurate.serialize.TypeSerializer;
 import org.spongepowered.configurate.serialize.TypeSerializerCollection;
 
 public final class KothTypeSerializers
@@ -21,12 +19,10 @@ public final class KothTypeSerializers
 
     }
 
-    public static final TypeSerializer<ArenaClass> ARENA_CLASS_TYPE_SERIALIZER = new ArenaClassSerializer();
 
     public static TypeSerializerCollection getKothTypeSerializers()
     {
         return TypeSerializerCollection.builder()
-                .register(ArenaClass.class, ARENA_CLASS_TYPE_SERIALIZER)
                 .build();
     }
 }

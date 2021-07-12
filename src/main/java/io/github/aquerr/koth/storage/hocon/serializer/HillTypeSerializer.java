@@ -1,4 +1,4 @@
-//package io.github.aquerr.koth.storage.serializer;
+//package io.github.aquerr.koth.storage.hocon.serializer;
 //
 //import io.leangen.geantyref.TypeToken;
 //import org.checkerframework.checker.nullness.qual.NonNull;
