@@ -31,7 +31,7 @@ public class CreateArenaClassCommand extends AbstractCommand
         ServerPlayer serverPlayer = requireServerPlayer(context);
 
         final List<ItemStack> items = getItemFromPlayer(serverPlayer);
-        final boolean didSucceed = this.arenaClassManager.addArenaClass(new ArenaClass(className, items));
+        final boolean didSucceed = this.arenaClassManager.saveOrUpdate(new ArenaClass(className, items));
         if(!didSucceed)
             throw new CommandException(Component.text("Something went wrong while creating the arena class..."));
         serverPlayer.sendMessage(TextComponent.ofChildren(Component.text("Successfully created the arena class!", NamedTextColor.GOLD)));

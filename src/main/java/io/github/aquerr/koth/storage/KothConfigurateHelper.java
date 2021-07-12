@@ -10,14 +10,9 @@
 
 package io.github.aquerr.koth.storage;
 
-import io.github.aquerr.koth.model.ArenaClass;
-import io.github.aquerr.koth.storage.serializer.ArenaClassSerializer;
-import io.github.aquerr.koth.storage.serializer.KothTypeSerializers;
-import io.leangen.geantyref.TypeToken;
+import io.github.aquerr.koth.storage.hocon.serializer.KothTypeSerializers;
 import org.spongepowered.configurate.ConfigurationOptions;
 import org.spongepowered.configurate.hocon.HoconConfigurationLoader;
-import org.spongepowered.configurate.serialize.ScalarSerializer;
-import org.spongepowered.configurate.serialize.TypeSerializer;
 import org.spongepowered.configurate.serialize.TypeSerializerCollection;
 
 import java.nio.file.Path;
